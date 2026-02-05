@@ -1,0 +1,320 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <title>CoSwap – Dashboard</title>
+
+    <style>
+        /* ---------------- BASIC RESET & TYPOGRAPHY ---------------- */
+        * {
+            box-sizing: border-box;
+        }
+
+        html,
+        body {
+            height: 100%;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: "Poppins", system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial;
+            background: linear-gradient(135deg, #171e36 0%, #12172b 50%, #0e1222 100%);
+            color: #ffffff;
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+            padding: 28px 36px;
+            min-height: 100vh;
+        }
+
+        /* ---------------- TOP BAR ---------------- */
+        .top-bar {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 16px;
+            margin-bottom: 28px;
+        }
+
+        .welcome {
+            font-size: 28px;
+            font-weight: 700;
+            letter-spacing: -0.2px;
+        }
+
+        .top-right {
+            display: flex;
+            gap: 12px;
+            align-items: center;
+        }
+
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            padding: 10px 16px;
+            border-radius: 12px;
+            font-weight: 600;
+            font-size: 14px;
+            border: none;
+            cursor: pointer;
+        }
+
+        .wallet-btn {
+            background: linear-gradient(180deg, rgba(79, 208, 255, 0.12) 0%, rgba(79, 208, 255, 0.06) 100%);
+            color: #eafcff;
+            border: 1px solid rgba(79, 208, 255, 0.22);
+            box-shadow: 0 6px 18px rgba(79, 208, 255, 0.04);
+        }
+
+        .chat-btn {
+            background: linear-gradient(90deg, #4fd0ff, #7b5bff);
+            color: #fff;
+            box-shadow: 0 10px 30px rgba(111, 108, 255, 0.12);
+        }
+
+        .logout-btn {
+            background: rgba(255, 255, 255, 0.12);
+            color: #fff;
+            border: 1px solid rgba(255, 255, 255, 0.06);
+        }
+
+        /* ---------------- HEADING ---------------- */
+        .heading {
+            font-size: 20px;
+            font-weight: 700;
+            margin-bottom: 18px;
+            color: #f6f7fb;
+        }
+
+        .subheading {
+            margin-bottom: 18px;
+            color: rgba(255, 255, 255, 0.75);
+            font-size: 14px;
+        }
+
+        /* ---------------- GRID (Responsive) ---------------- */
+        .grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 28px;
+            align-items: start;
+        }
+
+        @media (max-width: 1100px) {
+            .grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+
+        @media (max-width: 680px) {
+            .grid {
+                grid-template-columns: 1fr;
+            }
+
+            body {
+                padding: 18px;
+            }
+        }
+
+        /* ---------------- CARD ---------------- */
+        .card {
+            background: linear-gradient(180deg, rgba(255, 255, 255, 0.03), rgba(255, 255, 255, 0.02));
+            border-radius: 18px;
+            padding: 20px;
+            min-height: 230px;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            border: 1px solid rgba(255, 255, 255, 0.06);
+            box-shadow: 0 6px 20px rgba(3, 8, 23, 0.35);
+            transition: transform .18s ease, box-shadow .18s ease;
+        }
+
+        .card:hover {
+            transform: translateY(-6px);
+            box-shadow: 0 18px 40px rgba(3, 8, 23, 0.45);
+        }
+
+        .card-head {
+            margin-bottom: 16px;
+        }
+
+        .card-title {
+            font-size: 20px;
+            font-weight: 700;
+            margin-bottom: 8px;
+            color: #ffffff;
+            line-height: 1.15;
+        }
+
+        .card-desc {
+            color: rgba(255, 255, 255, 0.75);
+            font-size: 14px;
+            margin: 0;
+            line-height: 1.5;
+            max-width: 100%;
+        }
+
+        .card-controls {
+            margin-top: 18px;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .card-btn-primary {
+            width: 100%;
+            padding: 12px 16px;
+            background: linear-gradient(135deg, #ff6bff 0%, #7b5bff 50%, #4fd0ff 100%);
+            color: #fff;
+            border-radius: 12px;
+            border: none;
+            font-size: 15px;
+            font-weight: 700;
+            cursor: pointer;
+            box-shadow: 0 10px 30px rgba(111, 108, 255, 0.14);
+            transition: transform .12s ease, opacity .12s;
+        }
+
+        .card-btn-primary:hover {
+            opacity: .96;
+        }
+
+        .card-btn-primary:active {
+            transform: translateY(1px);
+        }
+
+        .card-btn-secondary {
+            width: 100%;
+            padding: 11px 14px;
+            background: rgba(255, 255, 255, 0.06);
+            color: #fff;
+            border-radius: 12px;
+            border: 1px solid rgba(255, 255, 255, 0.06);
+            font-size: 14px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: background .12s ease;
+        }
+
+        .card-btn-secondary:hover {
+            background: rgba(255, 255, 255, 0.09);
+        }
+
+        .meta {
+            margin-top: 10px;
+            font-weight: 700;
+            color: #f8fbff;
+            font-size: 15px;
+        }
+
+        p {
+            margin: 0;
+        }
+    </style>
+    <link rel="stylesheet" href="theme.css">
+    <script src="ui.js" defer></script></head>
+
+<body>
+
+    <div class="top-bar">
+        <div>
+            <div class="welcome">Welcome, <span id="userName">Manoj</span> 👋</div>
+            <div class="subheading">Dashboard Overview</div>
+        </div>
+
+        <div class="top-right">
+            <button class="btn wallet-btn" onclick="go('wallet.html')">💰 Wallet</button>
+            <button class="btn chat-btn" onclick="openChat()">💬 Chat</button>
+            <button class="btn logout-btn" onclick="logout()">Logout</button>
+        </div>
+    </div>
+
+    <div class="heading">Quick actions</div>
+
+    <div class="grid" id="dashboardGrid"></div>
+
+    <script src="api.js"></script>
+    <script>
+        if (!requireAuth("dashboard.html")) {
+            // redirected
+        }
+
+        const dashboardCards = [
+            { title: "Browse Coupons", desc: "Find the best deals posted by users.", action: "Explore", href: "browse.html" },
+            { title: "Sell Coupons", desc: "Post your coupon and earn money instantly.", action: "Sell Now", href: "sell.html" },
+            { title: "My Listings", desc: "Manage your active coupons.", action: "Manage", href: "mylistings.html" },
+            { title: "My Purchases", desc: "View all coupons you bought.", action: "History", href: "mypurchases.html" },
+            { title: "Profile", desc: "Check trust score, rating, and level.", action: "Profile", href: "sellerprofile.html" }
+        ];
+
+        const grid = document.getElementById('dashboardGrid');
+
+        dashboardCards.forEach(card => {
+            const el = document.createElement('div');
+            el.className = 'card';
+            el.innerHTML = `
+                <div class="card-head">
+                    <div class="card-title">${escapeHtml(card.title)}</div>
+                    <p class="card-desc">${escapeHtml(card.desc)}</p>
+                </div>
+
+                <div class="card-controls">
+                    <button class="card-btn-primary" onclick="navigate('${encodeURIComponent(card.href)}')">
+                        ${escapeHtml(card.action)}
+                    </button>
+                </div>
+            `;
+            grid.appendChild(el);
+        });
+
+        function navigate(hrefEncoded) {
+            const href = decodeURIComponent(hrefEncoded);
+            window.location.href = href;
+        }
+
+        /* IMPORTANT: NOW OPENS CHATLIST (NOT chat.html) */
+        function openChat() {
+            window.location.href = "chatlist.html";
+        }
+
+        function go(page) { window.location.href = page; }
+
+        function logout() {
+            clearAuth();
+            window.location.href = 'login.html';
+        }
+
+        const user = getCurrentUser();
+        if (user && user.name) {
+            document.getElementById('userName').innerText = user.name;
+        }
+
+        (async function refreshUser() {
+            try {
+                const data = await apiRequest("/me");
+                if (data.user && data.user.name) {
+                    document.getElementById('userName').innerText = data.user.name;
+                }
+            } catch {
+                // ignore
+            }
+        })();
+
+        function escapeHtml(str) {
+            if (!str) return '';
+            return String(str)
+                .replace(/&/g, "&amp;")
+                .replace(/</g, "&lt;")
+                .replace(/>/g, "&gt;")
+                .replace(/"/g, "&quot;")
+                .replace(/'/g, "&#39;");
+        }
+    </script>
+
+</body>
+
+</html>

@@ -1,0 +1,199 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Transactions – CoSwap</title>
+
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: Poppins, sans-serif;
+        }
+
+        body {
+            background: radial-gradient(circle at center, #141828, #0b0f1e, #05060a);
+            color: white;
+            padding: 30px;
+        }
+
+        h1 {
+            font-size: 34px;
+            font-weight: 700;
+            margin-bottom: 25px;
+        }
+
+        .transaction-card {
+            background: rgba(255, 255, 255, 0.08);
+            padding: 22px;
+            border-radius: 16px;
+            margin-bottom: 18px;
+            backdrop-filter: blur(14px);
+            border: 1px solid rgba(255, 255, 255, 0.12);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            transition: 0.3s;
+        }
+
+        .transaction-card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 0 18px rgba(0, 0, 0, 0.4);
+        }
+
+        .left-box {
+            width: 65%;
+        }
+
+        .coupon-title {
+            font-size: 20px;
+            font-weight: 600;
+        }
+
+        .price {
+            color: #4fd0ff;
+            font-size: 18px;
+            margin-top: 6px;
+            font-weight: 600;
+        }
+
+        .small-info {
+            margin-top: 8px;
+            opacity: 0.85;
+            font-size: 14px;
+        }
+
+        .status {
+            padding: 6px 14px;
+            border-radius: 8px;
+            font-size: 13px;
+            font-weight: 600;
+            margin-top: 10px;
+            display: inline-block;
+        }
+
+        .success {
+            background: rgba(0, 255, 80, 0.2);
+            border: 1px solid #00ff80;
+        }
+
+        .review {
+            background: rgba(255, 210, 80, 0.15);
+            border: 1px solid #ffd850;
+        }
+
+        .fraud {
+            background: rgba(255, 0, 0, 0.2);
+            border: 1px solid red;
+        }
+
+        .button-box {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .btn {
+            padding: 10px 18px;
+            border-radius: 10px;
+            border: none;
+            cursor: pointer;
+            font-size: 14px;
+            font-weight: 600;
+            transition: 0.2s;
+        }
+
+        .view-btn {
+            background: linear-gradient(90deg, #4fd0ff, #6f6cff);
+            color: white;
+        }
+
+        .chat-btn {
+            background: rgba(255, 255, 255, 0.12);
+            color: white;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+
+        .btn:hover {
+            opacity: 0.85;
+        }
+    </style>
+    <link rel="stylesheet" href="theme.css">
+    <script src="ui.js" defer></script></head>
+
+<body>
+
+    <h1>Your Transactions</h1>
+
+    <div id="transactionsList"></div>
+
+    <script src="api.js"></script>
+    <script>
+        if (!requireAuth("transactions.html")) {
+            // redirected
+        }
+
+        async function loadTransactions() {
+            const box = document.getElementById("transactionsList");
+            box.innerHTML = "<p>Loading transactions...</p>";
+
+            try {
+                const data = await apiRequest("/me/transactions");
+                const transactions = data.transactions || [];
+
+                if (transactions.length === 0) {
+                    box.innerHTML = "<p>No transactions yet.</p>";
+                    return;
+                }
+
+                box.innerHTML = "";
+                transactions.forEach(t => {
+                    const statusClass = t.status === "success" ? "success" : "review";
+                    box.innerHTML += `
+                        <div class="transaction-card">
+                            <div class="left-box">
+                                <p class="coupon-title">${t.title}</p>
+                                <p class="price">₹${t.price}</p>
+                                <p class="small-info">
+                                    Date: ${new Date(t.purchased_at).toLocaleDateString()} • Fee Charged: ₹${t.fee}
+                                </p>
+                                <span class="status ${statusClass}">${t.status === "success" ? "Successful" : "Under Review"}</span>
+                            </div>
+
+                            <div class="button-box">
+                                <button class="btn view-btn" onclick="viewCoupon(${t.coupon_id})">View Coupon</button>
+                                <button class="btn chat-btn" onclick="openChat(${t.coupon_id})">View Chat</button>
+                            </div>
+                        </div>
+                    `;
+                });
+            } catch (err) {
+                box.innerHTML = `<p>Failed to load transactions. ${err.message || ""}</p>`;
+            }
+        }
+
+        function viewCoupon(couponId) {
+            window.location.href = `coupon-details.html?id=${couponId}`;
+        }
+
+        async function openChat(couponId) {
+            try {
+                const data = await apiRequest("/chats", {
+                    method: "POST",
+                    body: JSON.stringify({ couponId })
+                });
+                window.location.href = `chat.html?id=${data.chat.id}`;
+            } catch (err) {
+                alert(err.message || "Unable to open chat.");
+            }
+        }
+
+        loadTransactions();
+    </script>
+
+</body>
+
+</html>

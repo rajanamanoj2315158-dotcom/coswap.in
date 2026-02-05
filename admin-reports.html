@@ -1,0 +1,206 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Review Reports – CoSwap Admin</title>
+
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: Poppins, sans-serif;
+        }
+
+        body {
+            background: radial-gradient(circle at top, #151a2d, #0b0f1f, #05060a);
+            color: white;
+            padding: 30px;
+        }
+
+        h1 {
+            font-size: 34px;
+            margin-bottom: 20px;
+            font-weight: 700;
+        }
+
+        .back-btn {
+            padding: 12px 18px;
+            background: #4e7bff;
+            color: white;
+            border-radius: 10px;
+            text-decoration: none;
+            display: inline-block;
+            margin-bottom: 20px;
+        }
+
+        .report-card {
+            background: rgba(255, 255, 255, 0.08);
+            padding: 22px;
+            border-radius: 16px;
+            margin-bottom: 18px;
+            backdrop-filter: blur(14px);
+            border: 1px solid rgba(255, 255, 255, 0.12);
+            box-shadow: 0 0 20px rgba(0, 0, 0, 0.4);
+        }
+
+        .top {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 12px;
+        }
+
+        .seller {
+            font-size: 18px;
+            font-weight: 600;
+        }
+
+        .rating {
+            font-size: 16px;
+            color: #ffd850;
+            font-weight: 600;
+        }
+
+        .issue {
+            margin-top: 10px;
+            font-size: 15px;
+            opacity: 0.9;
+            line-height: 1.5;
+        }
+
+        .status {
+            display: inline-block;
+            margin-top: 12px;
+            padding: 6px 14px;
+            border-radius: 8px;
+            font-size: 13px;
+            font-weight: 600;
+        }
+
+        .pending {
+            background: rgba(255, 210, 80, 0.2);
+            border: 1px solid #ffd850;
+        }
+
+        .resolved {
+            background: rgba(0, 255, 120, 0.2);
+            border: 1px solid #00ff9d;
+        }
+
+        .actions {
+            margin-top: 15px;
+            display: flex;
+            gap: 10px;
+        }
+
+        .btn {
+            padding: 10px 16px;
+            border-radius: 10px;
+            border: none;
+            cursor: pointer;
+            font-size: 14px;
+            font-weight: 600;
+        }
+
+        .warn {
+            background: rgba(255, 80, 80, 0.25);
+            border: 1px solid red;
+            color: white;
+        }
+
+        .freeze {
+            background: rgba(255, 0, 0, 0.35);
+            border: 1px solid red;
+            color: white;
+        }
+
+        .resolve {
+            background: linear-gradient(90deg, #4fd0ff, #6f6cff);
+            color: white;
+        }
+    </style>
+    <link rel="stylesheet" href="theme.css">
+    <script src="ui.js" defer></script></head>
+
+<body>
+
+    <a href="admin-dashboard.html" class="back-btn">← Back to Dashboard</a>
+
+    <h1>Seller Reviews & Reports</h1>
+
+    <div id="reportsList"></div>
+
+    <script src="api.js"></script>
+    <script>
+        if (!requireAdmin("admin-reports.html")) {
+            // redirected
+        }
+
+        async function loadReports() {
+            const list = document.getElementById("reportsList");
+            list.innerHTML = "<p>Loading reports...</p>";
+
+            try {
+                const data = await apiRequest("/admin/reports");
+                const reports = data.reports || [];
+
+                if (reports.length === 0) {
+                    list.innerHTML = "<p>No reports found.</p>";
+                    return;
+                }
+
+                list.innerHTML = "";
+                reports.forEach(r => {
+                    const statusClass = r.status === "pending" ? "pending" : "resolved";
+                    list.innerHTML += `
+                        <div class="report-card">
+                            <div class="top">
+                                <p class="seller">Seller: ${r.seller_name}</p>
+                                <p class="rating">Reporter: ${r.reporter_name}</p>
+                            </div>
+
+                            <p class="issue">
+                                <b>Reason:</b> ${r.reason}<br>
+                                ${r.description || "No additional details."}
+                                ${r.coupon_title ? `<br><b>Coupon:</b> ${r.coupon_title}` : ""}
+                            </p>
+
+                            <span class="status ${statusClass}">${r.status.toUpperCase()}</span>
+
+                            <div class="actions">
+                                <button class="btn warn" onclick="warnSeller(${r.id})">Warn Seller</button>
+                                <button class="btn freeze" onclick="freezeSeller(${r.id})">Freeze Seller</button>
+                                <button class="btn resolve" onclick="resolveReport(${r.id})">Mark Resolved</button>
+                            </div>
+                        </div>
+                    `;
+                });
+            } catch (err) {
+                list.innerHTML = `<p>Failed to load reports. ${err.message || ""}</p>`;
+            }
+        }
+
+        async function warnSeller(id) {
+            await apiRequest(`/admin/reports/${id}/warn`, { method: "POST" });
+            loadReports();
+        }
+
+        async function freezeSeller(id) {
+            await apiRequest(`/admin/reports/${id}/freeze`, { method: "POST" });
+            loadReports();
+        }
+
+        async function resolveReport(id) {
+            await apiRequest(`/admin/reports/${id}/resolve`, { method: "POST" });
+            loadReports();
+        }
+
+        loadReports();
+    </script>
+
+</body>
+
+</html>

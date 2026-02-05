@@ -1,0 +1,334 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sell Coupon – CoSwap</title>
+
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: "Poppins", sans-serif;
+        }
+
+        body {
+            background: linear-gradient(135deg, #151b2f, #10162a, #0c101f);
+            color: white;
+            padding: 30px;
+            display: flex;
+            justify-content: center;
+        }
+
+        /* Page Heading */
+        h1 {
+            position: absolute;
+            top: 20px;
+            font-size: 34px;
+            font-weight: 700;
+            text-shadow: 0 0 15px rgba(110, 130, 255, 0.7);
+        }
+
+        .wrapper {
+            width: 100%;
+            max-width: 520px;
+            margin-top: 80px;
+            background: rgba(255, 255, 255, 0.07);
+            border-radius: 22px;
+            padding: 28px;
+            padding-top: 40px;
+            border: 1px solid rgba(255, 255, 255, 0.14);
+            box-shadow: 0 0 28px rgba(140, 160, 255, 0.2);
+            backdrop-filter: blur(12px);
+            animation: fadeIn 0.5s ease;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(10px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        /* Info Box */
+        .info-box {
+            background: linear-gradient(135deg, rgba(79, 208, 255, 0.12), rgba(123, 91, 255, 0.12));
+            border: 1px solid rgba(255, 255, 255, 0.12);
+            padding: 18px 22px;
+            border-radius: 16px;
+            margin-bottom: 25px;
+            box-shadow: 0 0 22px rgba(80, 110, 255, 0.18);
+        }
+
+        .info-box span {
+            font-weight: 700;
+        }
+
+        .info-box b {
+            font-size: 17px;
+        }
+
+        label {
+            display: block;
+            margin-top: 18px;
+            margin-bottom: 7px;
+            font-size: 16px;
+            opacity: 0.9;
+            font-weight: 500;
+        }
+
+        input,
+        textarea,
+        select {
+            width: 100%;
+            padding: 15px;
+            border-radius: 14px;
+            border: none;
+            outline: none;
+            font-size: 16px;
+            color: white;
+            background: rgba(255, 255, 255, 0.12);
+            backdrop-filter: blur(6px);
+            transition: 0.25s;
+        }
+
+        input:focus,
+        textarea:focus,
+        select:focus {
+            background: rgba(255, 255, 255, 0.18);
+            box-shadow: 0 0 18px rgba(120, 150, 255, 0.35);
+        }
+
+        textarea {
+            height: 120px;
+            resize: none;
+        }
+
+        input[type="file"] {
+            padding: 10px;
+            background: rgba(255, 255, 255, 0.10);
+        }
+
+        .error-text {
+            display: none;
+            font-size: 13px;
+            margin-top: 5px;
+            color: #ff6b6b;
+        }
+
+        /* Button */
+        button {
+            width: 100%;
+            margin-top: 30px;
+            padding: 16px;
+            font-size: 18px;
+            font-weight: 700;
+            color: white;
+            border: none;
+            border-radius: 16px;
+            cursor: pointer;
+            background: linear-gradient(135deg, #ff6bff, #7b5bff, #4fd0ff);
+            box-shadow: 0 0 25px rgba(120, 120, 255, 0.35);
+            transition: 0.25s;
+        }
+
+        button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 0 30px rgba(140, 140, 255, 0.45);
+        }
+    </style>
+    <link rel="stylesheet" href="theme.css">
+    <script src="ui.js" defer></script></head>
+
+<body class="soft-bg">
+
+    <h1>Sell Coupon</h1>
+
+    <div class="wrapper">
+
+        <!-- INFO BOX -->
+        <div class="info-box">
+            <b>Fraud %:</b> <span id="percent">0%</span><br>
+            <b>Max Price:</b> ₹<span id="maxPrice">0</span><br>
+            <b>Status:</b> <span id="statusText">Active</span>
+        </div>
+
+        <!-- TITLE -->
+        <label>Coupon Title*</label>
+        <input id="titleInput" placeholder="Enter coupon title">
+        <div id="titleError" class="error-text">Title is required.</div>
+
+        <!-- DETAILS -->
+        <label>Offer Details*</label>
+        <textarea id="detailsInput" placeholder="Describe the offer"></textarea>
+        <div id="detailsError" class="error-text">Offer details are required.</div>
+
+        <!-- DATE -->
+        <label>Expiry Date*</label>
+        <input id="expiryInput" type="date">
+        <div id="dateError" class="error-text">Select a valid expiry date.</div>
+
+        <!-- PRICE -->
+        <label>Price (₹)*</label>
+        <input id="priceInput" placeholder="Enter selling price">
+        <div id="priceError" class="error-text"></div>
+
+        <!-- CATEGORY -->
+        <label>Category*</label>
+        <select id="categoryInput">
+            <option value="">Select Category</option>
+            <option>Shopping</option>
+            <option>OTT</option>
+            <option>Music</option>
+            <option>Food Delivery</option>
+            <option>Gaming</option>
+            <option>Recharge</option>
+            <option>Travel</option>
+            <option>Groceries</option>
+            <option>Education</option>
+            <option>Electronics</option>
+            <option>Beauty</option>
+            <option>Fashion</option>
+            <option>Health</option>
+            <option>Bills & Utilities</option>
+        </select>
+        <div id="categoryError" class="error-text">Please select a category.</div>
+
+        <!-- IMAGE -->
+        <label>Upload Image (Optional)</label>
+        <input id="imageInput" type="file" accept="image/*">
+
+        <button id="sellButton">Post Coupon</button>
+    </div>
+
+    <script src="api.js"></script>
+    <script>
+        if (!requireAuth("sell.html")) {
+            // redirected
+        }
+
+        /* LOAD PROFILE METRICS */
+        let sellerMaxPrice = 20;
+
+        async function loadProfileStats() {
+            try {
+                const data = await apiRequest("/me/profile");
+                const profile = data.profile || {};
+
+                const fraudPercent = Number(profile.fraudPercent || 0).toFixed(1);
+                sellerMaxPrice = profile.maxPrice || 20;
+                const status = profile.status === "frozen" ? "Frozen" : "Active";
+
+                document.getElementById("percent").innerText = `${fraudPercent}%`;
+                document.getElementById("maxPrice").innerText = sellerMaxPrice;
+                document.getElementById("statusText").innerText = status;
+            } catch {
+                const storedProfile = JSON.parse(localStorage.getItem("profileData"));
+                sellerMaxPrice = storedProfile ? storedProfile.maxPrice : 20;
+            }
+            document.getElementById("maxPrice").innerText = sellerMaxPrice;
+        }
+
+        loadProfileStats();
+
+        /* MIN DATE = TODAY */
+        (function () {
+            const d = new Date();
+            expiryInput.min =
+                `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, "0")}-${String(d.getDate()).padStart(2, "0")}`;
+        })();
+
+        /* PRICE VALIDATION */
+        priceInput.addEventListener("input", () => {
+            let value = priceInput.value.trim();
+            let error = document.getElementById("priceError");
+
+            if (!/^[0-9]*$/.test(value)) {
+                error.innerText = "Enter a valid number.";
+                error.style.display = "block";
+                return;
+            }
+
+            if (!value) {
+                error.style.display = "none";
+                return;
+            }
+
+            if (parseInt(value) > sellerMaxPrice) {
+                error.innerText = `Price cannot exceed ₹${sellerMaxPrice}.`;
+                error.style.display = "block";
+            } else {
+                error.style.display = "none";
+            }
+        });
+
+        /* SUBMIT */
+        sellButton.onclick = () => {
+            let title = titleInput.value.trim();
+            let details = detailsInput.value.trim();
+            let expiry = expiryInput.value;
+            let price = priceInput.value.trim();
+            let category = categoryInput.value;
+            let uploadedImage = imageInput.files[0];
+
+            let valid = true;
+
+            if (!title) { titleError.style.display = "block"; valid = false; }
+            if (!details) { detailsError.style.display = "block"; valid = false; }
+            if (!expiry) { dateError.style.display = "block"; valid = false; }
+
+            if (!/^[0-9]+$/.test(price)) {
+                priceError.innerText = "Enter a valid price.";
+                priceError.style.display = "block";
+                valid = false;
+            } else if (parseInt(price) > sellerMaxPrice) {
+                priceError.innerText = `Max allowed price: ₹${sellerMaxPrice}`;
+                priceError.style.display = "block";
+                valid = false;
+            }
+
+            if (!category) { categoryError.style.display = "block"; valid = false; }
+
+            if (!valid) return;
+
+            async function saveCoupon(imageURL) {
+                try {
+                    await apiRequest("/coupons", {
+                        method: "POST",
+                        body: JSON.stringify({
+                            title,
+                            details,
+                            expiry,
+                            price,
+                            category,
+                            image: imageURL
+                        })
+                    });
+
+                    alert("✔ Coupon Posted Successfully!");
+                    window.location.href = "mylistings.html";
+                } catch (err) {
+                    alert(err.message || "Failed to post coupon.");
+                }
+            }
+
+            if (uploadedImage) {
+                const reader = new FileReader();
+                reader.onload = e => saveCoupon(e.target.result);
+                reader.readAsDataURL(uploadedImage);
+            } else {
+                saveCoupon("bg.png");
+            }
+        };
+    </script>
+
+</body>
+
+</html>

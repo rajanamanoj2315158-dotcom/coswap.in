@@ -1,0 +1,369 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Create Account – CoSwap</title>
+
+    <script src="https://accounts.google.com/gsi/client" async defer></script>
+
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: Poppins, sans-serif;
+        }
+
+        body {
+            background: radial-gradient(circle at center, #141828, #0b0f1e, #05060a);
+            height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            color: white;
+        }
+
+        .card {
+            width: 430px;
+            padding: 45px;
+            background: linear-gradient(155deg, rgba(45, 54, 88, 0.96), rgba(28, 35, 58, 0.95));
+            border-radius: 26px;
+            backdrop-filter: blur(18px);
+            border: 1px solid rgba(99, 167, 255, 0.25);
+            box-shadow: 0 24px 60px rgba(10, 12, 26, 0.62),
+                0 0 0 1px rgba(79, 208, 255, 0.08),
+                inset 0 0 0 1px rgba(255, 255, 255, 0.05);
+        }
+
+        h1 {
+            text-align: center;
+            margin-bottom: 35px;
+            font-size: 30px;
+            font-weight: 700;
+        }
+
+        label {
+            margin-bottom: 6px;
+            display: block;
+            opacity: 0.85;
+        }
+
+        input {
+            width: 100%;
+            padding: 14px;
+            border-radius: 14px;
+            background: rgba(255, 255, 255, 0.16);
+            border: 2px solid transparent;
+            outline: none;
+            margin-bottom: 5px;
+            font-size: 16px;
+            color: white;
+        }
+
+        input.error {
+            border-color: #ff4d4d;
+        }
+
+        input.valid {
+            border-color: #4dff88;
+        }
+
+        .error-text {
+            color: #ff4d4d;
+            font-size: 13px;
+            height: 16px;
+            margin-bottom: 14px;
+        }
+
+        .btn {
+            width: 100%;
+            padding: 15px;
+            border-radius: 14px;
+            background: linear-gradient(90deg, #4fd0ff, #6f6cff);
+            border: none;
+            font-size: 18px;
+            color: white;
+            cursor: pointer;
+            margin-top: 10px;
+            font-weight: bold;
+            opacity: 0.5;
+            pointer-events: none;
+            transition: 0.2s;
+        }
+
+        .btn.enabled {
+            opacity: 1;
+            pointer-events: auto;
+        }
+
+        /* WHITE GOOGLE BUTTON */
+        .google-btn-white {
+            width: 100%;
+            padding: 15px;
+            border-radius: 14px;
+            background: #ffffff;
+            border: none;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 12px;
+            cursor: pointer;
+            font-size: 16px;
+            font-weight: 500;
+            color: #000;
+            margin-top: 18px;
+            box-shadow: 0 2px 6px rgba(255, 255, 255, 0.1);
+        }
+
+        .google-btn-white img {
+            width: 22px;
+        }
+
+        .login {
+            margin-top: 18px;
+            text-align: center;
+        }
+
+        .login a {
+            color: #4fd0ff;
+            text-decoration: none;
+        }
+
+        /* Toast */
+
+    </style>
+    <link rel="stylesheet" href="theme.css">
+    <script src="ui.js" defer></script></head>
+
+<body class="soft-bg">
+
+    <div class="card">
+
+        <h1>Create Your Account</h1>
+
+        <!-- FULL NAME -->
+        <label>Full Name</label>
+        <input type="text" id="name" placeholder="Enter your name" oninput="validateName()" onblur="validateName()">
+        <div id="nameError" class="error-text"></div>
+
+        <!-- EMAIL -->
+        <label>Email</label>
+        <input type="text" id="email" placeholder="Enter your email" oninput="validateEmail()" onblur="validateEmail()">
+        <div id="emailError" class="error-text"></div>
+
+        <!-- PASSWORD -->
+        <label>Password</label>
+        <input type="password" id="password" placeholder="Create a password" oninput="validatePassword()"
+            onblur="validatePassword()">
+        <div id="passwordError" class="error-text"></div>
+
+        <!-- CONFIRM PASSWORD -->
+        <label>Re-enter Password</label>
+        <input type="password" id="confirm" placeholder="Confirm password" oninput="validateConfirm()"
+            onblur="validateConfirm()">
+        <div id="confirmError" class="error-text"></div>
+
+        <button id="signupBtn" class="btn" onclick="signUp()">Sign Up</button>
+
+        <button class="google-btn-white" onclick="signInWithGoogle()">
+            <img src="https://www.svgrepo.com/show/475656/google-color.svg">
+            Continue with Google
+        </button>
+
+        <div class="login">Already have an account? <a href="login.html">Login</a></div>
+
+    </div>
+
+    <div id="toast" class="toast"></div>
+
+    <script src="api.js"></script>
+    <script>
+        function showToast(message) {
+            const el = document.getElementById("toast");
+            el.textContent = message;
+            el.classList.add("show");
+            clearTimeout(el._t);
+            el._t = setTimeout(() => el.classList.remove("show"), 2200);
+        }
+
+        function isValidEmail(value) {
+            return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value);
+        }
+        /* ========== VALIDATION ========== */
+
+        function validateName() {
+            let input = document.getElementById("name");
+            let error = document.getElementById("nameError");
+            let value = input.value.trim();
+
+            if (value === "") {
+                input.classList.remove("error", "valid");
+                error.innerText = "";
+                checkForm(); return;
+            }
+
+            if (value.length < 3) {
+                input.classList.add("error");
+                input.classList.remove("valid");
+                error.innerText = "Please enter at least 3 characters.";
+                checkForm(); return;
+            }
+
+            if (!/^[A-Za-z ]+$/.test(value)) {
+                input.classList.add("error");
+                input.classList.remove("valid");
+                error.innerText = "Name cannot contain numbers or symbols.";
+                checkForm(); return;
+            }
+
+            input.classList.remove("error");
+            input.classList.add("valid");
+            error.innerText = "";
+            checkForm();
+        }
+
+        function validateEmail() {
+            let input = document.getElementById("email");
+            let error = document.getElementById("emailError");
+            let value = input.value.trim();
+
+            if (value === "") {
+                input.classList.remove("error", "valid");
+                error.innerText = "";
+                checkForm(); return;
+            }
+
+            if (!isValidEmail(value)) {
+                input.classList.add("error");
+                input.classList.remove("valid");
+                error.innerText = "Please enter a valid email address.";
+                checkForm(); return;
+            }
+
+            input.classList.remove("error");
+            input.classList.add("valid");
+            error.innerText = "";
+            checkForm();
+        }
+
+        function validatePassword() {
+            let input = document.getElementById("password");
+            let error = document.getElementById("passwordError");
+            let value = input.value.trim();
+
+            if (value === "") {
+                input.classList.remove("error", "valid");
+                error.innerText = "";
+                checkForm(); return;
+            }
+
+            if (value.length < 6 || !/[0-9]/.test(value)) {
+                input.classList.add("error");
+                input.classList.remove("valid");
+                error.innerText = "Password must be 6+ chars and include a number.";
+                checkForm(); return;
+            }
+
+            input.classList.remove("error");
+            input.classList.add("valid");
+            error.innerText = "";
+            checkForm();
+        }
+
+        function validateConfirm() {
+            let pass = document.getElementById("password").value.trim();
+            let input = document.getElementById("confirm");
+            let error = document.getElementById("confirmError");
+            let value = input.value.trim();
+
+            if (value === "") {
+                input.classList.remove("error", "valid");
+                error.innerText = "";
+                checkForm(); return;
+            }
+
+            if (value !== pass) {
+                input.classList.add("error");
+                input.classList.remove("valid");
+                error.innerText = "Passwords do not match.";
+                checkForm(); return;
+            }
+
+            input.classList.remove("error");
+            input.classList.add("valid");
+            error.innerText = "";
+            checkForm();
+        }
+
+        /* ========== CHECK FORM (BUTTON ENABLE LOGIC) ========== */
+
+        function checkForm() {
+            let btn = document.getElementById("signupBtn");
+
+            let isValid =
+                document.getElementById("name").classList.contains("valid") &&
+                document.getElementById("email").classList.contains("valid") &&
+                document.getElementById("password").classList.contains("valid") &&
+                document.getElementById("confirm").classList.contains("valid");
+
+            if (isValid) btn.classList.add("enabled");
+            else btn.classList.remove("enabled");
+        }
+
+        /* ========== SIGN UP (OTP + SAVE DATA) ========== */
+
+        async function signUp() {
+            let isValid =
+                document.getElementById("name").classList.contains("valid") &&
+                document.getElementById("email").classList.contains("valid") &&
+                document.getElementById("password").classList.contains("valid") &&
+                document.getElementById("confirm").classList.contains("valid");
+
+            if (!isValid) {
+                showToast("Please correct the highlighted fields to continue.");
+                return;
+            }
+
+            let user = {
+                name: document.getElementById("name").value.trim(),
+                email: document.getElementById("email").value.trim(),
+                password: document.getElementById("password").value.trim()
+            };
+
+            try {
+                const data = await apiRequest("/auth/signup", {
+                    method: "POST",
+                    body: JSON.stringify(user)
+                });
+
+                setAuth(data.token, data.user);
+                showToast("Account created successfully!");
+                window.location.href = "dashboard.html";
+            } catch (err) {
+                showToast(err.message || "Unable to create account. Please try again.");
+            }
+        }
+
+        /* ========== GOOGLE LOGIN ========== */
+
+        function signInWithGoogle() {
+            google.accounts.id.initialize({
+                client_id: "YOUR_GOOGLE_CLIENT_ID",
+                callback: googleCallback
+            });
+            google.accounts.id.prompt();
+        }
+
+        function googleCallback(response) {
+            let data = JSON.parse(atob(response.credential.split('.')[1]));
+
+            localStorage.setItem("googleEmail", data.email);
+            window.location.href = "entername.html";
+        }
+    </script>
+
+</body>
+
+</html>

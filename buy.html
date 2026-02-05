@@ -1,0 +1,417 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Buy Coupon – CoSwap</title>
+
+    <style>
+        body {
+            background: linear-gradient(135deg, #151b2f, #10162a, #0c101f);
+            color: white;
+            font-family: Poppins, sans-serif;
+            padding: 25px;
+        }
+
+        h1 {
+            text-align: center;
+            font-size: 34px;
+            margin-bottom: 25px;
+            font-weight: 700;
+            text-shadow: 0 0 15px rgba(110, 130, 255, 0.7);
+        }
+
+        .card {
+            background: rgba(255, 255, 255, 0.07);
+            border-radius: 20px;
+            overflow: hidden;
+            border: 1px solid rgba(255, 255, 255, 0.14);
+            backdrop-filter: blur(12px);
+            max-width: 480px;
+            margin: auto;
+            box-shadow: 0 0 25px rgba(140, 160, 255, 0.2);
+            animation: fadeIn 0.5s ease;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(10px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        img {
+            width: 100%;
+            height: 200px;
+            object-fit: cover;
+        }
+
+        .info {
+            padding: 22px;
+        }
+
+        .info h2 {
+            font-size: 24px;
+            margin-bottom: 6px;
+        }
+
+        .info h3 {
+            font-size: 20px;
+            color: #4fd0ff;
+            margin-bottom: 10px;
+        }
+
+        .seller-line {
+            opacity: 0.9;
+            margin-bottom: 8px;
+        }
+
+        .seller-stats {
+            display: inline-flex;
+            gap: 10px;
+            align-items: center;
+            font-size: 13px;
+            padding: 6px 10px;
+            border-radius: 12px;
+            background: rgba(255, 255, 255, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.12);
+            margin-bottom: 10px;
+        }
+
+        .coupon-desc {
+            font-size: 14px;
+            opacity: 0.78;
+            line-height: 1.4;
+            margin-bottom: 6px;
+        }
+
+        .buy-btn {
+            width: 100%;
+            padding: 15px;
+            border: none;
+            background: linear-gradient(135deg, #ff6bff, #7b5bff, #4fd0ff);
+            border-radius: 14px;
+            font-size: 18px;
+            margin-top: 20px;
+            color: white;
+            cursor: pointer;
+            font-weight: 600;
+            box-shadow: 0 0 18px rgba(120, 120, 255, 0.25);
+            transition: 0.25s;
+        }
+
+        .buy-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 0 25px rgba(140, 140, 255, 0.4);
+        }
+
+        .purchase-box {
+            max-width: 480px;
+            margin: 25px auto;
+            padding: 22px;
+            border-radius: 18px;
+            background: rgba(255, 255, 255, 0.08);
+            border: 1px solid rgba(255, 255, 255, 0.18);
+            box-shadow: 0 0 22px rgba(90, 110, 255, 0.18);
+            backdrop-filter: blur(10px);
+        }
+
+        .purchase-box h3 {
+            margin-bottom: 15px;
+            font-size: 22px;
+            font-weight: 600;
+        }
+
+        #purchaseDetails p {
+            margin-bottom: 8px;
+            font-size: 15px;
+            opacity: 0.9;
+        }
+
+        .action-buttons {
+            margin-top: 20px;
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 14px;
+        }
+
+        .btn {
+            padding: 12px;
+            border-radius: 12px;
+            border: none;
+            cursor: pointer;
+            font-weight: 600;
+            font-size: 15px;
+            transition: 0.25s;
+        }
+
+        .view-btn {
+            background: linear-gradient(90deg, #4fd0ff, #6a7bff);
+            color: white;
+        }
+
+        .contact-btn {
+            background: rgba(255, 255, 255, 0.2);
+            color: white;
+        }
+
+        .invoice-btn {
+            background: rgba(120, 255, 120, 0.3);
+            color: #afffaf;
+        }
+
+        .review-btn {
+            background: linear-gradient(90deg, #ffb84d, #ff8f3d);
+            color: black;
+            font-weight: 700;
+        }
+
+        /* REVIEW MODAL */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.6);
+            justify-content: center;
+            align-items: center;
+            backdrop-filter: blur(4px);
+        }
+
+        .modal-box {
+            background: rgba(255, 255, 255, 0.1);
+            padding: 25px;
+            border-radius: 18px;
+            width: 320px;
+            text-align: center;
+            border: 1px solid rgba(255, 255, 255, 0.25);
+            box-shadow: 0 0 25px rgba(100, 120, 255, 0.35);
+            animation: zoomIn 0.3s ease;
+        }
+
+        @keyframes zoomIn {
+            from {
+                transform: scale(0.9);
+                opacity: 0;
+            }
+
+            to {
+                transform: scale(1);
+                opacity: 1;
+            }
+        }
+
+        .stars span {
+            font-size: 32px;
+            cursor: pointer;
+            margin: 4px;
+            transition: 0.2s;
+            color: rgba(255, 255, 255, 0.5);
+        }
+
+        .stars span:hover {
+            transform: scale(1.2);
+            color: gold;
+        }
+
+        .stars span.active {
+            color: #ffd15c;
+            text-shadow: 0 0 12px rgba(255, 209, 92, 0.6);
+        }
+
+        .fraud {
+            margin-top: 14px;
+            padding: 12px;
+            background: rgba(255, 0, 0, 0.25);
+            border: 1px solid red;
+            border-radius: 12px;
+            cursor: pointer;
+            font-weight: 600;
+        }
+
+        .close-btn {
+            margin-top: 15px;
+            background: rgba(255, 255, 255, 0.25);
+            padding: 10px;
+            border-radius: 12px;
+            cursor: pointer;
+        }
+    </style>
+    <link rel="stylesheet" href="theme.css">
+    <script src="ui.js" defer></script></head>
+
+<body class="soft-bg">
+
+    <h1>Buy Coupon</h1>
+
+    <div class="card">
+        <img id="couponImg">
+        <div class="info">
+            <h2 id="couponName"></h2>
+            <h3 id="couponPrice"></h3>
+            <p class="seller-line" id="couponSeller"></p>
+            <div class="seller-stats" id="sellerStats">Loading stats...</div>
+            <p class="coupon-desc" id="couponDesc"></p>
+
+            <button class="buy-btn" onclick="completePurchase()">Complete Purchase</button>
+        </div>
+    </div>
+
+    <div class="purchase-box">
+        <h3>Purchase Summary</h3>
+        <div id="purchaseDetails"></div>
+
+        <div class="action-buttons">
+            <button class="btn view-btn" onclick="viewCoupon()">View Coupon</button>
+            <button class="btn contact-btn" onclick="contactSeller()">Contact Seller</button>
+            <button class="btn invoice-btn" onclick="downloadInvoice()">Download Invoice</button>
+            <button class="btn review-btn" onclick="openReview()">Review</button>
+        </div>
+    </div>
+
+    <!-- REVIEW POPUP -->
+    <div class="modal" id="reviewModal">
+        <div class="modal-box">
+            <h2>Rate Your Experience</h2>
+
+            <div class="stars">
+                <span onclick="rate(1,this)">★</span>
+                <span onclick="rate(2,this)">★</span>
+                <span onclick="rate(3,this)">★</span>
+                <span onclick="rate(4,this)">★</span>
+                <span onclick="rate(5,this)">★</span>
+            </div>
+
+            <div class="fraud" onclick="reportFraud()">
+                Report Fraud
+            </div>
+
+            <div class="close-btn" onclick="closeReview()">
+                Close
+            </div>
+        </div>
+    </div>
+
+    <script src="api.js"></script>
+    <script>
+        const params = new URLSearchParams(window.location.search);
+        const couponId = params.get("id");
+        let c = null;
+
+        async function loadCoupon() {
+            if (!getAuthToken()) {
+                const target = couponId ? `buy.html?id=${couponId}` : "buy.html";
+                localStorage.setItem("redirectAfterLogin", target);
+                window.location.href = "login.html";
+                return;
+            }
+
+            if (!couponId) {
+                alert("No coupon selected. Redirecting to Browse.");
+                window.location.href = "browse.html";
+                return;
+            }
+
+            try {
+                const data = await apiRequest(`/coupons/${couponId}`);
+                c = data.coupon;
+
+                document.getElementById("couponName").innerText = c.title;
+                document.getElementById("couponPrice").innerText = "₹" + c.price;
+                document.getElementById("couponSeller").innerText = "Seller: " + (c.seller_name || "Unknown");
+                const ratingText = c.seller_rating ? `${c.seller_rating}★` : "Not rated";
+                const fraudText = (c.seller_fraud_percent ?? 0) + "% fraud";
+                const levelText = "Level " + (c.seller_level || 1);
+                document.getElementById("sellerStats").innerText =
+                    `${ratingText} • ${fraudText} • ${levelText}`;
+                document.getElementById("couponDesc").innerText = c.details || "No description provided.";
+                document.getElementById("couponImg").src = c.image_url || "bg.png";
+
+                document.getElementById("purchaseDetails").innerHTML = `
+                    <p><b>Coupon:</b> ${c.title}</p>
+                    <p><b>Price:</b> ₹${c.price}</p>
+                    <p><b>Seller:</b> ${c.seller_name || "Unknown"}</p>
+                    <p><b>Rating:</b> ${ratingText}</p>
+                    <p><b>Fraud:</b> ${fraudText}</p>
+                    <p><b>Date:</b> ${new Date().toLocaleDateString()}</p>
+                `;
+            } catch (err) {
+                alert(err.message || "Failed to load coupon.");
+                window.location.href = "browse.html";
+            }
+        }
+
+        async function completePurchase() {
+            if (!c) return;
+
+            try {
+                await apiRequest("/purchases", {
+                    method: "POST",
+                    body: JSON.stringify({ couponId: c.id })
+                });
+                window.location.href = "mypurchases.html";
+            } catch (err) {
+                alert(err.message || "Purchase failed.");
+            }
+        }
+
+        function viewCoupon() {
+            if (!c) return;
+            window.location.href = `coupon-details.html?id=${c.id}`;
+        }
+
+        async function contactSeller() {
+            if (!c) return;
+            try {
+                const data = await apiRequest("/requests", {
+                    method: "POST",
+                    body: JSON.stringify({ couponId: c.id })
+                });
+                window.location.href = `waiting.html?id=${data.request.id}`;
+            } catch (err) {
+                alert(err.message || "Unable to send request.");
+            }
+        }
+
+        function downloadInvoice() {
+            window.location.href = "transactions.html";
+        }
+
+        function reportFraud() {
+            if (!c) return;
+            window.location.href = `report.html?id=${c.id}`;
+        }
+
+        loadCoupon();
+
+        function openReview() {
+            document.getElementById("reviewModal").style.display = "flex";
+        }
+
+        function closeReview() {
+            document.getElementById("reviewModal").style.display = "none";
+        }
+
+        let selectedRating = 0;
+
+        function rate(n) {
+            selectedRating = n;
+            document.querySelectorAll(".stars span").forEach((star, index) => {
+                if (index < n) star.classList.add("active");
+                else star.classList.remove("active");
+            });
+            showToast("Thanks for rating!");
+        }
+    </script>
+
+</body>
+
+</html>

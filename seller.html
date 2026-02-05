@@ -1,0 +1,240 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Seller Profile – CoSwap</title>
+
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: Poppins, sans-serif;
+        }
+
+        body {
+            background: radial-gradient(circle at center, #141828, #0b0f1e, #05060a);
+            color: white;
+            padding: 25px;
+        }
+
+        .container {
+            max-width: 700px;
+            margin: auto;
+            background: rgba(255, 255, 255, 0.08);
+            padding: 30px;
+            border-radius: 20px;
+            backdrop-filter: blur(14px);
+            border: 1px solid rgba(255, 255, 255, 0.12);
+        }
+
+        h1 {
+            font-size: 32px;
+            margin-bottom: 15px;
+        }
+
+        .box {
+            padding: 18px;
+            background: rgba(255, 255, 255, 0.10);
+            border-radius: 14px;
+            margin-bottom: 15px;
+        }
+
+        .value {
+            font-size: 20px;
+            font-weight: 600;
+            margin-top: 5px;
+        }
+
+        /* Buttons */
+        .vote-btn {
+            width: 48%;
+            padding: 14px;
+            border-radius: 14px;
+            cursor: pointer;
+            border: none;
+            font-size: 16px;
+            font-weight: 600;
+            margin-top: 8px;
+        }
+
+        .genuine-btn {
+            background: #4fd0ff;
+            color: black;
+        }
+
+        .fraud-btn {
+            background: #ff4e4e;
+            color: white;
+        }
+
+        /* Rating stars */
+        .stars {
+            display: flex;
+            font-size: 28px;
+            margin-top: 10px;
+            cursor: pointer;
+        }
+
+        .star {
+            color: gray;
+            margin-right: 8px;
+        }
+
+        .star.active {
+            color: gold;
+        }
+
+        .rating-text {
+            margin-top: 10px;
+            font-size: 18px;
+            opacity: 0.8;
+        }
+    </style>
+    <link rel="stylesheet" href="theme.css">
+    <script src="ui.js" defer></script></head>
+
+<body>
+
+    <div class="container">
+        <h1>Seller Profile</h1>
+
+        <div class="box">
+            <div>Name</div>
+            <div class="value" id="sellerName">Rahul Kumar</div>
+        </div>
+
+        <div class="box">
+            <div>Seller Level</div>
+            <div class="value" id="sellerLevel">Level 3</div>
+        </div>
+
+        <div class="box">
+            <div>Total Customers</div>
+            <div class="value" id="sellerCustomers">122</div>
+        </div>
+
+        <div class="box">
+            <div>Rating</div>
+            <div class="value" id="ratingDisplay">4.8 ⭐</div>
+        </div>
+
+        <div class="box">
+            <div>Votes</div>
+            <div class="value">
+                Genuine 👍: <span id="genuineCount">0</span><br>
+                Fraud 👎: <span id="fraudCount">0</span>
+            </div>
+        </div>
+
+        <!-- Vote Buttons -->
+        <div style="display:flex; justify-content: space-between;">
+            <button class="vote-btn genuine-btn" onclick="voteGenuine()">He is Genuine 👍</button>
+            <button class="vote-btn fraud-btn" onclick="voteFraud()">He is Fraud 👎</button>
+        </div>
+
+        <!-- Rating Section -->
+        <div class="box">
+            <div>Rate This Seller</div>
+
+            <div class="stars" id="stars">
+                <span class="star" data-val="1">&#9733;</span>
+                <span class="star" data-val="2">&#9733;</span>
+                <span class="star" data-val="3">&#9733;</span>
+                <span class="star" data-val="4">&#9733;</span>
+                <span class="star" data-val="5">&#9733;</span>
+            </div>
+
+            <p class="rating-text">Click stars to rate</p>
+        </div>
+
+    </div>
+
+    <script src="api.js"></script>
+    <script>
+        const params = new URLSearchParams(window.location.search);
+        const sellerId = params.get("id");
+        const stars = document.querySelectorAll(".star");
+
+        async function loadSeller() {
+            if (!sellerId) {
+                alert("Seller not found.");
+                window.location.href = "browse.html";
+                return;
+            }
+
+            try {
+                const data = await apiRequest(`/sellers/${sellerId}`);
+                const s = data.seller;
+
+                document.getElementById("sellerName").innerText = s.name;
+                document.getElementById("sellerLevel").innerText = "Level " + s.level;
+                document.getElementById("sellerCustomers").innerText = s.customers;
+                document.getElementById("genuineCount").innerText = s.genuineVotes;
+                document.getElementById("fraudCount").innerText = s.fraudVotes;
+                document.getElementById("ratingDisplay").innerText = `${s.rating} ⭐ (based on ${s.ratingCount} ratings)`;
+            } catch (err) {
+                alert(err.message || "Failed to load seller.");
+                window.location.href = "browse.html";
+            }
+        }
+
+        function ensureLoggedIn() {
+            if (!getAuthToken()) {
+                localStorage.setItem("redirectAfterLogin", `seller.html?id=${sellerId}`);
+                window.location.href = "login.html";
+                return false;
+            }
+            return true;
+        }
+
+        async function voteGenuine() {
+            if (!ensureLoggedIn()) return;
+            await apiRequest(`/sellers/${sellerId}/vote`, {
+                method: "POST",
+                body: JSON.stringify({ type: "genuine" })
+            });
+            alert("Your feedback has been recorded!");
+            loadSeller();
+        }
+
+        async function voteFraud() {
+            if (!ensureLoggedIn()) return;
+            await apiRequest(`/sellers/${sellerId}/vote`, {
+                method: "POST",
+                body: JSON.stringify({ type: "fraud" })
+            });
+            alert("Your report has been recorded!");
+            loadSeller();
+        }
+
+        function setStarRating(val) {
+            stars.forEach(s => s.classList.remove("active"));
+            for (let i = 0; i < val; i++) {
+                if (stars[i]) stars[i].classList.add("active");
+            }
+        }
+
+        stars.forEach(star => {
+            star.addEventListener("click", async function () {
+                if (!ensureLoggedIn()) return;
+                let val = Number(this.dataset.val);
+                await apiRequest(`/sellers/${sellerId}/rate`, {
+                    method: "POST",
+                    body: JSON.stringify({ rating: val })
+                });
+
+                setStarRating(val);
+                alert("Rating submitted!");
+                loadSeller();
+            });
+        });
+
+        loadSeller();
+    </script>
+
+</body>
+
+</html>

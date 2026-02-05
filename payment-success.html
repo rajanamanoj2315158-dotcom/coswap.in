@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Payment Successful – CoSwap</title>
+
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: Poppins, sans-serif;
+        }
+
+        body {
+            background: radial-gradient(circle at center, #141828, #0b0f1e, #05060a);
+            color: white;
+            height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+        }
+
+        .card {
+            background: rgba(255, 255, 255, 0.10);
+            padding: 40px;
+            border-radius: 20px;
+            backdrop-filter: blur(16px);
+            border: 1px solid rgba(255, 255, 255, 0.15);
+            text-align: center;
+            width: 380px;
+            box-shadow: 0 0 25px rgba(0, 0, 0, 0.4);
+            animation: pop 0.6s ease;
+        }
+
+        @keyframes pop {
+            from {
+                transform: scale(0.8);
+                opacity: 0;
+            }
+
+            to {
+                transform: scale(1);
+                opacity: 1;
+            }
+        }
+
+        .icon {
+            font-size: 60px;
+            margin-bottom: 20px;
+            color: #4eff9c;
+        }
+
+        h1 {
+            font-size: 28px;
+            margin-bottom: 10px;
+            font-weight: 700;
+        }
+
+        p {
+            opacity: 0.85;
+            margin-bottom: 20px;
+            font-size: 15px;
+            line-height: 1.4;
+        }
+
+        .btn {
+            padding: 14px 20px;
+            background: linear-gradient(90deg, #4fd0ff, #6f6cff);
+            color: white;
+            border: none;
+            border-radius: 14px;
+            cursor: pointer;
+            font-size: 16px;
+            width: 100%;
+            font-weight: 600;
+            margin-top: 8px;
+            transition: 0.2s;
+        }
+
+        .btn:hover {
+            opacity: 0.85;
+        }
+    </style>
+
+    <link rel="stylesheet" href="theme.css">
+    <script src="ui.js" defer></script></head>
+
+<body>
+
+    <div class="card">
+
+        <div class="icon">✔</div>
+
+        <h1>Payment Successful</h1>
+
+        <p>Your payment has been recorded successfully.<br>
+            Your account is now unlocked and ready to use.</p>
+
+        <button class="btn" onclick="goWallet()">Go to Wallet</button>
+        <button class="btn" onclick="goDashboard()">Go to Dashboard</button>
+
+    </div>
+
+    <script>
+        function goWallet() {
+            window.location.href = "wallet.html";
+        }
+
+        function goDashboard() {
+            window.location.href = "dashboard.html";
+        }
+    </script>
+
+</body>
+
+</html>

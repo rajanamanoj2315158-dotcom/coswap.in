@@ -1,0 +1,11 @@
+// SEND BUY REQUEST
+function buyCoupon(title, seller) {
+
+    localStorage.setItem("pendingCoupon", title);
+    localStorage.setItem("pendingSeller", seller);
+
+    alert("Request sent to the seller!");
+
+    window.location.href = "waiting.html";
+}
+

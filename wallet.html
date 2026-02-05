@@ -1,0 +1,193 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Your Wallet – CoSwap</title>
+
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: Poppins, sans-serif;
+        }
+
+        body {
+            background: radial-gradient(circle at center, #141828, #0b0f1e, #05060a);
+            color: white;
+            padding: 30px;
+        }
+
+        h1 {
+            font-size: 34px;
+            font-weight: 700;
+            margin-bottom: 20px;
+        }
+
+        .wallet-box {
+            background: rgba(255, 255, 255, 0.09);
+            padding: 25px;
+            border-radius: 18px;
+            backdrop-filter: blur(16px);
+            border: 1px solid rgba(255, 255, 255, 0.15);
+            margin-bottom: 30px;
+        }
+
+        .amount {
+            font-size: 38px;
+            font-weight: 700;
+            color: #4fd0ff;
+            margin-bottom: 8px;
+        }
+
+        .note {
+            font-size: 15px;
+            opacity: 0.8;
+            margin-bottom: 15px;
+        }
+
+        .pay-btn {
+            padding: 14px 20px;
+            border: none;
+            border-radius: 14px;
+            background: linear-gradient(90deg, #4fd0ff, #6f6cff);
+            color: white;
+            font-size: 18px;
+            font-weight: 600;
+            cursor: pointer;
+            margin-top: 10px;
+        }
+
+        .pay-btn:hover {
+            opacity: 0.9;
+        }
+
+        .freeze-warning {
+            background: rgba(255, 0, 0, 0.2);
+            border-left: 4px solid red;
+            padding: 15px;
+            border-radius: 12px;
+            margin-bottom: 20px;
+            font-size: 15px;
+        }
+
+        /* Payment History */
+        .history-title {
+            font-size: 26px;
+            margin-bottom: 15px;
+            font-weight: 600;
+        }
+
+        .history-item {
+            background: rgba(255, 255, 255, 0.08);
+            padding: 18px;
+            border-radius: 14px;
+            margin-bottom: 12px;
+            border: 1px solid rgba(255, 255, 255, 0.12);
+        }
+
+        .history-item p {
+            margin-bottom: 6px;
+            opacity: 0.85;
+        }
+
+        .paid {
+            color: #4eff9c;
+            font-weight: 600;
+        }
+    </style>
+
+    <link rel="stylesheet" href="theme.css">
+    <script src="ui.js" defer></script></head>
+
+<body>
+
+    <h1>Your Wallet</h1>
+
+    <!-- Freeze Warning -->
+    <div id="freezeBox" class="freeze-warning" style="display:none;">
+        ⚠ Your account is frozen! Please clear your pending fees to continue selling coupons.
+    </div>
+
+    <!-- Wallet Balance Section -->
+    <div class="wallet-box">
+        <p class="amount" id="pendingAmount">₹0</p>
+        <p class="note">Pending fee amount</p>
+
+        <button class="pay-btn" onclick="payNow()">Pay Fees</button>
+    </div>
+
+    <!-- Payment History -->
+    <h2 class="history-title">Payment History</h2>
+
+    <div id="historyList"></div>
+
+    <script src="api.js"></script>
+    <script>
+        if (!requireAuth("wallet.html")) {
+            // redirected
+        }
+
+        let pendingFee = 0;
+        let paymentHistory = [];
+
+        async function loadWallet() {
+            try {
+                const data = await apiRequest("/me/wallet");
+                pendingFee = Number(data.wallet.pending_fee || 0);
+                paymentHistory = data.wallet.payments || [];
+
+                document.getElementById("pendingAmount").innerText = "₹" + pendingFee;
+                if (pendingFee > 0) {
+                    document.getElementById("freezeBox").style.display = "block";
+                }
+
+                loadHistory();
+            } catch (err) {
+                alert(err.message || "Failed to load wallet.");
+            }
+        }
+
+        async function payNow() {
+            if (pendingFee <= 0) {
+                alert("No pending fees.");
+                return;
+            }
+
+            try {
+                await apiRequest("/me/wallet/pay", { method: "POST" });
+                alert("Payment recorded successfully!");
+                loadWallet();
+            } catch (err) {
+                alert(err.message || "Failed to record payment.");
+            }
+        }
+
+        function loadHistory() {
+            let list = document.getElementById("historyList");
+            list.innerHTML = "";
+
+            if (paymentHistory.length === 0) {
+                list.innerHTML = "<p>No payments yet.</p>";
+                return;
+            }
+
+            paymentHistory.forEach(h => {
+                list.innerHTML += `
+                    <div class="history-item">
+                        <p>Paid Amount: <b>₹${h.amount}</b></p>
+                        <p>Date: ${new Date(h.created_at).toLocaleString()}</p>
+                        <p class="paid">Status: ${(h.status || "paid").toUpperCase()} ✔</p>
+                    </div>
+                `;
+            });
+        }
+
+        loadWallet();
+    </script>
+
+</body>
+
+</html>

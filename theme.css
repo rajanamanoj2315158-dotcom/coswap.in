@@ -1,0 +1,194 @@
+@import url("https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&display=swap");
+
+:root {
+  --bg-glow: rgba(19, 211, 189, 0.12);
+  --accent: #13d3bd;
+  --accent-2: #2f7bff;
+  --accent-3: #f59e0b;
+  --danger: #ff4e4e;
+  --success: #00c389;
+  --text-soft: rgba(255, 255, 255, 0.82);
+  --card-border: rgba(255, 255, 255, 0.14);
+  --card-bg: rgba(255, 255, 255, 0.08);
+  --shadow-soft: 0 18px 55px rgba(0, 0, 0, 0.35);
+  --focus-ring: 0 0 0 2px rgba(19, 211, 189, 0.55);
+  --radius-lg: 18px;
+  --radius-md: 12px;
+  --transition-fast: 0.2s ease;
+  --transition-slow: 0.45s ease;
+  --surface: rgba(9, 12, 20, 0.75);
+  --surface-2: rgba(255, 255, 255, 0.06);
+}
+
+* {
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  font-family: "Manrope", "Poppins", system-ui, -apple-system, "Segoe UI", sans-serif;
+}
+
+body {
+  letter-spacing: 0.1px;
+}
+
+.soft-bg {
+  background:
+    radial-gradient(1200px 700px at 15% -10%, rgba(79, 208, 255, 0.18), transparent 55%),
+    radial-gradient(900px 600px at 85% 10%, rgba(111, 108, 255, 0.18), transparent 55%),
+    linear-gradient(180deg, #151b2f, #0f1324);
+  background-attachment: fixed;
+}
+
+::selection {
+  background: rgba(79, 208, 255, 0.35);
+}
+
+a {
+  text-decoration: none;
+}
+
+button,
+.btn,
+input,
+select,
+textarea {
+  transition: box-shadow var(--transition-fast), transform var(--transition-fast), background var(--transition-fast),
+    border-color var(--transition-fast), color var(--transition-fast), opacity var(--transition-fast);
+}
+
+input,
+select,
+textarea {
+  border-radius: var(--radius-md);
+  border: 1px solid rgba(255, 255, 255, 0.14);
+  background: rgba(255, 255, 255, 0.1);
+  color: #fff;
+}
+
+input::placeholder,
+textarea::placeholder {
+  color: rgba(255, 255, 255, 0.5);
+}
+
+button,
+.btn {
+  border-radius: var(--radius-md);
+  border: none;
+  font-weight: 600;
+  letter-spacing: 0.2px;
+}
+
+button:hover,
+.btn:hover {
+  transform: translateY(-1px);
+}
+
+button:active,
+.btn:active {
+  transform: translateY(0);
+}
+
+input:focus,
+select:focus,
+textarea:focus,
+button:focus-visible,
+.btn:focus-visible {
+  outline: none;
+  box-shadow: var(--focus-ring);
+}
+
+.card,
+.table-container,
+.wallet-box,
+.history-item,
+.report-card,
+.transaction-card,
+.purchase-card,
+.notif-card,
+.chat-card {
+  border-radius: var(--radius-lg);
+  border: 1px solid var(--card-border);
+  box-shadow: var(--shadow-soft);
+  background: var(--card-bg);
+}
+
+.btn-primary,
+.btn-main,
+.btn-login,
+.pay-btn,
+.save-btn {
+  background: linear-gradient(135deg, var(--accent), var(--accent-2));
+  box-shadow: 0 10px 28px rgba(111, 108, 255, 0.25);
+}
+
+.btn-secondary {
+  background: rgba(255, 255, 255, 0.12);
+}
+
+/* Professional motion */
+.card,
+.purchase-card,
+.transaction-card,
+.notif-card,
+.chat-card {
+  animation: riseIn 0.55s var(--transition-slow);
+}
+
+@keyframes riseIn {
+  0% {
+    opacity: 0;
+    transform: translateY(16px);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  * {
+    animation: none !important;
+    transition: none !important;
+  }
+}
+
+/* Mobile refinements */
+@media (max-width: 640px) {
+  body {
+    padding: 18px !important;
+  }
+  h1, h2 {
+    letter-spacing: -0.2px;
+  }
+  .card,
+  .wallet-box,
+  .table-container {
+    padding: 20px !important;
+  }
+  .theme-toggle {
+    right: 12px;
+    bottom: 12px;
+  }
+}
+
+.toast {
+  position: fixed;
+  left: 50%;
+  bottom: 28px;
+  transform: translateX(-50%) translateY(20px);
+  background: rgba(16, 18, 28, 0.95);
+  color: #fff;
+  padding: 14px 18px;
+  border-radius: var(--radius-md);
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  box-shadow: var(--shadow-soft);
+  opacity: 0;
+  transition: opacity 0.2s ease, transform 0.2s ease;
+  z-index: 9999;
+  min-width: 260px;
+  text-align: center;
+}
+
+.toast.show {
+  opacity: 1;
+  transform: translateX(-50%) translateY(0);
+}

@@ -1,0 +1,398 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>My Listings – CoSwap</title>
+
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: "Poppins", sans-serif;
+        }
+
+        body {
+            background: linear-gradient(135deg, #151b2f, #10162a, #0c101f);
+            color: white;
+            display: flex;
+            min-height: 100vh;
+        }
+
+        /* SIDEBAR */
+        .sidebar {
+            width: 260px;
+            background: rgba(255, 255, 255, 0.07);
+            backdrop-filter: blur(15px);
+            padding: 35px 20px;
+            border-right: 1px solid rgba(255, 255, 255, 0.12);
+            height: 100vh;
+            position: fixed;
+        }
+
+        .logo {
+            font-size: 30px;
+            font-weight: 700;
+            text-align: center;
+            margin-bottom: 35px;
+        }
+
+        .menu-item {
+            padding: 14px 16px;
+            margin-bottom: 12px;
+            border-radius: 12px;
+            cursor: pointer;
+            transition: .2s;
+            font-size: 16px;
+        }
+
+        .menu-item:hover {
+            background: rgba(255, 255, 255, 0.18);
+        }
+
+        .active {
+            background: linear-gradient(90deg, #4fd0ff, #7b5bff);
+            font-weight: 600;
+        }
+
+        /* MAIN */
+        .main {
+            flex: 1;
+            margin-left: 260px;
+            padding: 40px 45px;
+        }
+
+        h1 {
+            font-size: 32px;
+            font-weight: 700;
+            margin-bottom: 12px;
+        }
+
+        .subtitle {
+            opacity: 0.8;
+            margin-bottom: 25px;
+        }
+
+        /* GRID */
+        .grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 25px;
+        }
+
+        .card {
+            background: rgba(255, 255, 255, 0.08);
+            border-radius: 18px;
+            overflow: hidden;
+            backdrop-filter: blur(12px);
+            padding-bottom: 15px;
+            border: 1px solid rgba(255, 255, 255, 0.12);
+            transition: .25s;
+        }
+
+        .card:hover {
+            transform: translateY(-6px);
+            box-shadow: 0 12px 30px rgba(0, 0, 0, 0.4);
+        }
+
+        .card img {
+            width: 100%;
+            height: 160px;
+            object-fit: cover;
+        }
+
+        .card-body {
+            padding: 15px;
+        }
+
+        .title {
+            font-size: 18px;
+            font-weight: 600;
+        }
+
+        .price {
+            margin-top: 6px;
+            color: #4fd0ff;
+            font-size: 17px;
+        }
+
+        .expiry {
+            opacity: 0.8;
+            font-size: 14px;
+            margin-top: 4px;
+        }
+
+        /* STATUS TAGS */
+        .tag {
+            display: inline-block;
+            padding: 6px 12px;
+            border-radius: 12px;
+            font-size: 13px;
+            font-weight: 600;
+            margin-top: 10px;
+        }
+
+        .active-tag {
+            background: rgba(0, 255, 120, 0.2);
+            border: 1px solid #00ff9d;
+            color: #00ff9d;
+        }
+
+        .sold-tag {
+            background: rgba(255, 80, 80, 0.2);
+            border: 1px solid #ff4e4e;
+            color: #ff6b6b;
+        }
+
+        .pending-tag {
+            background: rgba(255, 220, 80, 0.18);
+            border: 1px solid #ffd850;
+            color: #ffd850;
+        }
+
+        /* BUTTON ROW */
+        .btn-row {
+            display: flex;
+            gap: 10px;
+            margin-top: 15px;
+        }
+
+        .btn {
+            flex: 1;
+            padding: 10px;
+            border-radius: 12px;
+            border: none;
+            cursor: pointer;
+            font-size: 14px;
+            font-weight: 600;
+        }
+
+        .edit-btn {
+            background: linear-gradient(90deg, #4fd0ff, #7b5bff);
+            color: white;
+        }
+
+        .delete-btn {
+            background: rgba(255, 60, 60, 0.25);
+            border: 1px solid red;
+            color: white;
+        }
+
+        /* EMPTY STATE */
+        .empty-box {
+            margin-top: 60px;
+            text-align: center;
+        }
+
+        .empty-box img {
+            width: 240px;
+            opacity: 0.8;
+        }
+
+        .empty-box p {
+            font-size: 18px;
+            margin-top: 12px;
+            opacity: 0.85;
+        }
+
+        .sell-btn {
+            margin-top: 15px;
+            padding: 14px 22px;
+            border-radius: 12px;
+            background: linear-gradient(90deg, #4fd0ff, #7b5bff);
+            border: none;
+            color: white;
+            font-size: 17px;
+            cursor: pointer;
+        }
+
+        /* DELETE POPUP */
+        .popup-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.55);
+            backdrop-filter: blur(5px);
+            display: none;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .popup-box {
+            background: rgba(255, 255, 255, 0.08);
+            padding: 25px;
+            width: 330px;
+            border-radius: 16px;
+            border: 1px solid rgba(255, 255, 255, 0.12);
+            text-align: center;
+            animation: popup .25s ease-out;
+        }
+
+        @keyframes popup {
+            from {
+                transform: scale(0.85);
+                opacity: 0;
+            }
+
+            to {
+                transform: scale(1);
+                opacity: 1;
+            }
+        }
+
+        .popup-buttons {
+            margin-top: 20px;
+            display: flex;
+            gap: 12px;
+        }
+
+        .cancel-btn {
+            flex: 1;
+            padding: 12px;
+            border-radius: 12px;
+            background: rgba(255, 255, 255, 0.18);
+            border: none;
+            color: white;
+        }
+
+        .confirm-btn {
+            flex: 1;
+            padding: 12px;
+            border-radius: 12px;
+            background: #ff4e4e;
+            border: none;
+            color: white;
+        }
+    </style>
+    <link rel="stylesheet" href="theme.css">
+    <script src="ui.js" defer></script></head>
+
+<body class="soft-bg">
+
+    <!-- SIDEBAR -->
+    <div class="sidebar">
+        <div class="logo">CoSwap</div>
+        <div class="menu-item" onclick="go('dashboard.html')">Dashboard</div>
+        <div class="menu-item" onclick="go('browse.html')">Browse Coupons</div>
+        <div class="menu-item" onclick="go('sell.html')">Sell a Coupon</div>
+        <div class="menu-item active">My Listings</div>
+        <div class="menu-item" onclick="go('mypurchases.html')">My Purchases</div>
+        <div class="menu-item" onclick="go('sellerprofile.html')">My Profile</div>
+        <div class="menu-item" onclick="go('requests.html')">Requests</div>
+        <div class="menu-item" onclick="go('wallet.html')">Wallet</div>
+    </div>
+
+    <!-- MAIN -->
+    <div class="main">
+
+        <h1>My Coupon Listings</h1>
+        <p class="subtitle">Manage, edit or remove your posted coupons.</p>
+
+        <div id="listingsGrid" class="grid"></div>
+
+        <!-- EMPTY STATE -->
+        <div id="emptyState" class="empty-box" style="display:none;">
+            <img src="empty.png" alt="">
+            <p>No coupons listed yet.</p>
+            <button class="sell-btn" onclick="go('sell.html')">Post Your First Coupon</button>
+        </div>
+
+    </div>
+
+    <!-- DELETE POPUP -->
+    <div id="deletePopup" class="popup-overlay">
+        <div class="popup-box">
+            <h3>Delete Coupon?</h3>
+            <p>This action cannot be undone.</p>
+
+            <div class="popup-buttons">
+                <button class="cancel-btn" onclick="closePopup()">Cancel</button>
+                <button id="confirmDeleteBtn" class="confirm-btn">Delete</button>
+            </div>
+        </div>
+    </div>
+
+    <script src="api.js"></script>
+    <script>
+        if (!requireAuth("mylistings.html")) {
+            // redirected
+        }
+        function go(page) { window.location.href = page; }
+
+        let listings = [];
+
+        async function loadListings() {
+            const grid = document.getElementById("listingsGrid");
+            const empty = document.getElementById("emptyState");
+
+            grid.innerHTML = "";
+
+            try {
+                const data = await apiRequest("/me/listings");
+                listings = data.coupons || [];
+
+                if (listings.length === 0) {
+                    empty.style.display = "block";
+                    return;
+                } else {
+                    empty.style.display = "none";
+                }
+
+                listings.forEach(c => {
+                    grid.innerHTML += `
+                        <div class="card">
+                            <img src="${c.image_url || 'bg.png'}">
+                            <div class="card-body">
+                                <div class="title">${c.title}</div>
+                                <div class="price">₹${c.price}</div>
+                                <div class="expiry">Expires: ${c.expiry || "N/A"}</div>
+                                <span class="tag ${c.status === "sold" ? "sold-tag" : "active-tag"}">${c.status === "sold" ? "Sold" : "Active"}</span>
+
+                                <div class="btn-row">
+                                    <button class="btn edit-btn" onclick="edit('${c.id}')">Edit</button>
+                                    <button class="btn delete-btn" onclick="openPopup('${c.id}')">Delete</button>
+                                </div>
+                            </div>
+                        </div>`;
+                });
+            } catch (err) {
+                grid.innerHTML = `<p>Failed to load listings. ${err.message || ""}</p>`;
+            }
+        }
+
+        function edit(id) {
+            window.location.href = "editcoupon.html?id=" + id;
+        }
+
+        /* DELETE POPUP */
+        let deleteId = null;
+
+        function openPopup(id) {
+            deleteId = id;
+            document.getElementById("deletePopup").style.display = "flex";
+        }
+
+        function closePopup() {
+            document.getElementById("deletePopup").style.display = "none";
+        }
+
+        document.getElementById("confirmDeleteBtn").onclick = async () => {
+            try {
+                await apiRequest(`/coupons/${deleteId}`, { method: "DELETE" });
+                closePopup();
+                loadListings();
+            } catch (err) {
+                alert(err.message || "Failed to delete.");
+            }
+        };
+
+        loadListings();
+    </script>
+
+</body>
+
+</html>

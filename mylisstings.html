@@ -1,0 +1,341 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>My Listings – CoSwap</title>
+
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: "Poppins", sans-serif;
+        }
+
+        body {
+            background: linear-gradient(135deg, #0a0d1a, #10152b, #0b0d19);
+            color: white;
+            display: flex;
+        }
+
+        /* SIDEBAR */
+        .sidebar {
+            width: 260px;
+            height: 100vh;
+            padding: 35px 25px;
+            background: rgba(255, 255, 255, 0.06);
+            border-right: 1px solid rgba(255, 255, 255, 0.12);
+            backdrop-filter: blur(14px);
+        }
+
+        .logo {
+            font-size: 32px;
+            text-align: center;
+            margin-bottom: 35px;
+            font-weight: 700;
+        }
+
+        .menu-item {
+            padding: 14px 16px;
+            margin-bottom: 12px;
+            border-radius: 12px;
+            cursor: pointer;
+            font-size: 17px;
+            opacity: 0.9;
+            transition: 0.25s;
+        }
+
+        .menu-item:hover {
+            background: rgba(255, 255, 255, 0.15);
+            opacity: 1;
+        }
+
+        .active {
+            background: linear-gradient(90deg, #4fd0ff, #7b5bff);
+            font-weight: 600;
+            opacity: 1;
+        }
+
+        /* MAIN AREA */
+        .main {
+            flex: 1;
+            padding: 35px 40px;
+            overflow-y: auto;
+        }
+
+        h1 {
+            font-size: 34px;
+            margin-bottom: 10px;
+            font-weight: 700;
+            text-shadow: 0 0 15px rgba(140, 180, 255, 0.5);
+        }
+
+        .subtitle {
+            opacity: 0.8;
+            margin-bottom: 25px;
+        }
+
+        /* GRID */
+        .grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: 25px;
+        }
+
+        .card {
+            background: rgba(255, 255, 255, 0.085);
+            border-radius: 18px;
+            padding: 18px;
+            border: 1px solid rgba(255, 255, 255, 0.12);
+            backdrop-filter: blur(10px);
+            transition: 0.25s;
+        }
+
+        .card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 25px rgba(79, 208, 255, 0.25);
+        }
+
+        .card img {
+            width: 100%;
+            height: 160px;
+            border-radius: 14px;
+            object-fit: cover;
+        }
+
+        .title {
+            font-size: 18px;
+            margin-top: 10px;
+            font-weight: 600;
+        }
+
+        .price {
+            color: #4fd0ff;
+            font-size: 17px;
+            margin-top: 5px;
+        }
+
+        .small {
+            font-size: 14px;
+            opacity: 0.75;
+            margin-top: 4px;
+        }
+
+        /* BUTTON ROW */
+        .btn-row {
+            display: flex;
+            gap: 10px;
+            margin-top: 15px;
+        }
+
+        .btn {
+            flex: 1;
+            padding: 10px;
+            border-radius: 12px;
+            border: none;
+            cursor: pointer;
+            font-weight: 600;
+            font-size: 14px;
+            color: white;
+            transition: 0.25s;
+        }
+
+        .edit-btn {
+            background: linear-gradient(90deg, #4fd0ff, #7b5bff);
+        }
+
+        .delete-btn {
+            background: rgba(255, 80, 80, 0.25);
+            border: 1px solid red;
+        }
+
+        .btn:hover {
+            transform: translateY(-2px);
+            opacity: 0.85;
+        }
+
+        /* EMPTY STATE */
+        .empty-state {
+            margin-top: 60px;
+            text-align: center;
+            opacity: 0.75;
+            font-size: 18px;
+        }
+
+        /* DELETE POPUP */
+        .popup-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.55);
+            backdrop-filter: blur(6px);
+            display: none;
+            justify-content: center;
+            align-items: center;
+            z-index: 999;
+        }
+
+        .popup-box {
+            width: 340px;
+            background: #171c2f;
+            padding: 25px;
+            border-radius: 18px;
+            text-align: center;
+            border: 1px solid rgba(255, 255, 255, 0.15);
+            animation: popIn 0.25s ease-out;
+        }
+
+        @keyframes popIn {
+            from {
+                transform: scale(0.85);
+                opacity: 0;
+            }
+
+            to {
+                transform: scale(1);
+                opacity: 1;
+            }
+        }
+
+        .popup-buttons {
+            display: flex;
+            gap: 12px;
+            margin-top: 18px;
+        }
+
+        .popup-btn {
+            flex: 1;
+            padding: 12px;
+            border-radius: 10px;
+            border: none;
+            cursor: pointer;
+            font-size: 15px;
+            font-weight: 600;
+        }
+
+        .cancel {
+            background: rgba(255, 255, 255, 0.15);
+            color: white;
+        }
+
+        .confirm {
+            background: #ff4e4e;
+            color: white;
+        }
+    </style>
+    <link rel="stylesheet" href="theme.css">
+    <script src="ui.js" defer></script></head>
+
+<body>
+
+    <!-- SIDEBAR -->
+    <div class="sidebar">
+        <div class="logo">CoSwap</div>
+
+        <div class="menu-item" onclick="go('dashboard.html')">Dashboard</div>
+        <div class="menu-item" onclick="go('browse.html')">Browse Coupons</div>
+        <div class="menu-item" onclick="go('sell.html')">Sell a Coupon</div>
+        <div class="menu-item active">My Listings</div>
+        <div class="menu-item" onclick="go('mypurchases.html')">My Purchases</div>
+        <div class="menu-item" onclick="go('sellerprofile.html')">My Profile</div>
+        <div class="menu-item" onclick="go('requests.html')">Requests</div>
+        <div class="menu-item" onclick="go('wallet.html')">Wallet</div>
+    </div>
+
+    <!-- MAIN -->
+    <div class="main">
+        <h1>My Listings</h1>
+        <p class="subtitle">Edit or remove coupons you have posted.</p>
+
+        <div id="listingsGrid" class="grid"></div>
+
+        <div class="empty-state" id="emptyState" style="display:none;">
+            No coupons listed yet.
+            <br><br>
+            <button class="edit-btn" style="width:200px;" onclick="go('sell.html')">Add New Coupon</button>
+        </div>
+    </div>
+
+    <!-- DELETE POPUP -->
+    <div class="popup-overlay" id="popup">
+        <div class="popup-box">
+            <h3>Delete Coupon?</h3>
+            <p>This cannot be undone. Do you want to delete this coupon?</p>
+
+            <div class="popup-buttons">
+                <button class="popup-btn cancel" onclick="closePopup()">Cancel</button>
+                <button class="popup-btn confirm" id="confirmDelete">Delete</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function go(page) {
+            window.location.href = page;
+        }
+
+        let listings = JSON.parse(localStorage.getItem("myListings") || "[]");
+        let deleteID = null;
+
+        function loadListings() {
+            const grid = document.getElementById("listingsGrid");
+            grid.innerHTML = "";
+
+            if (listings.length === 0) {
+                document.getElementById("emptyState").style.display = "block";
+                return;
+            }
+
+            listings.forEach(c => {
+                grid.innerHTML += `
+                <div class="card">
+                    <img src="${c.image}">
+                    <div class="title">${c.title}</div>
+                    <div class="price">₹${c.price}</div>
+                    <div class="small">Expires: ${c.expiry}</div>
+
+                    <div class="btn-row">
+                        <button class="btn edit-btn" onclick="editCoupon('${c.id}')">Edit</button>
+                        <button class="btn delete-btn" onclick="openPopup('${c.id}')">Delete</button>
+                    </div>
+                </div>
+                `;
+            });
+        }
+
+        function editCoupon(id) {
+            window.location.href = "editcoupon.html?id=" + id;
+        }
+
+        function openPopup(id) {
+            deleteID = id;
+            document.getElementById("popup").style.display = "flex";
+        }
+
+        function closePopup() {
+            deleteID = null;
+            document.getElementById("popup").style.display = "none";
+        }
+
+        document.getElementById("confirmDelete").onclick = function () {
+            listings = listings.filter(c => c.id !== deleteID);
+            localStorage.setItem("myListings", JSON.stringify(listings));
+            closePopup();
+            loadListings();
+        };
+
+        loadListings();
+    </script>
+
+</body>
+
+    <script>
+        window.location.href = "mylistings.html";
+    </script>
+</body>
+
+</html>

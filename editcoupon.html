@@ -1,0 +1,253 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Edit Coupon – CoSwap</title>
+
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: "Poppins", sans-serif;
+        }
+
+        body {
+            background: linear-gradient(135deg, #090b17, #12172b, #0a0d1a);
+            min-height: 100vh;
+            padding: 40px;
+            color: white;
+        }
+
+        h1 {
+            font-size: 34px;
+            font-weight: 700;
+            text-align: center;
+            margin-bottom: 26px;
+            text-shadow: 0 2px 12px rgba(0, 0, 0, 0.45);
+        }
+
+        .container {
+            max-width: 650px;
+            margin: auto;
+            background: rgba(255, 255, 255, 0.08);
+            border-radius: 22px;
+            padding: 32px;
+            border: 1px solid rgba(255, 255, 255, 0.12);
+            backdrop-filter: blur(14px);
+            animation: fadeIn .4s ease-out;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .img-preview {
+            width: 100%;
+            height: 200px;
+            border-radius: 16px;
+            object-fit: cover;
+            margin-bottom: 18px;
+            border: 1px solid rgba(255, 255, 255, 0.18);
+        }
+
+        label {
+            display: block;
+            margin-bottom: 6px;
+            opacity: .9;
+            font-size: 15px;
+        }
+
+        input,
+        textarea,
+        select {
+            width: 100%;
+            padding: 14px;
+            border-radius: 14px;
+            border: none;
+            outline: none;
+            background: rgba(255, 255, 255, 0.14);
+            color: white;
+            font-size: 15px;
+            margin-bottom: 20px;
+            transition: .2s;
+        }
+
+        input:focus,
+        textarea:focus,
+        select:focus {
+            background: rgba(255, 255, 255, 0.20);
+            box-shadow: 0 0 0 2px #4fd0ff;
+        }
+
+        textarea {
+            height: 130px;
+            resize: none;
+        }
+
+        .save-btn {
+            width: 100%;
+            padding: 16px;
+            border: none;
+            border-radius: 14px;
+            background: linear-gradient(90deg, #4fd0ff, #7b5bff);
+            color: white;
+            font-size: 18px;
+            font-weight: 600;
+            cursor: pointer;
+            margin-top: 10px;
+            transition: .2s;
+        }
+
+        .save-btn:hover {
+            transform: translateY(-3px);
+            opacity: 0.9;
+        }
+
+        .back-btn {
+            margin-top: 15px;
+            width: 100%;
+            padding: 14px;
+            background: rgba(255, 255, 255, 0.15);
+            border-radius: 14px;
+            color: white;
+            border: none;
+            cursor: pointer;
+            font-size: 16px;
+        }
+
+        .back-btn:hover {
+            background: rgba(255, 255, 255, 0.25);
+        }
+    </style>
+
+    <link rel="stylesheet" href="theme.css">
+    <script src="ui.js" defer></script></head>
+
+<body>
+
+    <h1>Edit Coupon</h1>
+
+    <div class="container">
+
+        <img id="previewImg" src="bg.png" class="img-preview">
+
+        <label>Coupon Title</label>
+        <input type="text" id="titleInput">
+
+        <label>Offer Details</label>
+        <textarea id="detailsInput"></textarea>
+
+        <label>Price (₹)</label>
+        <input type="number" id="priceInput">
+
+        <label>Expiry Date</label>
+        <input type="date" id="expiryInput">
+
+        <label>Category</label>
+        <select id="categoryInput">
+            <option>Food</option>
+            <option>Shopping</option>
+            <option>Music</option>
+            <option>OTT Subscription</option>
+            <option>Recharge</option>
+            <option>Other</option>
+        </select>
+
+        <label>Replace Image</label>
+        <input type="file" accept="image/*" onchange="loadImage(event)">
+
+        <button class="save-btn" onclick="saveCoupon()">Save Changes</button>
+        <button class="back-btn" onclick="goBack()">Cancel</button>
+
+    </div>
+
+
+    <script src="api.js"></script>
+    <script>
+        if (!requireAuth()) {
+            // redirected
+        }
+        function goBack() { window.location.href = "mylistings.html"; }
+
+        // GET ID FROM URL
+        const params = new URLSearchParams(window.location.search);
+        const couponId = params.get("id");
+
+        let coupon = null;
+
+        async function loadCoupon() {
+            if (!couponId) {
+                alert("No coupon selected.");
+                window.location.href = "mylistings.html";
+                return;
+            }
+
+            try {
+                const data = await apiRequest(`/coupons/${couponId}`);
+                coupon = data.coupon;
+
+                document.getElementById("previewImg").src = coupon.image_url || "bg.png";
+                document.getElementById("titleInput").value = coupon.title || "";
+                document.getElementById("detailsInput").value = coupon.details || "";
+                document.getElementById("priceInput").value = coupon.price || "";
+                document.getElementById("expiryInput").value = coupon.expiry || "";
+                document.getElementById("categoryInput").value = coupon.category || "";
+            } catch (err) {
+                alert(err.message || "Failed to load coupon.");
+                window.location.href = "mylistings.html";
+            }
+        }
+
+        // IMAGE PREVIEW
+        function loadImage(event) {
+            let file = event.target.files[0];
+            if (file) {
+                let url = URL.createObjectURL(file);
+                document.getElementById("previewImg").src = url;
+                coupon.image_url = url;
+            }
+        }
+
+        // SAVE UPDATED DATA
+        async function saveCoupon() {
+            if (!coupon) return;
+
+            const payload = {
+                title: document.getElementById("titleInput").value.trim(),
+                details: document.getElementById("detailsInput").value.trim(),
+                price: document.getElementById("priceInput").value.trim(),
+                expiry: document.getElementById("expiryInput").value.trim(),
+                category: document.getElementById("categoryInput").value.trim(),
+                image_url: coupon.image_url
+            };
+
+            try {
+                await apiRequest(`/coupons/${coupon.id}`, {
+                    method: "PUT",
+                    body: JSON.stringify(payload)
+                });
+
+                alert("Coupon updated successfully!");
+                window.location.href = "mylistings.html";
+            } catch (err) {
+                alert(err.message || "Failed to update coupon.");
+            }
+        }
+
+        loadCoupon();
+    </script>
+
+</body>
+
+</html>

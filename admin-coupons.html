@@ -1,0 +1,209 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Manage Coupons – CoSwap Admin</title>
+
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: Poppins, sans-serif;
+        }
+
+        body {
+            background: radial-gradient(circle at top, #151a2d, #0b0f1f, #05060a);
+            color: white;
+            padding: 30px;
+        }
+
+        h1 {
+            font-size: 34px;
+            font-weight: 700;
+            margin-bottom: 20px;
+        }
+
+        .back-btn {
+            padding: 12px 18px;
+            background: #4e7bff;
+            color: white;
+            border-radius: 10px;
+            text-decoration: none;
+            display: inline-block;
+            margin-bottom: 20px;
+        }
+
+        .table-box {
+            background: rgba(255, 255, 255, 0.08);
+            backdrop-filter: blur(14px);
+            border: 1px solid rgba(255, 255, 255, 0.12);
+            border-radius: 16px;
+            padding: 20px;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        th,
+        td {
+            padding: 14px;
+            text-align: left;
+            font-size: 15px;
+        }
+
+        th {
+            background: rgba(255, 255, 255, 0.12);
+            font-weight: 600;
+        }
+
+        tr:nth-child(even) {
+            background: rgba(255, 255, 255, 0.05);
+        }
+
+        .status {
+            padding: 6px 12px;
+            border-radius: 8px;
+            font-size: 13px;
+            font-weight: 600;
+            display: inline-block;
+        }
+
+        .active {
+            background: rgba(0, 255, 120, 0.2);
+            border: 1px solid #00ff9d;
+        }
+
+        .disabled {
+            background: rgba(255, 0, 0, 0.25);
+            border: 1px solid red;
+        }
+
+        .btn {
+            padding: 8px 14px;
+            border-radius: 10px;
+            border: none;
+            cursor: pointer;
+            font-size: 14px;
+            font-weight: 600;
+            margin-right: 6px;
+        }
+
+        .disable {
+            background: rgba(255, 0, 0, 0.35);
+            border: 1px solid red;
+            color: white;
+        }
+
+        .enable {
+            background: rgba(0, 255, 120, 0.25);
+            border: 1px solid #00ff9d;
+            color: white;
+        }
+
+        .delete {
+            background: rgba(255, 80, 80, 0.25);
+            border: 1px solid red;
+            color: white;
+        }
+    </style>
+    <link rel="stylesheet" href="theme.css">
+    <script src="ui.js" defer></script></head>
+
+<body>
+
+    <a href="admin-dashboard.html" class="back-btn">← Back to Dashboard</a>
+
+    <h1>Manage Coupons</h1>
+
+    <div class="table-box">
+        <table>
+            <tr>
+                <th>Coupon Title</th>
+                <th>Seller</th>
+                <th>Price</th>
+                <th>Expiry</th>
+                <th>Status</th>
+                <th>Actions</th>
+            </tr>
+            <tbody id="couponsBody"></tbody>
+        </table>
+    </div>
+
+    <script src="api.js"></script>
+    <script>
+        if (!requireAdmin("admin-coupons.html")) {
+            // redirected
+        }
+
+        async function loadCoupons() {
+            const body = document.getElementById("couponsBody");
+            body.innerHTML = "";
+
+            try {
+                const data = await apiRequest("/admin/coupons");
+                const coupons = data.coupons || [];
+
+                if (coupons.length === 0) {
+                    body.innerHTML = `<tr><td colspan="6">No coupons found.</td></tr>`;
+                    return;
+                }
+
+                coupons.forEach(c => {
+                    const statusClass = c.status === "active" ? "active" : "disabled";
+                    const statusLabel = c.status === "active" ? "Active" : (c.status === "sold" ? "Sold" : "Disabled");
+                    const expiry = c.expiry ? new Date(c.expiry).toLocaleDateString() : "N/A";
+
+                    let actionButtons = "";
+                    if (c.status === "active") {
+                        actionButtons = `
+                            <button class="btn disable" onclick="setStatus(${c.id}, 'disabled')">Disable</button>
+                            <button class="btn delete" onclick="removeCoupon(${c.id})">Delete</button>
+                        `;
+                    } else {
+                        actionButtons = `
+                            <button class="btn enable" onclick="setStatus(${c.id}, 'active')">Enable</button>
+                            <button class="btn delete" onclick="removeCoupon(${c.id})">Delete</button>
+                        `;
+                    }
+
+                    body.innerHTML += `
+                        <tr>
+                            <td>${c.title}</td>
+                            <td>${c.seller_name}</td>
+                            <td>₹${c.price}</td>
+                            <td>${expiry}</td>
+                            <td><span class="status ${statusClass}">${statusLabel}</span></td>
+                            <td>${actionButtons}</td>
+                        </tr>
+                    `;
+                });
+            } catch (err) {
+                body.innerHTML = `<tr><td colspan="6">Failed to load coupons. ${err.message || ""}</td></tr>`;
+            }
+        }
+
+        async function setStatus(id, status) {
+            await apiRequest(`/admin/coupons/${id}/status`, {
+                method: "POST",
+                body: JSON.stringify({ status })
+            });
+            loadCoupons();
+        }
+
+        async function removeCoupon(id) {
+            if (!confirm("Are you sure you want to delete this coupon?")) return;
+            await apiRequest(`/admin/coupons/${id}`, { method: "DELETE" });
+            loadCoupons();
+        }
+
+        loadCoupons();
+    </script>
+
+</body>
+
+</html>

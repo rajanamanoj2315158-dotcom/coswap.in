@@ -1,0 +1,188 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Buy Request – CoSwap</title>
+
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: Poppins, sans-serif;
+        }
+
+        body {
+            background: radial-gradient(circle at center, #1c2340, #12172b, #0b0f1d);
+            color: white;
+            height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+        }
+
+        .card {
+            width: 420px;
+            background: rgba(255, 255, 255, 0.08);
+            padding: 30px;
+            border-radius: 20px;
+            backdrop-filter: blur(14px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            text-align: center;
+            box-shadow: 0 0 25px rgba(0, 0, 0, 0.4);
+        }
+
+        h2 {
+            font-size: 26px;
+            margin-bottom: 10px;
+        }
+
+        .info {
+            opacity: 0.85;
+            margin-bottom: 20px;
+            line-height: 1.4;
+        }
+
+        #timer {
+            font-size: 20px;
+            margin-bottom: 20px;
+            color: #4fd0ff;
+            font-weight: 600;
+        }
+
+        .btn {
+            width: 100%;
+            padding: 14px;
+            border-radius: 14px;
+            border: none;
+            cursor: pointer;
+            margin-top: 12px;
+            font-size: 18px;
+        }
+
+        .accept {
+            background: linear-gradient(90deg, #4fd0ff, #6f6cff);
+            color: white;
+        }
+
+        .ignore {
+            background: rgba(255, 0, 0, 0.25);
+            border: 1px solid red;
+            color: white;
+        }
+    </style>
+
+    <link rel="stylesheet" href="theme.css">
+    <script src="ui.js" defer></script></head>
+
+<body class="soft-bg">
+
+    <div class="card">
+        <h2>Buy Request</h2>
+        <p class="info" id="requestInfo">Loading request...</p>
+
+        <p id="timer">--:--</p>
+        <p id="emptyHint" style="opacity:0.7; margin-top:8px; display:none;">
+            You can relax — we’ll notify you when a buyer sends a request.
+        </p>
+
+        <button class="btn accept" onclick="acceptRequest()">Accept Request</button>
+        <button class="btn ignore" onclick="ignoreRequest()">Ignore</button>
+    </div>
+
+    <script src="api.js"></script>
+    <script>
+        if (!requireAuth("requests.html")) {
+            // redirected
+        }
+
+        let activeRequest = null;
+        let countdown = null;
+
+        async function loadRequest() {
+            try {
+                const data = await apiRequest("/me/requests");
+                const pending = (data.asSeller || []).find(r => r.status === "pending");
+
+                if (!pending) {
+                    document.getElementById("requestInfo").innerText = "No pending requests.";
+                    document.getElementById("timer").innerText = "--:--";
+                    document.getElementById("emptyHint").style.display = "block";
+                    document.querySelector(".accept").style.display = "none";
+                    document.querySelector(".ignore").style.display = "none";
+                    return;
+                }
+
+                activeRequest = pending;
+                document.getElementById("emptyHint").style.display = "none";
+                document.querySelector(".accept").style.display = "block";
+                document.querySelector(".ignore").style.display = "block";
+                document.getElementById("requestInfo").innerText =
+                    `${pending.buyer_name} wants to buy your coupon: ${pending.coupon_title}.`;
+
+                startTimer(pending.expires_at);
+            } catch (err) {
+                document.getElementById("requestInfo").innerText =
+                    `Failed to load request. ${err.message || ""}`;
+                document.querySelector(".accept").style.display = "none";
+                document.querySelector(".ignore").style.display = "none";
+            }
+        }
+
+        function startTimer(expiresAt) {
+            if (countdown) clearInterval(countdown);
+
+            function tick() {
+                const diff = new Date(expiresAt) - new Date();
+                if (diff <= 0) {
+                    clearInterval(countdown);
+                    document.getElementById("timer").innerText = "00:00";
+                    alert("Request expired!");
+                    window.location.href = "dashboard.html";
+                    return;
+                }
+
+                const totalSeconds = Math.floor(diff / 1000);
+                const m = Math.floor(totalSeconds / 60);
+                const s = totalSeconds % 60;
+                document.getElementById("timer").innerText =
+                    `${m.toString().padStart(2, '0')}:${s.toString().padStart(2, '0')}`;
+            }
+
+            tick();
+            countdown = setInterval(tick, 1000);
+        }
+
+        async function acceptRequest() {
+            if (!activeRequest) return;
+            try {
+                const data = await apiRequest(`/requests/${activeRequest.id}/accept`, {
+                    method: "POST"
+                });
+                alert("Request accepted! Opening chat...");
+                window.location.href = `chat.html?id=${data.chat.id}`;
+            } catch (err) {
+                alert(err.message || "Failed to accept request.");
+            }
+        }
+
+        async function ignoreRequest() {
+            if (!activeRequest) return;
+            try {
+                await apiRequest(`/requests/${activeRequest.id}/ignore`, { method: "POST" });
+                alert("You ignored the request.");
+                window.location.href = "dashboard.html";
+            } catch (err) {
+                alert(err.message || "Failed to ignore request.");
+            }
+        }
+
+        loadRequest();
+    </script>
+
+</body>
+
+</html>
