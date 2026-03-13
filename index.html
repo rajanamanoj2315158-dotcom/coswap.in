@@ -3,57 +3,11 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
-    <!-- Primary SEO -->
     <title>CoSwap — Buy &amp; Sell Unused Coupons &amp; Vouchers in India</title>
     <meta name="description" content="CoSwap is India's trusted marketplace to buy and sell unused discount coupons, gift cards, and vouchers. Get great deals on OTT, food, fashion, travel and more.">
-    <meta name="keywords" content="coupon marketplace, sell coupons India, buy vouchers, discount coupons, gift cards, OTT coupons, food vouchers, coswap">
     <meta name="robots" content="index, follow">
     <link rel="canonical" href="https://coswap.in/">
-
-    <!-- Open Graph -->
-    <meta property="og:type" content="website">
-    <meta property="og:site_name" content="CoSwap">
-    <meta property="og:title" content="CoSwap — Buy &amp; Sell Unused Coupons in India">
-    <meta property="og:description" content="Convert unwanted vouchers into cash. Discover great deals and sell faster on CoSwap — India's coupon marketplace.">
-    <meta property="og:url" content="https://coswap.in/">
-    <meta property="og:image" content="https://coswap.in/logo.png">
-    <meta property="og:locale" content="en_IN">
-
-    <!-- Twitter Card -->
-    <meta name="twitter:card" content="summary_large_image">
-    <meta name="twitter:title" content="CoSwap — Buy &amp; Sell Unused Coupons">
-    <meta name="twitter:description" content="India's marketplace for unused discount coupons and vouchers.">
-    <meta name="twitter:image" content="https://coswap.in/logo.png">
-
-    <!-- JSON-LD Structured Data -->
-    <script type="application/ld+json">
-    {
-      "@context": "https://schema.org",
-      "@type": "WebSite",
-      "name": "CoSwap",
-      "url": "https://coswap.in",
-      "description": "India's marketplace to buy and sell unused discount coupons and vouchers.",
-      "potentialAction": {
-        "@type": "SearchAction",
-        "target": "https://coswap.in/browse.html?search={search_term_string}",
-        "query-input": "required name=search_term_string"
-      }
-    }
-    </script>
-
-    <!-- Google Search Console Verification -->
-    <!-- <meta name="google-site-verification" content="REPLACE_WITH_YOUR_GSC_CODE"> -->
-
-    <!-- Google Analytics 4 -->
-    <!-- <script async src="https://www.googletagmanager.com/gtag/js?id=G-XXXXXXXXXX"></script>
-    <script>
-      window.dataLayer = window.dataLayer || [];
-      function gtag(){dataLayer.push(arguments);}
-      gtag('js', new Date());
-      gtag('config', 'G-XXXXXXXXXX');
-    </script> -->
-
+    
     <link rel="stylesheet" href="theme.css">
     <script src="ui.js" defer></script>
     <style>
@@ -64,383 +18,628 @@
         }
 
         body {
-            background: #000;
+            background: #000; /* Original background preserved */
             color: white;
             overflow-x: hidden;
+            font-family: "Inter", system-ui, -apple-system, sans-serif;
+            -webkit-font-smoothing: antialiased;
         }
 
-        .hero {
-            background:
-                linear-gradient(90deg, rgba(2, 7, 19, 0.7), rgba(2, 7, 19, 0.35)),
-                url("bg.png") center/cover no-repeat;
-            min-height: 100vh;
-            position: relative;
-        }
-
-        .hero::after {
-            background:
-                radial-gradient(circle at 18% 20%, rgba(79, 208, 255, 0.14), transparent 24%),
-                radial-gradient(circle at 82% 16%, rgba(111, 108, 255, 0.14), transparent 24%);
-            content: "";
+        .bg-layer {
+            position: fixed;
             inset: 0;
+            background: linear-gradient(180deg, #151b2f 0%, #0b0f1d 100%);
+            z-index: -2;
             pointer-events: none;
-            position: absolute;
         }
 
-        .ambient {
+        /* Ambient Glowing Backgrounds */
+        .ambient-orbs {
+            position: fixed;
             inset: 0;
+            z-index: -1;
+            pointer-events: none;
             overflow: hidden;
-            pointer-events: none;
+        }
+
+        .orb {
             position: absolute;
+            border-radius: 50%;
+            filter: blur(80px);
+            opacity: 0.6;
         }
 
-        .droplet {
-            animation: drift 18s ease-in-out infinite;
-            background:
-                radial-gradient(circle at 28% 24%, rgba(255, 255, 255, 0.5), transparent 18%),
-                linear-gradient(180deg, rgba(255, 255, 255, 0.15), rgba(79, 208, 255, 0.08));
-            border: 1px solid rgba(255, 255, 255, 0.12);
-            border-radius: 60% 40% 58% 42% / 42% 58% 42% 58%;
-            box-shadow: inset 0 16px 18px rgba(255, 255, 255, 0.06), 0 18px 40px rgba(0, 0, 0, 0.2);
-            opacity: 0.42;
-            position: absolute;
+        .orb-1 {
+            width: 600px;
+            height: 600px;
+            background: radial-gradient(circle, rgba(79, 208, 255, 0.15), transparent 70%);
+            top: -150px;
+            left: -100px;
+            animation: orbFloat 24s ease-in-out infinite;
         }
 
-        .droplet.one {
-            height: 132px;
-            left: 5%;
-            top: 12%;
-            width: 108px;
+        .orb-2 {
+            width: 500px;
+            height: 500px;
+            background: radial-gradient(circle, rgba(111, 108, 255, 0.12), transparent 70%);
+            bottom: -100px;
+            right: -100px;
+            animation: orbFloat 30s ease-in-out infinite reverse;
+            animation-delay: -5s;
         }
 
-        .droplet.two {
-            animation-duration: 22s;
-            bottom: 10%;
-            height: 78px;
-            right: 18%;
-            width: 64px;
+        @keyframes orbFloat {
+            0%, 100% { transform: translate(0, 0) scale(1); }
+            33% { transform: translate(30px, -40px) scale(1.05); }
+            66% { transform: translate(-20px, 20px) scale(0.95); }
         }
 
-        .shell {
+        /* Navigation */
+        .nav-wrapper {
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            background: rgba(11, 15, 29, 0.75);
+            backdrop-filter: blur(20px);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+            transition: all 0.3s ease;
+        }
+
+        .nav-container {
+            max-width: 1360px;
             margin: 0 auto;
-            max-width: 1240px;
-            min-height: 100vh;
-            padding: 28px 32px;
-            position: relative;
-            z-index: 1;
-        }
-
-        .nav {
-            align-items: center;
+            padding: 16px 32px;
             display: flex;
+            align-items: center;
             justify-content: space-between;
         }
 
-        .brand {
-            align-items: center;
+        .nav-left {
             display: flex;
-            gap: 14px;
+            align-items: center;
+            gap: 12px;
+            text-decoration: none;
         }
 
-        .brand img {
-            width: 64px;
+        .nav-left img {
+            width: 36px;
+            height: 36px;
         }
 
-        .brand span {
-            color: #45c9ff;
-            font-size: 30px;
+        .nav-left span {
+            color: #fff;
+            font-size: 22px;
             font-weight: 800;
-            letter-spacing: -0.03em;
+            letter-spacing: -0.02em;
         }
 
-        .nav-links {
-            align-items: center;
+        .nav-center {
             display: flex;
-            gap: 14px;
-        }
-
-        .nav-links a {
-            color: rgba(255, 255, 255, 0.86);
-            font-size: 17px;
-            font-weight: 600;
-            padding: 12px 14px;
-        }
-
-        .nav-links a.primary {
-            background: rgba(95, 126, 255, 0.92);
-            border-radius: 14px;
-            color: white;
-            padding: 14px 22px;
-        }
-
-        .content {
             align-items: center;
-            display: grid;
-            gap: 28px;
-            grid-template-columns: minmax(0, 1fr) minmax(280px, 380px);
-            min-height: calc(100vh - 100px);
+            gap: 32px;
         }
 
-        .copy {
-            max-width: 620px;
+        .nav-center a {
+            color: rgba(255, 255, 255, 0.65);
+            font-size: 15px;
+            font-weight: 500;
+            text-decoration: none;
+            transition: color 0.2s;
         }
 
-        .copy h1 {
-            font-size: clamp(54px, 9vw, 84px);
-            font-weight: 800;
-            letter-spacing: -0.07em;
-            line-height: 0.92;
+        .nav-center a:hover {
+            color: #fff;
         }
 
-        .copy p {
-            color: rgba(255, 255, 255, 0.78);
-            font-size: 20px;
-            line-height: 1.65;
-            margin-top: 24px;
-            max-width: 28ch;
-        }
-
-        .cta-row {
+        .nav-right {
             display: flex;
+            align-items: center;
             gap: 16px;
-            margin-top: 34px;
         }
 
-        .cta {
-            border-radius: 18px;
-            display: inline-flex;
-            font-size: 18px;
-            font-weight: 700;
-            justify-content: center;
-            padding: 18px 28px;
-        }
-
-        .cta.primary {
-            background: linear-gradient(90deg, #4fd0ff, #6f6cff);
-            color: white;
-        }
-
-        .cta.secondary {
-            background: rgba(255, 255, 255, 0.04);
-            border: 2px solid rgba(255, 255, 255, 0.85);
-            color: white;
-        }
-
-        .side-panel {
-            backdrop-filter: blur(16px);
-            background: rgba(255, 255, 255, 0.06);
+        .profile-btn {
+            background: rgba(255, 255, 255, 0.08);
             border: 1px solid rgba(255, 255, 255, 0.12);
-            border-radius: 28px;
-            box-shadow: 0 26px 54px rgba(0, 0, 0, 0.22);
-            padding: 24px;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: background 0.2s, transform 0.2s;
         }
 
-        .side-panel h2 {
-            font-size: 28px;
+        .profile-btn:hover {
+            background: rgba(255, 255, 255, 0.15);
+            transform: scale(1.05);
+        }
+
+        .profile-btn svg {
+            width: 20px;
+            height: 20px;
+            fill: rgba(255, 255, 255, 0.8);
+        }
+
+        /* Hero Section */
+        .hero {
+            padding: 120px 24px 80px;
+            text-align: center;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .hero h1 {
+            font-size: clamp(48px, 6vw, 76px);
+            font-weight: 800;
             letter-spacing: -0.04em;
             line-height: 1.1;
+            margin-bottom: 24px;
+            max-width: 800px;
+            background: linear-gradient(180deg, #ffffff 0%, rgba(255, 255, 255, 0.7) 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
         }
 
-        .side-panel p {
-            color: rgba(255, 255, 255, 0.72);
-            line-height: 1.75;
-            margin-top: 12px;
-        }
-
-        .quick-list {
-            display: grid;
-            gap: 12px;
-            margin-top: 18px;
-        }
-
-        .quick-item {
-            background: rgba(255, 255, 255, 0.06);
-            border: 1px solid rgba(255, 255, 255, 0.08);
-            border-radius: 16px;
-            padding: 14px 16px;
-        }
-
-        .quick-item strong {
-            display: block;
-            font-size: 15px;
-            margin-bottom: 6px;
-        }
-
-        .quick-item span {
-            color: rgba(255, 255, 255, 0.7);
+        .hero p {
+            color: rgba(255, 255, 255, 0.6);
+            font-size: 20px;
+            font-weight: 400;
+            max-width: 600px;
+            margin-bottom: 48px;
             line-height: 1.6;
         }
 
-        @keyframes drift {
-            0%,
-            100% {
-                transform: translate3d(0, 0, 0);
-            }
+        /* Search Bar */
+        .search-container {
+            width: 100%;
+            max-width: 700px;
+            position: relative;
+        }
 
-            50% {
-                transform: translate3d(16px, -18px, 0);
+        .search-input {
+            width: 100%;
+            background: rgba(255, 255, 255, 0.04);
+            border: 1px solid rgba(255, 255, 255, 0.12);
+            border-radius: 20px;
+            padding: 24px 32px 24px 64px;
+            font-size: 20px;
+            color: white;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
+            transition: all 0.3s ease;
+            backdrop-filter: blur(12px);
+        }
+
+        .search-input:focus {
+            outline: none;
+            background: rgba(255, 255, 255, 0.08);
+            border-color: rgba(79, 208, 255, 0.4);
+            box-shadow: 0 24px 48px rgba(0, 0, 0, 0.4), 0 0 0 4px rgba(79, 208, 255, 0.1);
+        }
+
+        .search-input::placeholder {
+            color: rgba(255, 255, 255, 0.3);
+        }
+
+        .search-icon {
+            position: absolute;
+            left: 24px;
+            top: 50%;
+            transform: translateY(-50%);
+            width: 24px;
+            height: 24px;
+            opacity: 0.5;
+            pointer-events: none;
+        }
+
+        .search-button {
+            position: absolute;
+            right: 12px;
+            top: 50%;
+            transform: translateY(-50%);
+            background: white;
+            color: #111;
+            border: none;
+            padding: 12px 24px;
+            border-radius: 12px;
+            font-weight: 600;
+            font-size: 16px;
+            cursor: pointer;
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+
+        .search-button:hover {
+            transform: translateY(-50%) scale(1.02);
+            box-shadow: 0 8px 20px rgba(255, 255, 255, 0.2);
+        }
+
+        /* Product Area (Below Hero) */
+        .products-section {
+            max-width: 1280px;
+            margin: 0 auto;
+            padding: 60px 32px 100px;
+        }
+
+        .section-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 32px;
+            padding-bottom: 16px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+        }
+
+        .section-header h2 {
+            font-size: 24px;
+            font-weight: 600;
+            letter-spacing: -0.02em;
+        }
+
+        .section-header a {
+            color: #4fd0ff;
+            font-size: 15px;
+            font-weight: 500;
+            text-decoration: none;
+        }
+
+        .grid-layout {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 24px;
+            margin-bottom: 64px;
+        }
+
+        /* Card Styles */
+        .product-card {
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            border-radius: 20px;
+            padding: 24px;
+            display: flex;
+            flex-direction: column;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            backdrop-filter: blur(10px);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .product-card::before {
+            content: '';
+            position: absolute;
+            top: 0; left: 0; right: 0;
+            height: 1px;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent);
+            opacity: 0;
+            transition: opacity 0.3s;
+        }
+
+        .product-card:hover {
+            transform: translateY(-4px);
+            background: rgba(255, 255, 255, 0.05);
+            border-color: rgba(255, 255, 255, 0.15);
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.4);
+        }
+
+        .product-card:hover::before {
+            opacity: 1;
+        }
+
+        .card-category {
+            font-size: 12px;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+            color: #8fe5ff;
+            margin-bottom: 12px;
+        }
+
+        .card-title {
+            font-size: 20px;
+            font-weight: 600;
+            margin-bottom: 8px;
+            line-height: 1.3;
+        }
+
+        .card-desc {
+            color: rgba(255, 255, 255, 0.5);
+            font-size: 14px;
+            line-height: 1.6;
+            margin-bottom: 24px;
+            display: -webkit-box;
+            -webkit-line-clamp: 2;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+        }
+
+        .card-footer {
+            margin-top: auto;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .card-price {
+            font-size: 24px;
+            font-weight: 700;
+            color: white;
+        }
+
+        .card-btn {
+            background: rgba(255, 255, 255, 0.1);
+            color: white;
+            border: none;
+            padding: 10px 16px;
+            border-radius: 10px;
+            font-size: 14px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: background 0.2s;
+        }
+
+        .product-card:hover .card-btn {
+            background: white;
+            color: black;
+        }
+
+        /* Footer */
+        .site-footer {
+            border-top: 1px solid rgba(255, 255, 255, 0.08);
+            padding: 40px 32px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            max-width: 1360px;
+            margin: 0 auto;
+        }
+
+        .site-footer p {
+            color: rgba(255, 255, 255, 0.4);
+            font-size: 14px;
+        }
+
+        .footer-links {
+            display: flex;
+            gap: 24px;
+        }
+
+        .footer-links a {
+            color: rgba(255, 255, 255, 0.5);
+            font-size: 14px;
+            text-decoration: none;
+            transition: color 0.2s;
+        }
+
+        .footer-links a:hover {
+            color: white;
+        }
+
+        /* Mobile specific adjustments */
+        .mobile-menu-btn {
+            display: none;
+            background: transparent;
+            border: none;
+            color: white;
+            cursor: pointer;
+        }
+
+        .mobile-menu-btn svg {
+            width: 24px;
+            height: 24px;
+            fill: none;
+            stroke: currentColor;
+            stroke-width: 2;
+        }
+
+        @media (max-width: 1024px) {
+            .hero h1 {
+                font-size: 48px;
             }
         }
 
-        @media (max-width: 1080px) {
-            .content {
+        @media (max-width: 768px) {
+            .nav-center {
+                display: none; /* Hide on mobile, use hamburger or bottom nav */
+            }
+
+            .mobile-menu-btn {
+                display: block;
+            }
+
+            .hero {
+                padding: 80px 20px 60px;
+            }
+
+            .hero h1 {
+                font-size: 36px;
+            }
+
+            .hero p {
+                font-size: 16px;
+                margin-bottom: 32px;
+            }
+
+            .search-input {
+                padding: 18px 20px 18px 48px;
+                font-size: 16px;
+            }
+            
+            .search-icon {
+                left: 16px;
+                width: 20px;
+                height: 20px;
+            }
+
+            .search-button {
+                display: none; /* Hide button on mobile, let enter key work */
+            }
+
+            .grid-layout {
                 grid-template-columns: 1fr;
             }
-        }
 
-        @media (max-width: 760px) {
-            .shell {
-                padding: 18px;
-            }
-
-            .content {
-                min-height: auto;
-                padding: 40px 0 24px;
-            }
-
-            .nav,
-            .nav-links,
-            .cta-row {
-                align-items: stretch;
+            .site-footer {
                 flex-direction: column;
-            }
-
-            .brand span {
-                font-size: 28px;
-            }
-
-            .copy p {
-                max-width: none;
-            }
-
-            .copy h1 {
-                font-size: clamp(46px, 16vw, 70px);
-            }
-
-            .cta {
-                width: 100%;
-            }
-
-            .side-panel {
-                width: 100%;
-            }
-        }
-
-        @media (min-width: 1280px) {
-            .shell {
-                padding: 36px 48px;
-            }
-
-            .nav-links a {
-                font-size: 16px;
-                padding: 12px 18px;
-            }
-
-            .nav-links a.primary {
-                padding: 14px 26px;
-            }
-
-            .content {
-                gap: 48px;
-            }
-
-            .cta {
-                padding: 20px 34px;
-            }
-
-            .side-panel {
-                padding: 30px;
-            }
-        }
-
-        @media (min-width: 1440px) {
-            .shell {
-                max-width: 1360px;
-                padding: 44px 64px;
-            }
-
-            .copy h1 {
-                font-size: clamp(64px, 6vw, 88px);
-            }
-
-            .copy p {
-                font-size: 21px;
-            }
-        }
-
-        @media (min-width: 1920px) {
-            .shell {
-                max-width: 1480px;
-                padding: 52px 80px;
+                gap: 16px;
+                text-align: center;
             }
         }
     </style>
 </head>
 <body>
-    <section class="hero">
-        <div class="ambient" aria-hidden="true">
-            <span class="droplet one"></span>
-            <span class="droplet two"></span>
-        </div>
+    <div class="bg-layer"></div>
+    <div class="ambient-orbs">
+        <div class="orb orb-1"></div>
+        <div class="orb orb-2"></div>
+    </div>
 
-        <div class="shell">
-            <nav class="nav">
-                <div class="brand">
-                    <img src="logo.png" alt="CoSwap logo" loading="lazy" width="64" height="64">
-                    <span>CoSwap</span>
+    <nav class="nav-wrapper">
+        <div class="nav-container">
+            <a href="index.html" class="nav-left">
+                <img src="logo.png" alt="CoSwap" />
+                <span>CoSwap</span>
+            </a>
+
+            <div class="nav-center">
+                <a href="dashboard.html">Dashboard</a>
+                <a href="browse.html">Browse Coupons</a>
+                <a href="sell.html">Sell Coupon</a>
+                <a href="mylistings.html">My Listings</a>
+            </div>
+
+            <div class="nav-right">
+                <button class="mobile-menu-btn" onclick="window.location.href='dashboard.html'">
+                    <svg viewBox="0 0 24 24"><path d="M3 12h18M3 6h18M3 18h18"/></svg>
+                </button>
+                <div class="profile-btn" onclick="goToProfile()" title="Login / Profile">
+                    <svg viewBox="0 0 24 24"><path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/></svg>
                 </div>
-
-                <div class="nav-links">
-                    <a href="how-it-works.html">How It Works</a>
-                    <a href="about.html">About Us</a>
-                    <a href="login.html" class="primary">Sign In</a>
-                </div>
-            </nav>
-
-            <div class="content">
-                <div class="copy">
-                    <h1>Swap Unused Coupons for Cash</h1>
-                    <p>
-                        Convert unwanted vouchers into spendable money. Discover great deals and sell faster in one
-                        place.
-                    </p>
-
-                    <div class="cta-row">
-                        <a href="browse.html" class="cta primary">Browse Coupons</a>
-                        <a href="login.html?redirect=sell" class="cta secondary">Sell a Coupon</a>
-                    </div>
-                </div>
-
-                <aside class="side-panel">
-                    <h2>Simple coupon buying and selling.</h2>
-                    <p>
-                        Browse listings, connect with sellers, and complete deals through the same CoSwap flow without
-                        changing the current background style.
-                    </p>
-
-                    <div class="quick-list">
-                        <div class="quick-item">
-                            <strong>Browse listings</strong>
-                            <span>Find active coupons quickly across the marketplace.</span>
-                        </div>
-                        <div class="quick-item">
-                            <strong>Sell with less friction</strong>
-                            <span>List unused coupons and move them faster.</span>
-                        </div>
-                        <div class="quick-item">
-                            <strong>Stay connected</strong>
-                            <span>Keep deal conversations inside the platform.</span>
-                        </div>
-                    </div>
-                </aside>
             </div>
         </div>
-    </section>
+    </nav>
+
+    <main>
+        <header class="hero">
+            <h1>Unlock the Value of Your Unused Deals</h1>
+            <p>The premium marketplace for buying and selling verifiable discount coupons, gift cards, and vouchers.</p>
+            
+            <form class="search-container" action="browse.html" method="get">
+                <svg class="search-icon" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg>
+                <input type="text" name="search" class="search-input" placeholder="Search brands, e.g. Zomato, Myntra, Amazon..." required>
+                <button type="submit" class="search-button">Search</button>
+            </form>
+        </header>
+
+        <section class="products-section">
+            <div class="section-header">
+                <h2>Trending Deals</h2>
+                <a href="browse.html">View all &rarr;</a>
+            </div>
+            
+            <div class="grid-layout">
+                <!-- Card 1 -->
+                <div class="product-card" onclick="window.location.href='browse.html';">
+                    <div class="card-category">Food & Dining</div>
+                    <h3 class="card-title">Zomato Pro 3 Months</h3>
+                    <p class="card-desc">Valid across all restaurants. Unused voucher code from credit card rewards.</p>
+                    <div class="card-footer">
+                        <span class="card-price">₹149</span>
+                        <button class="card-btn">Buy Now</button>
+                    </div>
+                </div>
+
+                <!-- Card 2 -->
+                <div class="product-card" onclick="window.location.href='browse.html';">
+                    <div class="card-category">Shopping</div>
+                    <h3 class="card-title">Myntra 20% Off Code</h3>
+                    <p class="card-desc">Valid on total cart value above ₹1999. No max discount limit.</p>
+                    <div class="card-footer">
+                        <span class="card-price">₹49</span>
+                        <button class="card-btn">Buy Now</button>
+                    </div>
+                </div>
+
+                <!-- Card 3 -->
+                <div class="product-card" onclick="window.location.href='browse.html';">
+                    <div class="card-category">Entertainment</div>
+                    <h3 class="card-title">BookMyShow ₹500 Gift Card</h3>
+                    <p class="card-desc">Valid for all movie and event bookings. Expires in 6 months.</p>
+                    <div class="card-footer">
+                        <span class="card-price">₹350</span>
+                        <button class="card-btn">Buy Now</button>
+                    </div>
+                </div>
+            </div>
+
+            <div class="section-header">
+                <h2>Latest Listings</h2>
+                <a href="browse.html">Explore directory &rarr;</a>
+            </div>
+
+            <div class="grid-layout">
+                <!-- Card 4 -->
+                <div class="product-card" onclick="window.location.href='browse.html';">
+                    <div class="card-category">Travel</div>
+                    <h3 class="card-title">MakeMyTrip ₹1000 Off</h3>
+                    <p class="card-desc">Flat ₹1000 off on domestic flight bookings. Valid till this weekend.</p>
+                    <div class="card-footer">
+                        <span class="card-price">₹300</span>
+                        <button class="card-btn">Buy Now</button>
+                    </div>
+                </div>
+
+                <!-- Card 5 -->
+                <div class="product-card" onclick="window.location.href='browse.html';">
+                    <div class="card-category">Tech</div>
+                    <h3 class="card-title">Amazon Prime 1 Year</h3>
+                    <p class="card-desc">Activation code for 1 year of Amazon Prime membership.</p>
+                    <div class="card-footer">
+                        <span class="card-price">₹899</span>
+                        <button class="card-btn">Buy Now</button>
+                    </div>
+                </div>
+
+                <!-- Card 6 -->
+                <div class="product-card" onclick="window.location.href='browse.html';">
+                    <div class="card-category">Lifestyle</div>
+                    <h3 class="card-title">Cult.fit 1 Month Access</h3>
+                    <p class="card-desc">Full gym access for one month. Unused wellness reward.</p>
+                    <div class="card-footer">
+                        <span class="card-price">₹499</span>
+                        <button class="card-btn">Buy Now</button>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <footer class="site-footer">
+        <p>&copy; 2026 CoSwap Marketplace.</p>
+        <div class="footer-links">
+            <a href="terms.html">Terms</a>
+            <a href="about.html">About</a>
+            <a href="#" onclick="logout(); return false;">Logout</a>
+        </div>
+    </footer>
 
     <script src="api.js"></script>
     <script>
-        if (typeof getAuthToken === "function" && getAuthToken()) {
-            window.location.replace("dashboard.html");
+        function goToProfile() {
+            if (typeof getAuthToken === "function" && getAuthToken()) {
+                window.location.href = "dashboard.html";
+            } else {
+                window.location.href = "login.html";
+            }
+        }
+
+        function logout() {
+            if (typeof clearAuth === "function") {
+                clearAuth();
+            } else {
+                localStorage.removeItem("token");
+                localStorage.removeItem("user");
+            }
+            window.location.href = "login.html";
         }
     </script>
 </body>
