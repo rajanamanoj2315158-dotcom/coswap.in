@@ -54,7 +54,17 @@ app.use(express.json({ limit: "5mb" }));
 app.use(morgan(process.env.NODE_ENV === "production" ? "combined" : "dev"));
 
 // Serve frontend static files with caching
-app.use(express.static(path.join(__dirname, "../../"), {
+const staticPath = path.join(__dirname, "../../");
+app.get("/__debug_files", (req, res) => {
+  const fs = require("fs");
+  try {
+    const files = fs.readdirSync(staticPath);
+    res.json({ staticPath, files });
+  } catch (err) {
+    res.status(500).json({ error: err.message, staticPath });
+  }
+});
+app.use(express.static(staticPath, {
   maxAge: process.env.NODE_ENV === "production" ? "1d" : 0,
   etag: true,
   setHeaders(res, filePath) {
