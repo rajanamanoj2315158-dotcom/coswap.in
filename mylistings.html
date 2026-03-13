@@ -4,7 +4,17 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>My Listings – CoSwap</title>
+    <title>My Listings — CoSwap</title>
+    <meta name="description" content="Manage your active coupon listings on CoSwap marketplace.">
+    <meta name="robots" content="noindex, nofollow">
+    <link rel="canonical" href="https://coswap.in/mylistings.html">
+    <meta property="og:title" content="My Listings — CoSwap">
+    <meta property="og:description" content="Manage your active coupon listings on CoSwap marketplace.">
+    <meta property="og:image" content="https://coswap.in/logo.png">
+    <meta property="og:url" content="https://coswap.in/mylistings.html">
+    <!-- Google Analytics 4 -->
+    <!-- <script async src="https://www.googletagmanager.com/gtag/js?id=G-XXXXXXXXXX"></script>
+    <script>window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments)}gtag('js',new Date());gtag('config','G-XXXXXXXXXX');</script> -->
 
     <style>
         * {
@@ -61,7 +71,8 @@
         .main {
             flex: 1;
             margin-left: 260px;
-            padding: 40px 45px;
+            padding: 36px 40px;
+            min-width: 0;
         }
 
         h1 {
@@ -78,8 +89,8 @@
         /* GRID */
         .grid {
             display: grid;
-            grid-template-columns: repeat(3, 1fr);
-            gap: 25px;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: 22px;
         }
 
         .card {
@@ -269,7 +280,32 @@
         }
     </style>
     <link rel="stylesheet" href="theme.css">
-    <script src="ui.js" defer></script></head>
+    <script src="ui.js" defer></script>
+
+    <style>
+        @media (min-width: 1280px) {
+            .main {
+                padding: 40px 52px;
+            }
+
+            .grid {
+                gap: 24px;
+            }
+        }
+
+        @media (min-width: 1440px) {
+            .main {
+                padding: 48px 60px;
+            }
+        }
+
+        @media (min-width: 1920px) {
+            .main {
+                padding: 56px 72px;
+                max-width: 1560px;
+            }
+        }
+    </style>
 
 <body class="soft-bg">
 

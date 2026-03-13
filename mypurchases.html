@@ -4,7 +4,17 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>My Purchases – CoSwap</title>
+    <title>My Purchases — CoSwap</title>
+    <meta name="description" content="View your coupon purchase history on CoSwap.">
+    <meta name="robots" content="noindex, nofollow">
+    <link rel="canonical" href="https://coswap.in/mypurchases.html">
+    <meta property="og:title" content="My Purchases — CoSwap">
+    <meta property="og:description" content="View your coupon purchase history on CoSwap.">
+    <meta property="og:image" content="https://coswap.in/logo.png">
+    <meta property="og:url" content="https://coswap.in/mypurchases.html">
+    <!-- Google Analytics 4 -->
+    <!-- <script async src="https://www.googletagmanager.com/gtag/js?id=G-XXXXXXXXXX"></script>
+    <script>window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments)}gtag('js',new Date());gtag('config','G-XXXXXXXXXX');</script> -->
 
     <style>
         * {
@@ -17,7 +27,13 @@
         body {
             background: radial-gradient(circle at center, #1c2340, #12172b, #0b0f1d);
             color: white;
-            padding: 30px;
+            padding: 36px 32px;
+        }
+
+        .page-container {
+            margin: 0 auto;
+            max-width: 900px;
+            width: 100%;
         }
 
         h1 {
@@ -139,21 +155,57 @@
             background: linear-gradient(90deg, #4fd0ff, #6f6cff);
             color: white;
         }
+
+        @media (min-width: 1280px) {
+            body {
+                padding: 48px 56px;
+            }
+
+            .page-container {
+                max-width: 980px;
+            }
+
+            .purchase-card {
+                padding: 26px;
+            }
+        }
+
+        @media (min-width: 1440px) {
+            body {
+                padding: 56px 72px;
+            }
+
+            .page-container {
+                max-width: 1060px;
+            }
+        }
+
+        @media (min-width: 1920px) {
+            body {
+                padding: 64px 120px;
+            }
+
+            .page-container {
+                max-width: 1200px;
+            }
+        }
     </style>
     <link rel="stylesheet" href="theme.css">
     <script src="ui.js" defer></script></head>
 
 <body class="soft-bg">
 
-    <h1>Your Purchases</h1>
+    <div class="page-container">
+        <h1>Your Purchases</h1>
 
-    <div id="purchaseList"></div>
+        <div id="purchaseList"></div>
 
         <div id="emptyState" class="empty-box" style="display:none;">
             <h2>No Purchases Yet</h2>
             <p>Start exploring coupons in the Browse section!</p>
             <button class="btn view-btn" onclick="window.location.href='browse.html'">Browse Coupons</button>
         </div>
+    </div>
 
     <script src="api.js"></script>
     <script>

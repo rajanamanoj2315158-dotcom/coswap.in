@@ -4,7 +4,17 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Sell Coupon – CoSwap</title>
+    <title>Sell a Coupon — CoSwap</title>
+    <meta name="description" content="List your unused coupons or vouchers for sale on CoSwap India's marketplace.">
+    <meta name="robots" content="noindex, nofollow">
+    <link rel="canonical" href="https://coswap.in/sell.html">
+    <meta property="og:title" content="Sell a Coupon — CoSwap">
+    <meta property="og:description" content="List your unused coupons or vouchers for sale on CoSwap India's marketplace.">
+    <meta property="og:image" content="https://coswap.in/logo.png">
+    <meta property="og:url" content="https://coswap.in/sell.html">
+    <!-- Google Analytics 4 -->
+    <!-- <script async src="https://www.googletagmanager.com/gtag/js?id=G-XXXXXXXXXX"></script>
+    <script>window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments)}gtag('js',new Date());gtag('config','G-XXXXXXXXXX');</script> -->
 
     <style>
         * {
@@ -17,28 +27,30 @@
         body {
             background: linear-gradient(135deg, #151b2f, #10162a, #0c101f);
             color: white;
-            padding: 30px;
+            padding: 40px 28px;
             display: flex;
-            justify-content: center;
+            flex-direction: column;
+            align-items: center;
+            min-height: 100vh;
         }
 
         /* Page Heading */
         h1 {
-            position: absolute;
-            top: 20px;
-            font-size: 34px;
+            font-size: 28px;
             font-weight: 700;
             text-shadow: 0 0 15px rgba(110, 130, 255, 0.7);
+            margin-bottom: 24px;
+            align-self: flex-start;
+            max-width: 540px;
+            width: 100%;
         }
 
         .wrapper {
             width: 100%;
-            max-width: 520px;
-            margin-top: 80px;
+            max-width: 540px;
             background: rgba(255, 255, 255, 0.07);
             border-radius: 22px;
-            padding: 28px;
-            padding-top: 40px;
+            padding: 32px;
             border: 1px solid rgba(255, 255, 255, 0.14);
             box-shadow: 0 0 28px rgba(140, 160, 255, 0.2);
             backdrop-filter: blur(12px);
@@ -142,6 +154,28 @@
         button:hover {
             transform: translateY(-2px);
             box-shadow: 0 0 30px rgba(140, 140, 255, 0.45);
+        }
+
+        @media (min-width: 1280px) {
+            body {
+                padding: 56px 28px;
+            }
+
+            h1 {
+                font-size: 30px;
+                max-width: 560px;
+            }
+
+            .wrapper {
+                max-width: 560px;
+                padding: 36px;
+            }
+        }
+
+        @media (min-width: 1440px) {
+            body {
+                padding: 64px 28px;
+            }
         }
     </style>
     <link rel="stylesheet" href="theme.css">

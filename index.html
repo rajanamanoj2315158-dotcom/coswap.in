@@ -3,7 +3,57 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>CoSwap</title>
+
+    <!-- Primary SEO -->
+    <title>CoSwap — Buy &amp; Sell Unused Coupons &amp; Vouchers in India</title>
+    <meta name="description" content="CoSwap is India's trusted marketplace to buy and sell unused discount coupons, gift cards, and vouchers. Get great deals on OTT, food, fashion, travel and more.">
+    <meta name="keywords" content="coupon marketplace, sell coupons India, buy vouchers, discount coupons, gift cards, OTT coupons, food vouchers, coswap">
+    <meta name="robots" content="index, follow">
+    <link rel="canonical" href="https://coswap.in/">
+
+    <!-- Open Graph -->
+    <meta property="og:type" content="website">
+    <meta property="og:site_name" content="CoSwap">
+    <meta property="og:title" content="CoSwap — Buy &amp; Sell Unused Coupons in India">
+    <meta property="og:description" content="Convert unwanted vouchers into cash. Discover great deals and sell faster on CoSwap — India's coupon marketplace.">
+    <meta property="og:url" content="https://coswap.in/">
+    <meta property="og:image" content="https://coswap.in/logo.png">
+    <meta property="og:locale" content="en_IN">
+
+    <!-- Twitter Card -->
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="CoSwap — Buy &amp; Sell Unused Coupons">
+    <meta name="twitter:description" content="India's marketplace for unused discount coupons and vouchers.">
+    <meta name="twitter:image" content="https://coswap.in/logo.png">
+
+    <!-- JSON-LD Structured Data -->
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "WebSite",
+      "name": "CoSwap",
+      "url": "https://coswap.in",
+      "description": "India's marketplace to buy and sell unused discount coupons and vouchers.",
+      "potentialAction": {
+        "@type": "SearchAction",
+        "target": "https://coswap.in/browse.html?search={search_term_string}",
+        "query-input": "required name=search_term_string"
+      }
+    }
+    </script>
+
+    <!-- Google Search Console Verification -->
+    <!-- <meta name="google-site-verification" content="REPLACE_WITH_YOUR_GSC_CODE"> -->
+
+    <!-- Google Analytics 4 -->
+    <!-- <script async src="https://www.googletagmanager.com/gtag/js?id=G-XXXXXXXXXX"></script>
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);}
+      gtag('js', new Date());
+      gtag('config', 'G-XXXXXXXXXX');
+    </script> -->
+
     <link rel="stylesheet" href="theme.css">
     <script src="ui.js" defer></script>
     <style>
@@ -75,7 +125,7 @@
             margin: 0 auto;
             max-width: 1240px;
             min-height: 100vh;
-            padding: 28px;
+            padding: 28px 32px;
             position: relative;
             z-index: 1;
         }
@@ -275,6 +325,55 @@
                 width: 100%;
             }
         }
+
+        @media (min-width: 1280px) {
+            .shell {
+                padding: 36px 48px;
+            }
+
+            .nav-links a {
+                font-size: 16px;
+                padding: 12px 18px;
+            }
+
+            .nav-links a.primary {
+                padding: 14px 26px;
+            }
+
+            .content {
+                gap: 48px;
+            }
+
+            .cta {
+                padding: 20px 34px;
+            }
+
+            .side-panel {
+                padding: 30px;
+            }
+        }
+
+        @media (min-width: 1440px) {
+            .shell {
+                max-width: 1360px;
+                padding: 44px 64px;
+            }
+
+            .copy h1 {
+                font-size: clamp(64px, 6vw, 88px);
+            }
+
+            .copy p {
+                font-size: 21px;
+            }
+        }
+
+        @media (min-width: 1920px) {
+            .shell {
+                max-width: 1480px;
+                padding: 52px 80px;
+            }
+        }
     </style>
 </head>
 <body>
@@ -287,7 +386,7 @@
         <div class="shell">
             <nav class="nav">
                 <div class="brand">
-                    <img src="logo.png" alt="CoSwap logo">
+                    <img src="logo.png" alt="CoSwap logo" loading="lazy" width="64" height="64">
                     <span>CoSwap</span>
                 </div>
 

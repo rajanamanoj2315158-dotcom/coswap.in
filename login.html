@@ -3,7 +3,16 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>CoSwap Login</title>
+    <title>Sign In — CoSwap</title>
+    <meta name="description" content="Sign in to CoSwap to buy and sell unused coupons and vouchers in India.">
+    <meta name="robots" content="noindex, nofollow">
+    <link rel="canonical" href="https://coswap.in/login.html">
+    <meta property="og:title" content="Sign In — CoSwap">
+    <meta property="og:description" content="Sign in to CoSwap to manage your coupon listings and purchases.">
+    <meta property="og:image" content="https://coswap.in/logo.png">
+    <!-- Google Analytics 4 -->
+    <!-- <script async src="https://www.googletagmanager.com/gtag/js?id=G-XXXXXXXXXX"></script>
+    <script>window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments)}gtag('js',new Date());gtag('config','G-XXXXXXXXXX');</script> -->
     <link rel="stylesheet" href="theme.css">
     <script src="ui.js" defer></script>
     <style>
@@ -221,6 +230,28 @@
                 font-size: 36px;
             }
         }
+
+        @media (min-width: 1280px) {
+            .panel {
+                max-width: 480px;
+                padding: 40px 36px 36px;
+            }
+
+            .brand img {
+                width: 82px;
+            }
+
+            .brand-name {
+                font-size: 46px;
+            }
+        }
+
+        @media (min-width: 1440px) {
+            .panel {
+                max-width: 500px;
+                padding: 44px 40px 40px;
+            }
+        }
     </style>
 </head>
 <body>
@@ -234,7 +265,7 @@
     <main class="page">
         <section class="panel">
             <div class="brand">
-                <img src="logo.png" alt="CoSwap logo">
+                <img src="logo.png" alt="CoSwap logo" loading="lazy" width="74" height="74">
                 <div class="brand-name">CoSwap</div>
                 <div class="brand-copy">Sign in to continue.</div>
             </div>

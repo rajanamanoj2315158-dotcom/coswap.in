@@ -4,7 +4,17 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>My Profile – CoSwap</title>
+    <title>Seller Profile — CoSwap</title>
+    <meta name="description" content="View your seller profile, ratings, and trust level on CoSwap.">
+    <meta name="robots" content="noindex, nofollow">
+    <link rel="canonical" href="https://coswap.in/sellerprofile.html">
+    <meta property="og:title" content="Seller Profile — CoSwap">
+    <meta property="og:description" content="View your seller profile, ratings, and trust level on CoSwap.">
+    <meta property="og:image" content="https://coswap.in/logo.png">
+    <meta property="og:url" content="https://coswap.in/sellerprofile.html">
+    <!-- Google Analytics 4 -->
+    <!-- <script async src="https://www.googletagmanager.com/gtag/js?id=G-XXXXXXXXXX"></script>
+    <script>window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments)}gtag('js',new Date());gtag('config','G-XXXXXXXXXX');</script> -->
 
     <style>
         * {
@@ -115,6 +125,27 @@
 
         .btn-main:hover {
             transform: scale(1.02);
+        }
+
+        @media (min-width: 1280px) {
+            body {
+                padding: 56px 35px;
+            }
+
+            .profile-card {
+                max-width: 580px;
+                padding: 30px;
+            }
+        }
+
+        @media (min-width: 1440px) {
+            body {
+                padding: 72px 35px;
+            }
+
+            .profile-card {
+                max-width: 600px;
+            }
         }
     </style>
 

@@ -7,6 +7,8 @@ const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
 const crypto = require("crypto");
 const path = require("path");
+const compression = require("compression");
+const helmet = require("helmet");
 
 const {
   initDb,
@@ -42,11 +44,24 @@ const SEMANTIC_GROUPS = {
 };
 
 app.use(cors());
+app.use(compression());
+app.use(helmet({
+  contentSecurityPolicy: false,
+  crossOriginEmbedderPolicy: false
+}));
 app.use(express.json({ limit: "5mb" }));
-app.use(morgan("dev"));
+app.use(morgan(process.env.NODE_ENV === "production" ? "combined" : "dev"));
 
-// Serve frontend static files
-app.use(express.static(path.join(__dirname, "../../")));
+// Serve frontend static files with caching
+app.use(express.static(path.join(__dirname, "../../"), {
+  maxAge: process.env.NODE_ENV === "production" ? "1d" : 0,
+  etag: true,
+  setHeaders(res, filePath) {
+    if (filePath.endsWith(".html")) {
+      res.setHeader("Cache-Control", "no-cache");
+    }
+  }
+}));
 
 // ─── Helpers ─────────────────────────────────────────────────────────────────
 
@@ -230,7 +245,41 @@ async function expireRequests() {
 // ─── Routes ──────────────────────────────────────────────────────────────────
 
 app.get("/health", (req, res) => {
-  res.json({ ok: true, time: new Date().toISOString() });
+  res.json({ ok: true, time: new Date().toISOString(), env: process.env.NODE_ENV || "development" });
+});
+
+// ─── robots.txt ──────────────────────────────────────────────────────────────
+app.get("/robots.txt", (req, res) => {
+  res.type("text/plain");
+  res.send([
+    "User-agent: *",
+    "Allow: /",
+    "Disallow: /admin",
+    "Disallow: /admin/",
+    "",
+    `Sitemap: https://coswap.in/sitemap.xml`
+  ].join("\n"));
+});
+
+// ─── sitemap.xml ─────────────────────────────────────────────────────────────
+app.get("/sitemap.xml", async (req, res) => {
+  const base = "https://coswap.in";
+  const staticPages = [
+    { url: "/", priority: "1.0", freq: "daily" },
+    { url: "/browse.html", priority: "0.9", freq: "hourly" },
+    { url: "/about.html", priority: "0.7", freq: "monthly" },
+    { url: "/how-it-works.html", priority: "0.8", freq: "monthly" },
+    { url: "/terms.html", priority: "0.5", freq: "yearly" },
+    { url: "/login.html", priority: "0.6", freq: "monthly" },
+    { url: "/signup.html", priority: "0.6", freq: "monthly" }
+  ];
+  const today = new Date().toISOString().split("T")[0];
+  const urls = staticPages.map(p =>
+    `  <url>\n    <loc>${base}${p.url}</loc>\n    <lastmod>${today}</lastmod>\n    <changefreq>${p.freq}</changefreq>\n    <priority>${p.priority}</priority>\n  </url>`
+  ).join("\n");
+  res.type("application/xml");
+  res.setHeader("Cache-Control", "public, max-age=3600");
+  res.send(`<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n${urls}\n</urlset>`);
 });
 
 // Auth
@@ -771,8 +820,26 @@ app.post("/requests/:id/accept", authMiddleware, async (req, res) => {
       chat = await Chat.create({ coupon_id: request.coupon_id, buyer_id: request.buyer_id, seller_id: request.seller_id, status: "active", created_at: new Date().toISOString() });
     }
 
+    // ── First-request-wins: accept this one, decline all others for same coupon ──
     await BuyRequest.updateOne({ _id: request._id }, { status: "accepted", chat_id: chat._id });
-    await notify(request.buyer_id, "Your buy request was accepted. Chat is ready.", "chatlist.html");
+
+    // Decline all other pending requests for the same coupon
+    const otherPending = await BuyRequest.find({
+      coupon_id: request.coupon_id,
+      _id: { $ne: request._id },
+      status: "pending"
+    }).lean();
+    if (otherPending.length > 0) {
+      await BuyRequest.updateMany(
+        { coupon_id: request.coupon_id, _id: { $ne: request._id }, status: "pending" },
+        { status: "declined" }
+      );
+      for (const other of otherPending) {
+        await notify(other.buyer_id, "Your buy request was declined — the seller accepted another buyer first.", "browse.html");
+      }
+    }
+
+    await notify(request.buyer_id, "Your buy request was accepted! Chat is ready.", "chatlist.html");
 
     res.json({ request: { ...request, id: String(request._id), status: "accepted", chat_id: String(chat._id || chat.id) }, chat: { ...chat, id: String(chat._id || chat.id) } });
   } catch (err) { res.status(500).json({ error: err.message }); }

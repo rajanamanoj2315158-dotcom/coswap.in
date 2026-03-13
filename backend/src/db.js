@@ -4,10 +4,60 @@ const MONGODB_URI = process.env.MONGODB_URI || "mongodb://localhost:27017/coswap
 
 async function initDb() {
   if (mongoose.connection.readyState === 0) {
-    await mongoose.connect(MONGODB_URI);
+    await mongoose.connect(MONGODB_URI, {
+      maxPoolSize: 10,
+      serverSelectionTimeoutMS: 5000,
+      socketTimeoutMS: 45000,
+      connectTimeoutMS: 10000,
+    });
     console.log("MongoDB connected:", MONGODB_URI.split("@").pop());
+    await ensureIndexes();
   }
   return mongoose;
+}
+
+async function ensureIndexes() {
+  try {
+    // Coupon indexes
+    await Coupon.collection.createIndex({ status: 1, created_at: -1 });
+    await Coupon.collection.createIndex({ seller_id: 1, status: 1 });
+    await Coupon.collection.createIndex({ category: 1, status: 1 });
+    await Coupon.collection.createIndex({ status: 1, expiry: 1 });
+
+    // BuyRequest indexes
+    await BuyRequest.collection.createIndex({ coupon_id: 1, status: 1 });
+    await BuyRequest.collection.createIndex({ seller_id: 1, status: 1, created_at: -1 });
+    await BuyRequest.collection.createIndex({ buyer_id: 1, status: 1, created_at: -1 });
+    await BuyRequest.collection.createIndex({ status: 1, expires_at: 1 });
+
+    // Purchase indexes
+    await Purchase.collection.createIndex({ buyer_id: 1, purchased_at: -1 });
+    await Purchase.collection.createIndex({ coupon_id: 1 });
+
+    // Notification indexes
+    await Notification.collection.createIndex({ user_id: 1, created_at: -1 });
+    await Notification.collection.createIndex({ user_id: 1, read_at: 1 });
+
+    // Message indexes
+    await Message.collection.createIndex({ chat_id: 1, created_at: 1 });
+
+    // Chat indexes
+    await Chat.collection.createIndex({ buyer_id: 1, seller_id: 1 });
+    await Chat.collection.createIndex({ coupon_id: 1, buyer_id: 1, seller_id: 1 });
+
+    // Report indexes
+    await Report.collection.createIndex({ seller_id: 1, status: 1 });
+    await Report.collection.createIndex({ status: 1, created_at: -1 });
+
+    // PasswordReset indexes
+    await PasswordReset.collection.createIndex({ email: 1, used_at: 1 });
+    await PasswordReset.collection.createIndex({ reset_token: 1, used_at: 1 });
+    await PasswordReset.collection.createIndex({ expires_at: 1 }, { expireAfterSeconds: 0 });
+
+    console.log("Database indexes ensured.");
+  } catch (err) {
+    console.warn("Index creation warning (non-fatal):", err.message);
+  }
 }
 
 // ─── Schemas ────────────────────────────────────────────────────────────────
