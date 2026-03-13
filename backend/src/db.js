@@ -1,161 +1,137 @@
-const path = require("path");
-const Database = require("better-sqlite3");
+const mongoose = require("mongoose");
 
-const DB_PATH = process.env.DB_PATH || path.join(__dirname, "..", "data", "coswap.sqlite");
+const MONGODB_URI = process.env.MONGODB_URI || "mongodb://localhost:27017/coswap";
 
-let db;
-
-function initDb() {
-  if (db) return db;
-
-  db = new Database(DB_PATH);
-  db.pragma("journal_mode = WAL");
-
-  db.exec(`
-    CREATE TABLE IF NOT EXISTS users (
-      id INTEGER PRIMARY KEY AUTOINCREMENT,
-      name TEXT NOT NULL,
-      email TEXT NOT NULL UNIQUE,
-      password_hash TEXT NOT NULL,
-      created_at TEXT NOT NULL,
-      status TEXT NOT NULL DEFAULT 'active',
-      is_admin INTEGER NOT NULL DEFAULT 0,
-      pending_fee REAL NOT NULL DEFAULT 0,
-      rating_sum REAL NOT NULL DEFAULT 0,
-      rating_count INTEGER NOT NULL DEFAULT 0,
-      fraud_votes INTEGER NOT NULL DEFAULT 0,
-      genuine_votes INTEGER NOT NULL DEFAULT 0
-    );
-
-    CREATE TABLE IF NOT EXISTS coupons (
-      id INTEGER PRIMARY KEY AUTOINCREMENT,
-      title TEXT NOT NULL,
-      details TEXT,
-      expiry TEXT,
-      price REAL NOT NULL,
-      category TEXT,
-      image_url TEXT,
-      seller_id INTEGER NOT NULL,
-      status TEXT NOT NULL DEFAULT 'active',
-      rating REAL DEFAULT 4.8,
-      fraud INTEGER DEFAULT 2,
-      level INTEGER DEFAULT 1,
-      created_at TEXT NOT NULL,
-      FOREIGN KEY (seller_id) REFERENCES users(id)
-    );
-
-    CREATE TABLE IF NOT EXISTS purchases (
-      id INTEGER PRIMARY KEY AUTOINCREMENT,
-      coupon_id INTEGER NOT NULL,
-      buyer_id INTEGER NOT NULL,
-      price REAL NOT NULL,
-      status TEXT NOT NULL DEFAULT 'success',
-      purchased_at TEXT NOT NULL,
-      FOREIGN KEY (coupon_id) REFERENCES coupons(id),
-      FOREIGN KEY (buyer_id) REFERENCES users(id)
-    );
-
-    CREATE TABLE IF NOT EXISTS chats (
-      id INTEGER PRIMARY KEY AUTOINCREMENT,
-      coupon_id INTEGER NOT NULL,
-      buyer_id INTEGER NOT NULL,
-      seller_id INTEGER NOT NULL,
-      status TEXT NOT NULL DEFAULT 'active',
-      last_message TEXT,
-      last_message_at TEXT,
-      created_at TEXT NOT NULL,
-      FOREIGN KEY (coupon_id) REFERENCES coupons(id),
-      FOREIGN KEY (buyer_id) REFERENCES users(id),
-      FOREIGN KEY (seller_id) REFERENCES users(id)
-    );
-
-    CREATE TABLE IF NOT EXISTS messages (
-      id INTEGER PRIMARY KEY AUTOINCREMENT,
-      chat_id INTEGER NOT NULL,
-      sender_id INTEGER NOT NULL,
-      body TEXT NOT NULL,
-      created_at TEXT NOT NULL,
-      FOREIGN KEY (chat_id) REFERENCES chats(id),
-      FOREIGN KEY (sender_id) REFERENCES users(id)
-    );
-
-    CREATE TABLE IF NOT EXISTS reports (
-      id INTEGER PRIMARY KEY AUTOINCREMENT,
-      reporter_id INTEGER NOT NULL,
-      seller_id INTEGER NOT NULL,
-      coupon_id INTEGER,
-      reason TEXT NOT NULL,
-      description TEXT,
-      status TEXT NOT NULL DEFAULT 'pending',
-      created_at TEXT NOT NULL,
-      resolved_at TEXT,
-      FOREIGN KEY (reporter_id) REFERENCES users(id),
-      FOREIGN KEY (seller_id) REFERENCES users(id),
-      FOREIGN KEY (coupon_id) REFERENCES coupons(id)
-    );
-
-    CREATE TABLE IF NOT EXISTS notifications (
-      id INTEGER PRIMARY KEY AUTOINCREMENT,
-      user_id INTEGER NOT NULL,
-      message TEXT NOT NULL,
-      action TEXT,
-      created_at TEXT NOT NULL,
-      read_at TEXT,
-      FOREIGN KEY (user_id) REFERENCES users(id)
-    );
-
-    CREATE TABLE IF NOT EXISTS buy_requests (
-      id INTEGER PRIMARY KEY AUTOINCREMENT,
-      coupon_id INTEGER NOT NULL,
-      buyer_id INTEGER NOT NULL,
-      seller_id INTEGER NOT NULL,
-      status TEXT NOT NULL DEFAULT 'pending',
-      created_at TEXT NOT NULL,
-      expires_at TEXT NOT NULL,
-      chat_id INTEGER,
-      FOREIGN KEY (coupon_id) REFERENCES coupons(id),
-      FOREIGN KEY (buyer_id) REFERENCES users(id),
-      FOREIGN KEY (seller_id) REFERENCES users(id),
-      FOREIGN KEY (chat_id) REFERENCES chats(id)
-    );
-
-    CREATE TABLE IF NOT EXISTS payments (
-      id INTEGER PRIMARY KEY AUTOINCREMENT,
-      user_id INTEGER NOT NULL,
-      amount REAL NOT NULL,
-      method TEXT,
-      status TEXT NOT NULL DEFAULT 'paid',
-      created_at TEXT NOT NULL,
-      FOREIGN KEY (user_id) REFERENCES users(id)
-    );
-
-    CREATE TABLE IF NOT EXISTS password_resets (
-      id INTEGER PRIMARY KEY AUTOINCREMENT,
-      email TEXT NOT NULL,
-      otp TEXT NOT NULL,
-      reset_token TEXT NOT NULL,
-      expires_at TEXT NOT NULL,
-      used_at TEXT
-    );
-  `);
-
-  ensureColumn("users", "status", "TEXT NOT NULL DEFAULT 'active'");
-  ensureColumn("users", "is_admin", "INTEGER NOT NULL DEFAULT 0");
-  ensureColumn("users", "pending_fee", "REAL NOT NULL DEFAULT 0");
-  ensureColumn("users", "rating_sum", "REAL NOT NULL DEFAULT 0");
-  ensureColumn("users", "rating_count", "INTEGER NOT NULL DEFAULT 0");
-  ensureColumn("users", "fraud_votes", "INTEGER NOT NULL DEFAULT 0");
-  ensureColumn("users", "genuine_votes", "INTEGER NOT NULL DEFAULT 0");
-
-  return db;
-}
-
-function ensureColumn(table, column, definition) {
-  const columns = db.prepare(`PRAGMA table_info(${table})`).all();
-  const exists = columns.some((c) => c.name === column);
-  if (!exists) {
-    db.exec(`ALTER TABLE ${table} ADD COLUMN ${column} ${definition}`);
+async function initDb() {
+  if (mongoose.connection.readyState === 0) {
+    await mongoose.connect(MONGODB_URI);
+    console.log("MongoDB connected:", MONGODB_URI.split("@").pop());
   }
+  return mongoose;
 }
 
-module.exports = { initDb };
+// ─── Schemas ────────────────────────────────────────────────────────────────
+
+const userSchema = new mongoose.Schema({
+  name: { type: String, required: true },
+  email: { type: String, required: true, unique: true, lowercase: true },
+  password_hash: { type: String, required: true },
+  created_at: { type: String, default: () => new Date().toISOString() },
+  terms_accepted_at: String,
+  status: { type: String, default: "active" },
+  is_admin: { type: Boolean, default: false },
+  pending_fee: { type: Number, default: 0 },
+  rating_sum: { type: Number, default: 0 },
+  rating_count: { type: Number, default: 0 },
+  fraud_votes: { type: Number, default: 0 },
+  genuine_votes: { type: Number, default: 0 }
+});
+
+const couponSchema = new mongoose.Schema({
+  title: { type: String, required: true },
+  details: String,
+  expiry: String,
+  price: { type: Number, required: true },
+  category: String,
+  image_url: String,
+  seller_id: { type: mongoose.Schema.Types.ObjectId, ref: "User", required: true },
+  status: { type: String, default: "active" },
+  created_at: { type: String, default: () => new Date().toISOString() }
+});
+
+const purchaseSchema = new mongoose.Schema({
+  coupon_id: { type: mongoose.Schema.Types.ObjectId, ref: "Coupon", required: true },
+  buyer_id: { type: mongoose.Schema.Types.ObjectId, ref: "User", required: true },
+  price: { type: Number, required: true },
+  status: { type: String, default: "success" },
+  purchased_at: { type: String, default: () => new Date().toISOString() }
+});
+
+const chatSchema = new mongoose.Schema({
+  coupon_id: { type: mongoose.Schema.Types.ObjectId, ref: "Coupon", required: true },
+  buyer_id: { type: mongoose.Schema.Types.ObjectId, ref: "User", required: true },
+  seller_id: { type: mongoose.Schema.Types.ObjectId, ref: "User", required: true },
+  status: { type: String, default: "active" },
+  last_message: String,
+  last_message_at: String,
+  created_at: { type: String, default: () => new Date().toISOString() }
+});
+
+const messageSchema = new mongoose.Schema({
+  chat_id: { type: mongoose.Schema.Types.ObjectId, ref: "Chat", required: true },
+  sender_id: { type: mongoose.Schema.Types.ObjectId, ref: "User", required: true },
+  body: { type: String, required: true },
+  created_at: { type: String, default: () => new Date().toISOString() }
+});
+
+const reportSchema = new mongoose.Schema({
+  reporter_id: { type: mongoose.Schema.Types.ObjectId, ref: "User", required: true },
+  seller_id: { type: mongoose.Schema.Types.ObjectId, ref: "User", required: true },
+  coupon_id: { type: mongoose.Schema.Types.ObjectId, ref: "Coupon" },
+  reason: { type: String, required: true },
+  description: String,
+  status: { type: String, default: "pending" },
+  created_at: { type: String, default: () => new Date().toISOString() },
+  resolved_at: String
+});
+
+const notificationSchema = new mongoose.Schema({
+  user_id: { type: mongoose.Schema.Types.ObjectId, ref: "User", required: true },
+  message: { type: String, required: true },
+  action: String,
+  created_at: { type: String, default: () => new Date().toISOString() },
+  read_at: String
+});
+
+const buyRequestSchema = new mongoose.Schema({
+  coupon_id: { type: mongoose.Schema.Types.ObjectId, ref: "Coupon", required: true },
+  buyer_id: { type: mongoose.Schema.Types.ObjectId, ref: "User", required: true },
+  seller_id: { type: mongoose.Schema.Types.ObjectId, ref: "User", required: true },
+  status: { type: String, default: "pending" },
+  created_at: { type: String, default: () => new Date().toISOString() },
+  expires_at: { type: String, required: true },
+  chat_id: { type: mongoose.Schema.Types.ObjectId, ref: "Chat" }
+});
+
+const paymentSchema = new mongoose.Schema({
+  user_id: { type: mongoose.Schema.Types.ObjectId, ref: "User", required: true },
+  amount: { type: Number, required: true },
+  method: String,
+  status: { type: String, default: "paid" },
+  created_at: { type: String, default: () => new Date().toISOString() }
+});
+
+const passwordResetSchema = new mongoose.Schema({
+  email: { type: String, required: true, lowercase: true },
+  otp: { type: String, required: true },
+  reset_token: { type: String, required: true },
+  expires_at: { type: String, required: true },
+  used_at: String
+});
+
+// ─── Models ─────────────────────────────────────────────────────────────────
+
+const User = mongoose.model("User", userSchema);
+const Coupon = mongoose.model("Coupon", couponSchema);
+const Purchase = mongoose.model("Purchase", purchaseSchema);
+const Chat = mongoose.model("Chat", chatSchema);
+const Message = mongoose.model("Message", messageSchema);
+const Report = mongoose.model("Report", reportSchema);
+const Notification = mongoose.model("Notification", notificationSchema);
+const BuyRequest = mongoose.model("BuyRequest", buyRequestSchema);
+const Payment = mongoose.model("Payment", paymentSchema);
+const PasswordReset = mongoose.model("PasswordReset", passwordResetSchema);
+
+module.exports = {
+  initDb,
+  User,
+  Coupon,
+  Purchase,
+  Chat,
+  Message,
+  Report,
+  Notification,
+  BuyRequest,
+  Payment,
+  PasswordReset
+};

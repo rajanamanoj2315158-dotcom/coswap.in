@@ -1,369 +1,485 @@
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Create Account – CoSwap</title>
-
-    <script src="https://accounts.google.com/gsi/client" async defer></script>
-
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Create Account - CoSwap</title>
+    <link rel="stylesheet" href="theme.css">
+    <script src="ui.js" defer></script>
     <style>
         * {
+            box-sizing: border-box;
             margin: 0;
             padding: 0;
-            box-sizing: border-box;
-            font-family: Poppins, sans-serif;
         }
 
         body {
-            background: radial-gradient(circle at center, #141828, #0b0f1e, #05060a);
-            height: 100vh;
-            display: flex;
-            justify-content: center;
-            align-items: center;
+            background:
+                radial-gradient(circle at 18% 18%, rgba(79, 208, 255, 0.18), transparent 24%),
+                radial-gradient(circle at 82% 14%, rgba(111, 108, 255, 0.18), transparent 25%),
+                linear-gradient(180deg, #0a1020, #0a0d18 48%, #060910 100%);
             color: white;
+            min-height: 100vh;
+            overflow: hidden;
+            position: relative;
         }
 
-        .card {
-            width: 430px;
-            padding: 45px;
-            background: linear-gradient(155deg, rgba(45, 54, 88, 0.96), rgba(28, 35, 58, 0.95));
-            border-radius: 26px;
+        .ambient {
+            inset: 0;
+            overflow: hidden;
+            pointer-events: none;
+            position: fixed;
+        }
+
+        .droplet {
+            animation: drift 19s ease-in-out infinite;
+            background:
+                radial-gradient(circle at 28% 24%, rgba(255, 255, 255, 0.52), transparent 18%),
+                linear-gradient(180deg, rgba(255, 255, 255, 0.16), rgba(79, 208, 255, 0.08));
+            border: 1px solid rgba(255, 255, 255, 0.12);
+            border-radius: 60% 40% 58% 42% / 42% 58% 42% 58%;
+            box-shadow: inset 0 16px 18px rgba(255, 255, 255, 0.05), 0 18px 36px rgba(0, 0, 0, 0.2);
+            opacity: 0.52;
+            position: absolute;
+        }
+
+        .droplet.one {
+            height: 142px;
+            left: 4%;
+            top: 12%;
+            width: 118px;
+        }
+
+        .droplet.two {
+            animation-duration: 23s;
+            bottom: 14%;
+            height: 88px;
+            right: 12%;
+            width: 70px;
+        }
+
+        .page {
+            align-items: center;
+            display: grid;
+            gap: 24px;
+            grid-template-columns: minmax(0, 1.04fr) minmax(360px, 440px);
+            margin: 0 auto;
+            max-width: 1180px;
+            min-height: 100vh;
+            padding: 28px;
+            position: relative;
+            z-index: 1;
+        }
+
+        .hero-copy h1 {
+            font-size: clamp(42px, 7vw, 72px);
+            letter-spacing: -0.07em;
+            line-height: 0.95;
+            margin: 14px 0 18px;
+            max-width: 12ch;
+        }
+
+        .eyebrow {
+            color: #98e8ff;
+            font-size: 12px;
+            font-weight: 700;
+            letter-spacing: 0.18em;
+            text-transform: uppercase;
+        }
+
+        .hero-copy p {
+            color: rgba(255, 255, 255, 0.76);
+            font-size: 16px;
+            line-height: 1.8;
+            max-width: 60ch;
+        }
+
+        .hero-grid {
+            display: grid;
+            gap: 14px;
+            grid-template-columns: repeat(2, minmax(0, 1fr));
+            margin-top: 30px;
+        }
+
+        .info-card,
+        .panel {
             backdrop-filter: blur(18px);
-            border: 1px solid rgba(99, 167, 255, 0.25);
-            box-shadow: 0 24px 60px rgba(10, 12, 26, 0.62),
-                0 0 0 1px rgba(79, 208, 255, 0.08),
-                inset 0 0 0 1px rgba(255, 255, 255, 0.05);
+            background: rgba(255, 255, 255, 0.07);
+            border: 1px solid rgba(255, 255, 255, 0.12);
+            border-radius: 24px;
+            box-shadow: 0 24px 52px rgba(0, 0, 0, 0.24);
         }
 
-        h1 {
-            text-align: center;
-            margin-bottom: 35px;
-            font-size: 30px;
+        .info-card {
+            min-height: 172px;
+            padding: 18px;
+        }
+
+        .info-card h3 {
+            font-size: 18px;
+            line-height: 1.35;
+            margin: 10px 0 8px;
+        }
+
+        .info-card p {
+            color: rgba(255, 255, 255, 0.72);
+            line-height: 1.65;
+        }
+
+        .panel {
+            padding: 28px;
+        }
+
+        .panel h2 {
+            font-size: 34px;
+            letter-spacing: -0.05em;
+        }
+
+        .panel p {
+            color: rgba(255, 255, 255, 0.72);
+            line-height: 1.65;
+            margin-top: 10px;
+        }
+
+        .signup-form {
+            display: grid;
+            gap: 14px;
+            margin-top: 24px;
+        }
+
+        .field {
+            display: grid;
+            gap: 8px;
+        }
+
+        .field span {
+            font-size: 14px;
             font-weight: 700;
         }
 
-        label {
-            margin-bottom: 6px;
-            display: block;
-            opacity: 0.85;
-        }
-
-        input {
-            width: 100%;
-            padding: 14px;
-            border-radius: 14px;
-            background: rgba(255, 255, 255, 0.16);
-            border: 2px solid transparent;
-            outline: none;
-            margin-bottom: 5px;
-            font-size: 16px;
+        .field input {
+            background: rgba(255, 255, 255, 0.08);
+            border: 1px solid rgba(255, 255, 255, 0.12);
+            border-radius: 16px;
             color: white;
+            font-size: 15px;
+            padding: 15px 16px;
         }
 
-        input.error {
-            border-color: #ff4d4d;
+        .field input:focus {
+            box-shadow: 0 0 0 3px rgba(79, 208, 255, 0.18);
+            outline: none;
         }
 
-        input.valid {
-            border-color: #4dff88;
+        .helper,
+        .error-text {
+            font-size: 13px;
+        }
+
+        .helper {
+            color: rgba(255, 255, 255, 0.52);
         }
 
         .error-text {
-            color: #ff4d4d;
-            font-size: 13px;
-            height: 16px;
-            margin-bottom: 14px;
+            color: #ffb0b0;
+            min-height: 16px;
         }
 
-        .btn {
-            width: 100%;
-            padding: 15px;
-            border-radius: 14px;
-            background: linear-gradient(90deg, #4fd0ff, #6f6cff);
+        .terms-box {
+            align-items: flex-start;
+            display: flex;
+            gap: 12px;
+            margin-top: 4px;
+        }
+
+        .terms-box input {
+            accent-color: #4fd0ff;
+            margin-top: 4px;
+        }
+
+        .terms-box label {
+            color: rgba(255, 255, 255, 0.78);
+            font-size: 14px;
+            line-height: 1.7;
+        }
+
+        .terms-box a,
+        .links a {
+            color: #98e8ff;
+            font-weight: 700;
+        }
+
+        .submit-btn {
+            background: linear-gradient(135deg, #4fd0ff, #6f6cff);
             border: none;
-            font-size: 18px;
+            border-radius: 16px;
             color: white;
             cursor: pointer;
-            margin-top: 10px;
-            font-weight: bold;
-            opacity: 0.5;
-            pointer-events: none;
-            transition: 0.2s;
-        }
-
-        .btn.enabled {
-            opacity: 1;
-            pointer-events: auto;
-        }
-
-        /* WHITE GOOGLE BUTTON */
-        .google-btn-white {
-            width: 100%;
-            padding: 15px;
-            border-radius: 14px;
-            background: #ffffff;
-            border: none;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 12px;
-            cursor: pointer;
             font-size: 16px;
-            font-weight: 500;
-            color: #000;
+            font-weight: 800;
+            margin-top: 8px;
+            padding: 15px 18px;
+        }
+
+        .submit-btn:disabled {
+            cursor: not-allowed;
+            opacity: 0.7;
+        }
+
+        .session-note {
+            background: rgba(255, 255, 255, 0.06);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            border-radius: 16px;
+            color: rgba(255, 255, 255, 0.72);
+            font-size: 13px;
+            line-height: 1.65;
             margin-top: 18px;
-            box-shadow: 0 2px 6px rgba(255, 255, 255, 0.1);
+            padding: 14px 16px;
         }
 
-        .google-btn-white img {
-            width: 22px;
-        }
-
-        .login {
+        .links {
+            color: rgba(255, 255, 255, 0.72);
+            display: flex;
+            flex-wrap: wrap;
+            gap: 12px 18px;
+            justify-content: center;
             margin-top: 18px;
-            text-align: center;
         }
 
-        .login a {
-            color: #4fd0ff;
-            text-decoration: none;
+        @keyframes drift {
+            0%,
+            100% {
+                transform: translate3d(0, 0, 0);
+            }
+
+            50% {
+                transform: translate3d(14px, -18px, 0);
+            }
         }
 
-        /* Toast */
+        @media (max-width: 1080px) {
+            body {
+                overflow: auto;
+            }
 
+            .page,
+            .hero-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .hero-copy h1 {
+                max-width: none;
+            }
+        }
+
+        @media (max-width: 680px) {
+            .page {
+                padding: 18px;
+            }
+        }
     </style>
-    <link rel="stylesheet" href="theme.css">
-    <script src="ui.js" defer></script></head>
-
-<body class="soft-bg">
-
-    <div class="card">
-
-        <h1>Create Your Account</h1>
-
-        <!-- FULL NAME -->
-        <label>Full Name</label>
-        <input type="text" id="name" placeholder="Enter your name" oninput="validateName()" onblur="validateName()">
-        <div id="nameError" class="error-text"></div>
-
-        <!-- EMAIL -->
-        <label>Email</label>
-        <input type="text" id="email" placeholder="Enter your email" oninput="validateEmail()" onblur="validateEmail()">
-        <div id="emailError" class="error-text"></div>
-
-        <!-- PASSWORD -->
-        <label>Password</label>
-        <input type="password" id="password" placeholder="Create a password" oninput="validatePassword()"
-            onblur="validatePassword()">
-        <div id="passwordError" class="error-text"></div>
-
-        <!-- CONFIRM PASSWORD -->
-        <label>Re-enter Password</label>
-        <input type="password" id="confirm" placeholder="Confirm password" oninput="validateConfirm()"
-            onblur="validateConfirm()">
-        <div id="confirmError" class="error-text"></div>
-
-        <button id="signupBtn" class="btn" onclick="signUp()">Sign Up</button>
-
-        <button class="google-btn-white" onclick="signInWithGoogle()">
-            <img src="https://www.svgrepo.com/show/475656/google-color.svg">
-            Continue with Google
-        </button>
-
-        <div class="login">Already have an account? <a href="login.html">Login</a></div>
-
+</head>
+<body>
+    <div class="ambient" aria-hidden="true">
+        <span class="droplet one"></span>
+        <span class="droplet two"></span>
     </div>
+
+    <main class="page">
+        <section class="hero-copy">
+            <div class="eyebrow">Account Creation</div>
+            <h1>Join CoSwap with a cleaner launch-ready flow.</h1>
+            <p>
+                Create an account to unlock semantic browsing, recommendation-based discovery, persistent chat
+                sessions, and the connected marketplace experience.
+            </p>
+
+            <div class="hero-grid">
+                <article class="info-card">
+                    <div class="eyebrow">Search</div>
+                    <h3>Intent-aware marketplace discovery</h3>
+                    <p>Semantic search expands broad shopper intent into better listing matches.</p>
+                </article>
+                <article class="info-card">
+                    <div class="eyebrow">Recommendations</div>
+                    <h3>Personalized listing ranking</h3>
+                    <p>Behavior-aware picks adapt between personalized and trending marketplace views.</p>
+                </article>
+                <article class="info-card">
+                    <div class="eyebrow">Chat</div>
+                    <h3>Persistent buyer-seller sessions</h3>
+                    <p>Conversation history stays available across return visits after accepted requests and purchases.</p>
+                </article>
+                <article class="info-card">
+                    <div class="eyebrow">Trust</div>
+                    <h3>Terms-backed account access</h3>
+                    <p>New signups accept the CoSwap Terms &amp; Conditions as part of the live launch flow.</p>
+                </article>
+            </div>
+        </section>
+
+        <section class="panel">
+            <div class="eyebrow">Create Account</div>
+            <h2>Create your CoSwap account</h2>
+            <p>Fill in your account details and accept the Terms &amp; Conditions to continue.</p>
+
+            <form class="signup-form" id="signupForm">
+                <label class="field">
+                    <span>Full name</span>
+                    <input type="text" id="name" placeholder="Enter your full name" autocomplete="name">
+                    <div class="error-text" id="nameError"></div>
+                </label>
+
+                <label class="field">
+                    <span>Email address</span>
+                    <input type="email" id="email" placeholder="name@company.com" autocomplete="email">
+                    <div class="error-text" id="emailError"></div>
+                </label>
+
+                <label class="field">
+                    <span>Password</span>
+                    <input type="password" id="password" placeholder="At least 6 characters" autocomplete="new-password">
+                    <div class="helper">Use a minimum of 6 characters.</div>
+                    <div class="error-text" id="passwordError"></div>
+                </label>
+
+                <label class="field">
+                    <span>Confirm password</span>
+                    <input type="password" id="confirmPassword" placeholder="Re-enter your password" autocomplete="new-password">
+                    <div class="error-text" id="confirmError"></div>
+                </label>
+
+                <div class="terms-box">
+                    <input type="checkbox" id="acceptTerms">
+                    <label for="acceptTerms">
+                        I agree to the <a href="terms.html" target="_blank" rel="noopener">Terms &amp; Conditions</a>.
+                    </label>
+                </div>
+                <div class="error-text" id="termsError"></div>
+
+                <button type="submit" class="submit-btn" id="submitButton">Create account</button>
+            </form>
+
+            <div class="session-note">
+                Use your details to create your account and continue into CoSwap.
+            </div>
+
+            <div class="links">
+                <a href="login.html">Already have an account? Sign in</a>
+                <a href="terms.html">Terms &amp; Conditions</a>
+                <a href="index.html">Back to home</a>
+            </div>
+        </section>
+    </main>
 
     <div id="toast" class="toast"></div>
 
     <script src="api.js"></script>
     <script>
-        function showToast(message) {
-            const el = document.getElementById("toast");
-            el.textContent = message;
-            el.classList.add("show");
-            clearTimeout(el._t);
-            el._t = setTimeout(() => el.classList.remove("show"), 2200);
+        if (typeof getAuthToken === "function" && getAuthToken()) {
+            window.location.replace("dashboard.html");
         }
 
-        function isValidEmail(value) {
-            return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value);
+        const form = document.getElementById("signupForm");
+        const submitButton = document.getElementById("submitButton");
+
+        function setError(id, message) {
+            document.getElementById(id).textContent = message || "";
         }
-        /* ========== VALIDATION ========== */
 
         function validateName() {
-            let input = document.getElementById("name");
-            let error = document.getElementById("nameError");
-            let value = input.value.trim();
-
-            if (value === "") {
-                input.classList.remove("error", "valid");
-                error.innerText = "";
-                checkForm(); return;
-            }
-
-            if (value.length < 3) {
-                input.classList.add("error");
-                input.classList.remove("valid");
-                error.innerText = "Please enter at least 3 characters.";
-                checkForm(); return;
-            }
-
-            if (!/^[A-Za-z ]+$/.test(value)) {
-                input.classList.add("error");
-                input.classList.remove("valid");
-                error.innerText = "Name cannot contain numbers or symbols.";
-                checkForm(); return;
-            }
-
-            input.classList.remove("error");
-            input.classList.add("valid");
-            error.innerText = "";
-            checkForm();
+            const value = document.getElementById("name").value.trim();
+            if (!value) return "Full name is required.";
+            if (value.length < 3) return "Use at least 3 characters.";
+            return "";
         }
 
         function validateEmail() {
-            let input = document.getElementById("email");
-            let error = document.getElementById("emailError");
-            let value = input.value.trim();
-
-            if (value === "") {
-                input.classList.remove("error", "valid");
-                error.innerText = "";
-                checkForm(); return;
-            }
-
-            if (!isValidEmail(value)) {
-                input.classList.add("error");
-                input.classList.remove("valid");
-                error.innerText = "Please enter a valid email address.";
-                checkForm(); return;
-            }
-
-            input.classList.remove("error");
-            input.classList.add("valid");
-            error.innerText = "";
-            checkForm();
+            const value = document.getElementById("email").value.trim();
+            if (!value) return "Email is required.";
+            if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value)) return "Enter a valid email address.";
+            return "";
         }
 
         function validatePassword() {
-            let input = document.getElementById("password");
-            let error = document.getElementById("passwordError");
-            let value = input.value.trim();
-
-            if (value === "") {
-                input.classList.remove("error", "valid");
-                error.innerText = "";
-                checkForm(); return;
-            }
-
-            if (value.length < 6 || !/[0-9]/.test(value)) {
-                input.classList.add("error");
-                input.classList.remove("valid");
-                error.innerText = "Password must be 6+ chars and include a number.";
-                checkForm(); return;
-            }
-
-            input.classList.remove("error");
-            input.classList.add("valid");
-            error.innerText = "";
-            checkForm();
+            const value = document.getElementById("password").value;
+            if (!value) return "Password is required.";
+            if (value.length < 6) return "Password must be at least 6 characters.";
+            return "";
         }
 
         function validateConfirm() {
-            let pass = document.getElementById("password").value.trim();
-            let input = document.getElementById("confirm");
-            let error = document.getElementById("confirmError");
-            let value = input.value.trim();
-
-            if (value === "") {
-                input.classList.remove("error", "valid");
-                error.innerText = "";
-                checkForm(); return;
-            }
-
-            if (value !== pass) {
-                input.classList.add("error");
-                input.classList.remove("valid");
-                error.innerText = "Passwords do not match.";
-                checkForm(); return;
-            }
-
-            input.classList.remove("error");
-            input.classList.add("valid");
-            error.innerText = "";
-            checkForm();
+            const value = document.getElementById("confirmPassword").value;
+            if (!value) return "Please confirm your password.";
+            if (value !== document.getElementById("password").value) return "Passwords do not match.";
+            return "";
         }
 
-        /* ========== CHECK FORM (BUTTON ENABLE LOGIC) ========== */
-
-        function checkForm() {
-            let btn = document.getElementById("signupBtn");
-
-            let isValid =
-                document.getElementById("name").classList.contains("valid") &&
-                document.getElementById("email").classList.contains("valid") &&
-                document.getElementById("password").classList.contains("valid") &&
-                document.getElementById("confirm").classList.contains("valid");
-
-            if (isValid) btn.classList.add("enabled");
-            else btn.classList.remove("enabled");
+        function validateTerms() {
+            return document.getElementById("acceptTerms").checked ? "" : "You must accept the Terms & Conditions.";
         }
 
-        /* ========== SIGN UP (OTP + SAVE DATA) ========== */
+        function setSubmitting(isSubmitting) {
+            submitButton.disabled = isSubmitting;
+            submitButton.textContent = isSubmitting ? "Creating account..." : "Create account";
+        }
 
-        async function signUp() {
-            let isValid =
-                document.getElementById("name").classList.contains("valid") &&
-                document.getElementById("email").classList.contains("valid") &&
-                document.getElementById("password").classList.contains("valid") &&
-                document.getElementById("confirm").classList.contains("valid");
+        function handleRedirect() {
+            const redirectPage = localStorage.getItem("redirectAfterLogin");
+            if (redirectPage) {
+                localStorage.removeItem("redirectAfterLogin");
+                window.location.href = redirectPage;
+                return;
+            }
+            window.location.href = "dashboard.html";
+        }
 
-            if (!isValid) {
-                showToast("Please correct the highlighted fields to continue.");
+        async function submitSignup(event) {
+            event.preventDefault();
+
+            const nameError = validateName();
+            const emailError = validateEmail();
+            const passwordError = validatePassword();
+            const confirmError = validateConfirm();
+            const termsError = validateTerms();
+
+            setError("nameError", nameError);
+            setError("emailError", emailError);
+            setError("passwordError", passwordError);
+            setError("confirmError", confirmError);
+            setError("termsError", termsError);
+
+            if (nameError || emailError || passwordError || confirmError || termsError) {
+                showToast("Review the highlighted fields.");
                 return;
             }
 
-            let user = {
-                name: document.getElementById("name").value.trim(),
-                email: document.getElementById("email").value.trim(),
-                password: document.getElementById("password").value.trim()
-            };
+            setSubmitting(true);
 
             try {
+                const payload = {
+                    name: document.getElementById("name").value.trim(),
+                    email: document.getElementById("email").value.trim(),
+                    password: document.getElementById("password").value,
+                    acceptTerms: document.getElementById("acceptTerms").checked
+                };
+
                 const data = await apiRequest("/auth/signup", {
                     method: "POST",
-                    body: JSON.stringify(user)
+                    body: JSON.stringify(payload)
                 });
 
                 setAuth(data.token, data.user);
-                showToast("Account created successfully!");
-                window.location.href = "dashboard.html";
+                showToast("Account created successfully.");
+                window.setTimeout(handleRedirect, 250);
             } catch (err) {
-                showToast(err.message || "Unable to create account. Please try again.");
+                showToast(err.message || "Unable to create your account right now.");
+            } finally {
+                setSubmitting(false);
             }
         }
 
-        /* ========== GOOGLE LOGIN ========== */
-
-        function signInWithGoogle() {
-            google.accounts.id.initialize({
-                client_id: "YOUR_GOOGLE_CLIENT_ID",
-                callback: googleCallback
-            });
-            google.accounts.id.prompt();
-        }
-
-        function googleCallback(response) {
-            let data = JSON.parse(atob(response.credential.split('.')[1]));
-
-            localStorage.setItem("googleEmail", data.email);
-            window.location.href = "entername.html";
-        }
+        form.addEventListener("submit", submitSignup);
     </script>
-
 </body>
-
 </html>

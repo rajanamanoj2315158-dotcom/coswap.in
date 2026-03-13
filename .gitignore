@@ -1,6 +1,10 @@
 node_modules/
 backend/node_modules/
-backend/data/*.sqlite
-backend/data/*.sqlite-shm
-backend/data/*.sqlite-wal
+backend/data/
 .DS_Store
+.env
+backend/.env
+*.sqlite
+*.sqlite-shm
+*.sqlite-wal
+myfirst.cpp

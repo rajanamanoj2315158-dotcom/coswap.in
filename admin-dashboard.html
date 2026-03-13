@@ -115,7 +115,7 @@
 
         <div class="card">
             <h2 id="revenue">₹0</h2>
-            <p>Total Platform Revenue</p>
+            <p>Total Sales Volume</p>
         </div>
 
         <div class="card">
@@ -157,7 +157,7 @@
 
                 document.getElementById("usersCount").innerText = o.totalUsers;
                 document.getElementById("couponCount").innerText = o.couponCount;
-                document.getElementById("revenue").innerText = "₹" + o.revenue;
+                document.getElementById("revenue").innerText = "₹" + (o.salesVolume ?? o.revenue ?? 0);
                 document.getElementById("reports").innerText = o.pendingReports;
                 document.getElementById("suspicious").innerText = o.suspiciousSellers;
                 document.getElementById("activeChats").innerText = o.activeChats;

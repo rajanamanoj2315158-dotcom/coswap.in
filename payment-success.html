@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Payment Successful – CoSwap</title>
+    <title>Transaction Successful – CoSwap</title>
 
     <style>
         * {
@@ -95,19 +95,19 @@
 
         <div class="icon">✔</div>
 
-        <h1>Payment Successful</h1>
+        <h1>Transaction Successful</h1>
 
         <p>Your payment has been recorded successfully.<br>
-            Your account is now unlocked and ready to use.</p>
+            Your account is ready to continue browsing, selling, and chatting.</p>
 
-        <button class="btn" onclick="goWallet()">Go to Wallet</button>
+        <button class="btn" onclick="goChats()">Open Chat</button>
         <button class="btn" onclick="goDashboard()">Go to Dashboard</button>
 
     </div>
 
     <script>
-        function goWallet() {
-            window.location.href = "wallet.html";
+        function goChats() {
+            window.location.href = "chatlist.html";
         }
 
         function goDashboard() {

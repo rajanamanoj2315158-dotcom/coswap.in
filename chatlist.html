@@ -4,107 +4,282 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Chats – CoSwap</title>
+    <title>Messages - CoSwap</title>
+    <link rel="stylesheet" href="theme.css">
+    <script src="ui.js" defer></script>
 
     <style>
-        body {
-            margin: 0;
-            padding: 25px;
-            font-family: "Poppins", sans-serif;
-            background: linear-gradient(135deg, #0c0f1d 0%, #14182b 50%, #0b0d18 100%);
-            color: white;
+        * {
+            box-sizing: border-box;
         }
 
-        h1 {
-            margin-bottom: 20px;
-            font-size: 28px;
+        body {
+            background:
+                radial-gradient(circle at 18% 14%, rgba(79, 208, 255, 0.18), transparent 24%),
+                linear-gradient(180deg, #0b0f1d 0%, #11162a 52%, #090c15 100%);
+            color: white;
+            margin: 0;
+            min-height: 100vh;
+            padding: 30px;
+        }
+
+        .page-shell {
+            margin: 0 auto;
+            max-width: 1040px;
+        }
+
+        .hero {
+            align-items: flex-end;
+            display: flex;
+            gap: 18px;
+            justify-content: space-between;
+            margin-bottom: 28px;
+        }
+
+        .hero h1 {
+            font-size: clamp(34px, 5vw, 50px);
+            letter-spacing: -0.05em;
+            margin-bottom: 10px;
+        }
+
+        .hero p {
+            color: rgba(255, 255, 255, 0.72);
+            max-width: 60ch;
+        }
+
+        .hero .actions {
+            display: flex;
+            gap: 10px;
+        }
+
+        .btn {
+            background: rgba(255, 255, 255, 0.08);
+            border: 1px solid rgba(255, 255, 255, 0.12);
+            border-radius: 14px;
+            color: white;
+            cursor: pointer;
+            font-size: 14px;
             font-weight: 700;
+            padding: 12px 16px;
+        }
+
+        .btn.primary {
+            background: linear-gradient(135deg, #4fd0ff, #6f6cff);
+            border: none;
+        }
+
+        .stats {
+            display: grid;
+            gap: 12px;
+            grid-template-columns: repeat(3, minmax(0, 1fr));
+            margin-bottom: 20px;
+        }
+
+        .stat-card,
+        .chat-card {
+            backdrop-filter: blur(16px);
+            background: rgba(255, 255, 255, 0.06);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 20px;
+            box-shadow: 0 22px 44px rgba(0, 0, 0, 0.22);
+        }
+
+        .stat-card {
+            padding: 16px 18px;
+        }
+
+        .stat-label {
+            color: rgba(255, 255, 255, 0.62);
+            font-size: 12px;
+            letter-spacing: 0.12em;
+            text-transform: uppercase;
+        }
+
+        .stat-value {
+            font-size: 28px;
+            font-weight: 800;
+            margin-top: 8px;
+        }
+
+        .list {
+            display: grid;
+            gap: 14px;
         }
 
         .chat-card {
-            background: rgba(255, 255, 255, 0.06);
-            border: 1px solid rgba(255, 255, 255, 0.12);
-            border-radius: 16px;
-            padding: 16px;
-            margin-bottom: 15px;
-            display: flex;
-            gap: 16px;
             align-items: center;
             cursor: pointer;
-            transition: 0.2s;
-            backdrop-filter: blur(8px);
+            display: grid;
+            gap: 16px;
+            grid-template-columns: 60px minmax(0, 1fr) auto;
+            padding: 18px;
+            transition: transform 0.18s ease, border-color 0.18s ease, background 0.18s ease;
         }
 
         .chat-card:hover {
-            transform: translateY(-4px);
             background: rgba(255, 255, 255, 0.08);
+            border-color: rgba(79, 208, 255, 0.2);
+            transform: translateY(-2px);
         }
 
         .avatar {
-            width: 48px;
-            height: 48px;
-            border-radius: 50%;
-            background: rgba(79, 208, 255, 0.25);
-            display: flex;
             align-items: center;
+            background: linear-gradient(135deg, rgba(79, 208, 255, 0.28), rgba(111, 108, 255, 0.2));
+            border: 1px solid rgba(79, 208, 255, 0.28);
+            border-radius: 18px;
+            display: flex;
+            font-size: 22px;
+            font-weight: 800;
+            height: 60px;
             justify-content: center;
-            font-size: 20px;
-            font-weight: 700;
-            color: white;
-            border: 1px solid rgba(79, 208, 255, 0.45);
-        }
-
-        .chat-info {
-            flex: 1;
+            width: 60px;
         }
 
         .name {
-            font-size: 17px;
-            font-weight: 600;
-            margin-bottom: 3px;
+            font-size: 18px;
+            font-weight: 700;
+            line-height: 1.35;
         }
 
         .last-msg {
-            font-size: 13px;
-            opacity: 0.75;
+            color: rgba(255, 255, 255, 0.72);
+            font-size: 14px;
+            line-height: 1.6;
+            margin-top: 8px;
+        }
+
+        .meta {
+            align-items: flex-end;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
         }
 
         .status {
-            margin-top: 6px;
-            font-size: 12px;
-            padding: 4px 8px;
-            border-radius: 8px;
-            width: fit-content;
+            border-radius: 999px;
+            font-size: 11px;
+            font-weight: 700;
+            letter-spacing: 0.12em;
+            padding: 7px 10px;
+            text-transform: uppercase;
         }
 
         .pending {
-            background: rgba(255, 210, 0, 0.18);
-            color: #ffd200;
+            background: rgba(255, 210, 0, 0.14);
+            color: #ffd76b;
         }
 
         .active {
-            background: rgba(0, 255, 150, 0.18);
-            color: #00ff9d;
+            background: rgba(0, 255, 150, 0.14);
+            color: #87ffbf;
         }
 
         .expired {
-            background: rgba(255, 80, 80, 0.18);
-            color: #ff4e4e;
+            background: rgba(255, 80, 80, 0.14);
+            color: #ff9e9e;
         }
 
         .completed {
-            background: rgba(79, 208, 255, 0.18);
-            color: #4fd0ff;
+            background: rgba(79, 208, 255, 0.14);
+            color: #87e8ff;
+        }
+
+        .open-label {
+            color: rgba(255, 255, 255, 0.6);
+            font-size: 12px;
+            letter-spacing: 0.12em;
+            text-transform: uppercase;
+        }
+
+        .empty-state {
+            color: rgba(255, 255, 255, 0.72);
+            padding: 28px;
+            text-align: center;
+        }
+
+        .footer-links {
+            color: rgba(255, 255, 255, 0.64);
+            display: flex;
+            flex-wrap: wrap;
+            gap: 14px 16px;
+            justify-content: space-between;
+            margin-top: 22px;
+        }
+
+        .footer-links a {
+            color: #8fe5ff;
+            font-weight: 700;
+        }
+
+        @media (max-width: 780px) {
+            body {
+                padding: 18px;
+            }
+
+            .hero {
+                align-items: stretch;
+                flex-direction: column;
+            }
+
+            .stats {
+                grid-template-columns: 1fr;
+            }
+
+            .chat-card {
+                grid-template-columns: 52px minmax(0, 1fr);
+            }
+
+            .meta {
+                align-items: flex-start;
+                grid-column: 2 / 3;
+            }
         }
     </style>
-    <link rel="stylesheet" href="theme.css">
-    <script src="ui.js" defer></script></head>
+</head>
 
 <body>
+    <main class="page-shell">
+        <section class="hero">
+            <div>
+                <h1>Professional chat sessions</h1>
+                <p>Persistent conversation threads for accepted requests, completed purchases, and repeat engagement across returning visits.</p>
+            </div>
 
-    <h1>Your Chats</h1>
+            <div class="actions">
+                <button class="btn" onclick="window.location.href='dashboard.html'">Dashboard</button>
+                <button class="btn" onclick="window.location.href='terms.html'">Terms</button>
+                <button class="btn primary" onclick="window.location.href='browse.html'">Browse Listings</button>
+            </div>
+        </section>
 
-    <div id="chatList"></div>
+        <section class="stats" id="chatStats">
+            <div class="stat-card">
+                <div class="stat-label">Total</div>
+                <div class="stat-value" id="statTotal">0</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-label">Active</div>
+                <div class="stat-value" id="statActive">0</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-label">Completed</div>
+                <div class="stat-value" id="statCompleted">0</div>
+            </div>
+        </section>
+
+        <section class="list" id="chatList">
+            <div class="empty-state">Loading conversations...</div>
+        </section>
+
+        <div class="footer-links">
+            <div>Persistent chat sessions stay connected to your marketplace activity.</div>
+            <div>
+                <a href="about.html">About</a>
+                <a href="how-it-works.html">How It Works</a>
+                <a href="terms.html">Terms &amp; Conditions</a>
+            </div>
+        </div>
+    </main>
 
     <script src="api.js"></script>
     <script>
@@ -112,43 +287,79 @@
             // redirected
         }
 
-        let chats = [];
+        function escapeHtml(str) {
+            if (!str) return "";
+            return String(str)
+                .replace(/&/g, "&amp;")
+                .replace(/</g, "&lt;")
+                .replace(/>/g, "&gt;")
+                .replace(/"/g, "&quot;")
+                .replace(/'/g, "&#39;");
+        }
+
+        function formatRelative(ts) {
+            if (!ts) return "Just opened";
+
+            const date = new Date(ts);
+            if (Number.isNaN(date.getTime())) {
+                return "Recently updated";
+            }
+
+            return date.toLocaleString([], {
+                month: "short",
+                day: "numeric",
+                hour: "2-digit",
+                minute: "2-digit"
+            });
+        }
+
+        function updateStats(chats) {
+            const active = chats.filter((chat) => (chat.status || "active") === "active").length;
+            const completed = chats.filter((chat) => (chat.status || "") === "completed").length;
+
+            document.getElementById("statTotal").innerText = chats.length;
+            document.getElementById("statActive").innerText = active;
+            document.getElementById("statCompleted").innerText = completed;
+        }
 
         async function loadChats() {
-            let list = document.getElementById("chatList");
-            list.innerHTML = "<p style='opacity:0.7;'>Loading chats...</p>";
+            const list = document.getElementById("chatList");
+            list.innerHTML = `<div class="empty-state">Loading conversations...</div>`;
 
             try {
                 const data = await apiRequest("/chats");
-                chats = data.chats || [];
+                const chats = data.chats || [];
+                const me = getCurrentUser();
+
+                updateStats(chats);
 
                 if (chats.length === 0) {
-                    list.innerHTML = "<p style='opacity:0.7;'>No chats yet.</p>";
+                    list.innerHTML = `<div class="empty-state">No conversations yet. Once a request is accepted, the session will appear here.</div>`;
                     return;
                 }
 
-                const me = getCurrentUser();
-                list.innerHTML = "";
+                list.innerHTML = chats.map((chat) => {
+                    const other = chat.buyer_id === me.id ? chat.seller_name : chat.buyer_name;
+                    const initial = escapeHtml((other || "U").charAt(0).toUpperCase());
+                    const status = chat.status || "active";
 
-                chats.forEach(chat => {
-                    const other =
-                        chat.buyer_id === me.id ? chat.seller_name : chat.buyer_name;
-                    const initial = (other || "U").charAt(0).toUpperCase();
-                    const statusClass = chat.status || "active";
-
-                    list.innerHTML += `
-                        <div class="chat-card" onclick="openChat('${chat.id}')">
+                    return `
+                        <article class="chat-card" onclick="openChat('${chat.id}')">
                             <div class="avatar">${initial}</div>
-                            <div class="chat-info">
-                                <div class="name">${other} – ${chat.coupon_title}</div>
-                                <div class="last-msg">${chat.last_message || "No messages yet"}</div>
-                                <div class="status ${statusClass}">${(chat.status || "active").toUpperCase()}</div>
+                            <div>
+                                <div class="name">${escapeHtml(other || "Unknown User")} • ${escapeHtml(chat.coupon_title || "Untitled listing")}</div>
+                                <div class="last-msg">${escapeHtml(chat.last_message || "No messages yet. Open this session to start the conversation.")}</div>
                             </div>
-                        </div>
+                            <div class="meta">
+                                <div class="status ${status}">${escapeHtml(status)}</div>
+                                <div class="open-label">${escapeHtml(formatRelative(chat.last_message_at || chat.created_at))}</div>
+                            </div>
+                        </article>
                     `;
-                });
+                }).join("");
             } catch (err) {
-                list.innerHTML = `<p style='opacity:0.7;'>Failed to load chats. ${err.message || ""}</p>`;
+                document.getElementById("chatList").innerHTML =
+                    `<div class="empty-state">Unable to load conversations right now. ${escapeHtml(err.message || "")}</div>`;
             }
         }
 
@@ -158,7 +369,6 @@
 
         loadChats();
     </script>
-
 </body>
 
 </html>

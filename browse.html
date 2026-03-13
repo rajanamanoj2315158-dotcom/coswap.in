@@ -4,14 +4,15 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Browse Coupons – CoSwap</title>
+    <title>CoSwap Browse</title>
+    <link rel="stylesheet" href="theme.css">
+    <script src="ui.js" defer></script>
 
     <style>
         * {
+            box-sizing: border-box;
             margin: 0;
             padding: 0;
-            box-sizing: border-box;
-            font-family: "Poppins", sans-serif;
         }
 
         body {
@@ -22,31 +23,30 @@
             overflow-x: hidden;
         }
 
-        /* SIDEBAR (MATCHES MY LISTINGS EXACTLY) */
         .sidebar {
-            width: 260px;
-            background: rgba(255, 255, 255, 0.07);
             backdrop-filter: blur(15px);
-            padding: 35px 20px;
+            background: rgba(255, 255, 255, 0.07);
             border-right: 1px solid rgba(255, 255, 255, 0.12);
             height: 100vh;
+            padding: 35px 20px;
             position: fixed;
+            width: 260px;
         }
 
         .logo {
             font-size: 30px;
             font-weight: 700;
-            text-align: center;
             margin-bottom: 35px;
+            text-align: center;
         }
 
         .menu-item {
-            padding: 14px 16px;
-            margin-bottom: 12px;
             border-radius: 12px;
             cursor: pointer;
-            transition: .2s;
             font-size: 16px;
+            margin-bottom: 12px;
+            padding: 14px 16px;
+            transition: .2s;
         }
 
         .menu-item:hover {
@@ -58,19 +58,40 @@
             font-weight: 600;
         }
 
-        /* MAIN */
         .main {
             flex: 1;
             margin-left: 260px;
-            padding: 35px 45px;
+            padding: 30px 34px 38px;
         }
 
-        /* TOP BAR */
-        .top-bar {
+        .hero {
+            align-items: flex-start;
             display: flex;
+            gap: 18px;
             justify-content: space-between;
-            align-items: center;
-            margin-bottom: 30px;
+            margin-bottom: 22px;
+        }
+
+        .eyebrow {
+            color: #8adfff;
+            font-size: 12px;
+            font-weight: 700;
+            letter-spacing: 0.16em;
+            text-transform: uppercase;
+        }
+
+        h1 {
+            font-size: clamp(34px, 6vw, 50px);
+            font-weight: 800;
+            letter-spacing: -0.05em;
+            line-height: 0.96;
+            margin: 10px 0 12px;
+        }
+
+        .hero-copy {
+            color: rgba(255, 255, 255, 0.74);
+            line-height: 1.7;
+            max-width: 62ch;
         }
 
         .top-actions {
@@ -78,135 +99,310 @@
             gap: 12px;
         }
 
-        .top-btn {
-            padding: 10px 18px;
-            border-radius: 14px;
+        .top-btn,
+        .chip,
+        .browse-action {
             border: none;
+            border-radius: 14px;
             cursor: pointer;
-            font-size: 14px;
-            font-weight: 600;
-            color: white;
-            background: rgba(255, 255, 255, 0.12);
-            backdrop-filter: blur(8px);
-        }
-
-        .top-btn:hover {
-            background: rgba(255, 255, 255, 0.22);
-        }
-
-        h1 {
-            font-size: 34px;
             font-weight: 700;
         }
 
-        /* SEARCH + FILTER */
-        .search-box {
-            width: 100%;
-            margin: 20px 0;
-            padding: 16px 18px;
-            border-radius: 14px;
-            border: none;
-            outline: none;
-            font-size: 16px;
+        .top-btn {
             background: rgba(255, 255, 255, 0.12);
             color: white;
+            font-size: 14px;
+            padding: 12px 16px;
         }
 
-        /* GRID */
-        .grid {
+        .top-btn.primary {
+            background: linear-gradient(90deg, #4fd0ff, #7b5bff);
+        }
+
+        .panel,
+        .coupon-card,
+        .recommendation-card,
+        .metric-card {
+            backdrop-filter: blur(16px);
+            background: rgba(255, 255, 255, 0.06);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 22px;
+            box-shadow: 0 18px 36px rgba(0, 0, 0, 0.24);
+        }
+
+        .search-panel {
+            margin-bottom: 22px;
+            padding: 22px;
+            position: relative;
+        }
+
+        .search-row {
+            align-items: center;
             display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
-            gap: 25px;
-            margin-top: 30px;
+            gap: 14px;
+            grid-template-columns: minmax(0, 1fr) auto;
         }
 
-        .card {
-            background: rgba(255, 255, 255, 0.08);
-            border-radius: 18px;
-            overflow: hidden;
+        .search-box {
+            background: rgba(255, 255, 255, 0.1);
             border: 1px solid rgba(255, 255, 255, 0.12);
-            backdrop-filter: blur(14px);
-            transition: .25s;
-        }
-
-        .card:hover {
-            transform: translateY(-6px);
-            box-shadow: 0 14px 35px rgba(0, 0, 0, 0.45);
-        }
-
-        .card img {
+            border-radius: 18px;
+            color: white;
+            font-size: 16px;
+            outline: none;
+            padding: 17px 18px;
             width: 100%;
-            height: 170px;
-            object-fit: cover;
         }
 
-        .card-body {
+        .search-box:focus {
+            box-shadow: 0 0 0 3px rgba(79, 208, 255, 0.18);
+        }
+
+        .browse-action {
+            background: linear-gradient(135deg, #4fd0ff, #6f6cff);
+            color: white;
+            padding: 16px 18px;
+        }
+
+        .search-summary {
+            color: rgba(255, 255, 255, 0.7);
+            font-size: 14px;
+            line-height: 1.7;
+            margin-top: 14px;
+        }
+
+        .chip-row {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            margin-top: 16px;
+        }
+
+        .chip {
+            background: rgba(255, 255, 255, 0.08);
+            color: white;
+            font-size: 13px;
+            padding: 10px 14px;
+        }
+
+        .chip.semantic {
+            background: rgba(79, 208, 255, 0.14);
+            border: 1px solid rgba(79, 208, 255, 0.18);
+            color: #9be8ff;
+        }
+
+        .insights {
+            display: grid;
+            gap: 14px;
+            grid-template-columns: repeat(3, minmax(0, 1fr));
+            margin-bottom: 22px;
+        }
+
+        .metric-card {
+            min-height: 118px;
+            padding: 18px 20px;
+            position: relative;
+        }
+
+        .metric-label {
+            color: rgba(255, 255, 255, 0.62);
+            font-size: 12px;
+            letter-spacing: 0.12em;
+            text-transform: uppercase;
+        }
+
+        .metric-value {
+            font-size: 28px;
+            font-weight: 800;
+            margin-top: 10px;
+        }
+
+        .metric-copy {
+            color: rgba(255, 255, 255, 0.72);
+            font-size: 14px;
+            line-height: 1.6;
+            margin-top: 10px;
+        }
+
+        .droplet {
+            background:
+                radial-gradient(circle at 28% 22%, rgba(255, 255, 255, 0.5), transparent 20%),
+                linear-gradient(180deg, rgba(255, 255, 255, 0.14), rgba(79, 208, 255, 0.06));
+            border: 1px solid rgba(255, 255, 255, 0.12);
+            border-radius: 60% 40% 58% 42% / 44% 58% 42% 56%;
+            box-shadow: inset 0 14px 18px rgba(255, 255, 255, 0.05);
+            opacity: 0.55;
+            position: absolute;
+            right: 16px;
+            top: 14px;
+        }
+
+        .droplet.small {
+            height: 34px;
+            width: 28px;
+        }
+
+        .section-head {
+            align-items: center;
+            display: flex;
+            justify-content: space-between;
+            margin: 24px 0 14px;
+        }
+
+        .section-head h2 {
+            font-size: 22px;
+            letter-spacing: -0.03em;
+        }
+
+        .section-head p {
+            color: rgba(255, 255, 255, 0.68);
+        }
+
+        .recommendation-grid,
+        .results-grid {
+            display: grid;
+            gap: 18px;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+        }
+
+        .recommendation-card,
+        .coupon-card {
+            overflow: hidden;
+        }
+
+        .recommendation-card img,
+        .coupon-card img {
+            display: block;
+            height: 172px;
+            object-fit: cover;
+            width: 100%;
+        }
+
+        .recommendation-body,
+        .coupon-body {
             padding: 16px;
         }
 
-        .title {
-            font-size: 18px;
-            font-weight: 600;
+        .item-tag {
+            color: #8adfff;
+            font-size: 11px;
+            font-weight: 700;
+            letter-spacing: 0.12em;
+            text-transform: uppercase;
         }
 
-        .meta {
-            font-size: 14px;
-            opacity: 0.85;
-            margin: 6px 0;
-        }
-
-        .desc {
-            font-size: 14px;
-            opacity: 0.8;
-            margin: 6px 0 10px;
-            display: -webkit-box;
-            -webkit-line-clamp: 2;
-            -webkit-box-orient: vertical;
-            overflow: hidden;
-        }
-
-        .stats {
-            background: rgba(255, 255, 255, 0.08);
-            border-radius: 12px;
-            padding: 10px;
-            font-size: 14px;
-            margin: 10px 0;
-        }
-
-        .price {
-            color: #4fd0ff;
+        .item-title {
             font-size: 18px;
             font-weight: 700;
-            margin-bottom: 10px;
+            line-height: 1.35;
+            margin-top: 10px;
         }
 
-        .btn {
-            width: 100%;
-            padding: 12px;
+        .item-copy {
+            color: rgba(255, 255, 255, 0.74);
+            font-size: 14px;
+            line-height: 1.6;
+            margin-top: 10px;
+            min-height: 44px;
+        }
+
+        .item-stats {
+            background: rgba(255, 255, 255, 0.08);
             border-radius: 14px;
-            border: none;
-            cursor: pointer;
-            font-weight: 600;
-            font-size: 15px;
-            margin-top: 8px;
+            color: rgba(255, 255, 255, 0.78);
+            font-size: 13px;
+            line-height: 1.6;
+            margin-top: 12px;
+            padding: 10px 12px;
         }
 
-        .buy {
+        .item-meta {
+            align-items: center;
+            display: flex;
+            justify-content: space-between;
+            margin-top: 14px;
+        }
+
+        .item-price {
+            color: #4fd0ff;
+            font-size: 20px;
+            font-weight: 800;
+        }
+
+        .item-actions {
+            display: grid;
+            gap: 10px;
+            margin-top: 14px;
+        }
+
+        .card-btn {
+            border: none;
+            border-radius: 14px;
+            cursor: pointer;
+            font-size: 14px;
+            font-weight: 700;
+            padding: 12px;
+        }
+
+        .card-btn.primary {
             background: linear-gradient(90deg, #4fd0ff, #7b5bff);
             color: white;
         }
 
-        .details {
-            background: rgba(255, 255, 255, 0.18);
+        .card-btn.secondary {
+            background: rgba(255, 255, 255, 0.12);
             color: white;
         }
+
+        .empty {
+            color: rgba(255, 255, 255, 0.72);
+            padding: 28px;
+            text-align: center;
+        }
+
+        @media (max-width: 1080px) {
+            .insights {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        @media (max-width: 820px) {
+            body {
+                display: block;
+            }
+
+            .sidebar {
+                height: auto;
+                position: static;
+                width: auto;
+            }
+
+            .main {
+                margin-left: 0;
+                padding: 20px;
+            }
+
+            .hero,
+            .search-row,
+            .section-head {
+                align-items: stretch;
+                flex-direction: column;
+                grid-template-columns: 1fr;
+            }
+
+            .top-actions {
+                flex-wrap: wrap;
+            }
+
+            .top-btn,
+            .browse-action {
+                width: 100%;
+            }
+        }
     </style>
-    <link rel="stylesheet" href="theme.css">
-    <script src="ui.js" defer></script></head>
+</head>
 
 <body class="soft-bg">
-
-    <!-- SIDEBAR -->
     <div class="sidebar">
         <div class="logo">CoSwap</div>
         <div class="menu-item" onclick="go('dashboard.html')">Dashboard</div>
@@ -217,79 +413,230 @@
         <div class="menu-item" onclick="go('sellerprofile.html')">My Profile</div>
     </div>
 
-    <!-- MAIN -->
-    <div class="main">
-
-        <div class="top-bar">
-            <h1>Browse Coupons</h1>
+    <main class="main">
+        <section class="hero">
+            <div>
+                <div class="eyebrow">Semantic Search Engine</div>
+                <h1>Search the marketplace by meaning, not only keywords.</h1>
+                <p class="hero-copy">
+                    Query categories like OTT, food, travel, shopping, gaming, or beauty and CoSwap will expand
+                    your intent across related coupon signals.
+                </p>
+            </div>
 
             <div class="top-actions">
-                <button class="top-btn" onclick="go('wallet.html')">💰 Wallet</button>
-                <button class="top-btn" onclick="go('chatlist.html')">💬 Chat</button>
+                <button class="top-btn primary" onclick="go('chatlist.html')">Chat Workspace</button>
+                <button class="top-btn" onclick="go('terms.html')">Terms</button>
                 <button class="top-btn" onclick="logout()">Logout</button>
             </div>
-        </div>
+        </section>
 
-        <input class="search-box" placeholder="Search coupons (Music, Food, OTT, Shopping...)">
+        <section class="panel search-panel">
+            <div class="search-row">
+                <input id="searchInput" class="search-box" placeholder="Try: OTT subscriptions, food offers, travel stays, beauty deals">
+                <button class="browse-action" onclick="applySearch()">Run Semantic Search</button>
+            </div>
 
-        <div id="grid" class="grid"></div>
-    </div>
+            <div class="search-summary" id="searchSummary">
+                Start with a broad intent like <strong>food</strong>, <strong>OTT</strong>, or <strong>shopping</strong>.
+            </div>
+
+            <div class="chip-row" id="chipRow">
+                <button class="chip" onclick="setSemanticQuery('OTT subscriptions')">OTT subscriptions</button>
+                <button class="chip" onclick="setSemanticQuery('food discounts')">Food discounts</button>
+                <button class="chip" onclick="setSemanticQuery('travel stays')">Travel stays</button>
+                <button class="chip" onclick="setSemanticQuery('fashion shopping')">Fashion shopping</button>
+                <button class="chip" onclick="setSemanticQuery('beauty and salon')">Beauty and salon</button>
+            </div>
+        </section>
+
+        <section class="insights">
+            <article class="metric-card">
+                <div class="metric-label">Search Mode</div>
+                <div class="metric-value" id="metricMode">Semantic</div>
+                <div class="metric-copy">Keyword expansion and category-intent matching are active.</div>
+                <span class="droplet small"></span>
+            </article>
+
+            <article class="metric-card">
+                <div class="metric-label">Result Count</div>
+                <div class="metric-value" id="metricCount">0</div>
+                <div class="metric-copy">Live count of matching marketplace listings.</div>
+                <span class="droplet small"></span>
+            </article>
+
+            <article class="metric-card">
+                <div class="metric-label">Recommendation Mode</div>
+                <div class="metric-value" id="metricStrategy">Loading</div>
+                <div class="metric-copy">Personalized when activity exists, trending otherwise.</div>
+                <span class="droplet small"></span>
+            </article>
+        </section>
+
+        <section>
+            <div class="section-head">
+                <div>
+                    <h2>Recommended for you</h2>
+                    <p>Live recommendation system using seller quality, history, and fresh marketplace signals.</p>
+                </div>
+            </div>
+
+            <div class="recommendation-grid" id="recommendationGrid">
+                <div class="panel empty">Loading recommendations...</div>
+            </div>
+        </section>
+
+        <section>
+            <div class="section-head">
+                <div>
+                    <h2>Marketplace results</h2>
+                    <p id="resultsCaption">Latest active listings across CoSwap.</p>
+                </div>
+            </div>
+
+            <div id="grid" class="results-grid"></div>
+        </section>
+    </main>
 
     <script src="api.js"></script>
     <script>
+        const searchInput = document.getElementById("searchInput");
+        const chipRow = document.getElementById("chipRow");
+        const searchSummary = document.getElementById("searchSummary");
+        const resultsCaption = document.getElementById("resultsCaption");
+        const grid = document.getElementById("grid");
+        const recommendationGrid = document.getElementById("recommendationGrid");
+
+        let coupons = [];
+        let searchTimer = null;
+        const defaultChips = [
+            "OTT subscriptions",
+            "food discounts",
+            "travel stays",
+            "fashion shopping",
+            "beauty and salon"
+        ];
+
+        function escapeHtml(str) {
+            if (!str) return "";
+            return String(str)
+                .replace(/&/g, "&amp;")
+                .replace(/</g, "&lt;")
+                .replace(/>/g, "&gt;")
+                .replace(/"/g, "&quot;")
+                .replace(/'/g, "&#39;");
+        }
+
         function go(page) {
             window.location.href = page;
         }
 
-        /* LOGOUT SECURITY */
         function logout() {
             clearAuth();
             window.location.replace("index.html");
         }
 
-        /* LOAD COUPONS */
-        const grid = document.getElementById("grid");
-        let coupons = [];
+        function setSemanticQuery(query) {
+            searchInput.value = query;
+            applySearch();
+        }
+
+        function renderChipButtons(terms, semantic = false) {
+            chipRow.innerHTML = terms.map((term) => `
+                <button class="chip ${semantic ? "semantic" : ""}" onclick="setSemanticQuery(decodeURIComponent('${encodeURIComponent(term)}'))">
+                    ${escapeHtml(term)}
+                </button>
+            `).join("");
+        }
+
+        function renderCouponCards(items, semanticMeta) {
+            document.getElementById("metricCount").innerText = items.length;
+
+            if (!items.length) {
+                grid.innerHTML = `<div class="panel empty">No active listings matched this search. Try a broader semantic query like OTT, food, shopping, or travel.</div>`;
+                return;
+            }
+
+            grid.innerHTML = items.map((c, index) => `
+                <article class="coupon-card">
+                    <img src="${escapeHtml(c.image_url || "bg.png")}" onerror="this.src='bg.png'" alt="${escapeHtml(c.title)}">
+                    <div class="coupon-body">
+                        <div class="item-tag">${escapeHtml(c.category || "Marketplace listing")}</div>
+                        <div class="item-title">${escapeHtml(c.title)}</div>
+                        <div class="item-copy">${escapeHtml(c.details || "No description provided.")}</div>
+                        <div class="item-stats">
+                            ⭐ ${escapeHtml(c.seller_rating || "Not rated")} •
+                            Fraud ${escapeHtml(String(c.seller_fraud_percent ?? 0))}% •
+                            Level ${escapeHtml(String(c.seller_level || 1))}
+                            ${c.semanticReason ? ` • ${escapeHtml(c.semanticReason)}` : ""}
+                        </div>
+                        <div class="item-meta">
+                            <div class="item-price">₹${escapeHtml(c.price)}</div>
+                            <div>${escapeHtml(c.expiry || "No expiry")}</div>
+                        </div>
+                        <div class="item-actions">
+                            <button class="card-btn primary" onclick="handleBuy(${index})">Buy Now</button>
+                            <button class="card-btn secondary" onclick="handleDetails(${index})">Details</button>
+                        </div>
+                    </div>
+                </article>
+            `).join("");
+
+            if (semanticMeta && semanticMeta.expandedTerms && semanticMeta.expandedTerms.length) {
+                renderChipButtons(semanticMeta.expandedTerms, true);
+                searchSummary.innerHTML = `Semantic expansion active for <strong>${escapeHtml(semanticMeta.query)}</strong>. Matching related terms: ${semanticMeta.expandedTerms.map(escapeHtml).join(", ")}.`;
+                resultsCaption.innerText = `${semanticMeta.totalMatches || items.length} semantic matches ranked by relevance.`;
+            } else {
+                renderChipButtons(defaultChips, false);
+                searchSummary.innerText = "Start with a broad intent like food, OTT, shopping, or travel.";
+                resultsCaption.innerText = "Latest active listings across CoSwap.";
+            }
+        }
 
         async function loadCoupons(searchTerm = "") {
-            grid.innerHTML = "<p>Loading coupons...</p>";
+            grid.innerHTML = `<div class="panel empty">Loading listings...</div>`;
 
             try {
                 const query = searchTerm ? `?search=${encodeURIComponent(searchTerm)}` : "";
                 const data = await apiRequest(`/coupons${query}`);
                 coupons = data.coupons || [];
+                renderCouponCards(coupons, data.semantic || null);
+            } catch (err) {
+                grid.innerHTML = `<div class="panel empty">Unable to load listings right now. ${escapeHtml(err.message || "")}</div>`;
+            }
+        }
 
-                if (coupons.length === 0) {
-                    grid.innerHTML = "<p>No active coupons available.</p>";
+        async function loadRecommendations() {
+            recommendationGrid.innerHTML = `<div class="panel empty">Loading recommendations...</div>`;
+
+            try {
+                const data = await apiRequest("/recommendations?limit=6");
+                const recommendations = data.recommendations || [];
+                document.getElementById("metricStrategy").innerText =
+                    data.strategy === "personalized" ? "Personalized" : "Trending";
+
+                if (!recommendations.length) {
+                    recommendationGrid.innerHTML = `<div class="panel empty">No recommendations available yet.</div>`;
                     return;
                 }
 
-                grid.innerHTML = "";
-                coupons.forEach((c, index) => {
-                    grid.innerHTML += `
-                        <div class="card">
-                            <img src="${c.image_url || 'bg.png'}" onerror="this.src='bg.png'">
-                            <div class="card-body">
-                                <div class="title">${c.title}</div>
-                                <div class="meta">Expires: ${c.expiry || "N/A"}</div>
-                                <div class="desc">${c.details || "No description provided."}</div>
-
-                                <div class="stats">
-                                    ⭐ Rating: ${c.seller_rating ? c.seller_rating : "Not rated"} &nbsp; | &nbsp;
-                                    ⚠ Fraud: ${c.seller_fraud_percent ?? 0}% &nbsp; | &nbsp;
-                                    🏆 Level ${c.seller_level || 1}
-                                </div>
-
-                                <div class="price">₹${c.price}</div>
-
-                                <button class="btn buy" onclick="handleBuy(${index})">Buy Now</button>
-                                <button class="btn details" onclick="handleDetails(${index})">Details</button>
+                recommendationGrid.innerHTML = recommendations.map((item) => `
+                    <article class="recommendation-card">
+                        <img src="${escapeHtml(item.image_url || "bg.png")}" onerror="this.src='bg.png'" alt="${escapeHtml(item.title)}">
+                        <div class="recommendation-body">
+                            <div class="item-tag">${escapeHtml(item.category || "Recommended")}</div>
+                            <div class="item-title">${escapeHtml(item.title)}</div>
+                            <div class="item-copy">${escapeHtml(item.recommendation_reason || "Recommended listing")}</div>
+                            <div class="item-meta">
+                                <div class="item-price">₹${escapeHtml(item.price)}</div>
+                                <button class="card-btn secondary" onclick="window.location.href='coupon-details.html?id=${item.id}'">Open</button>
                             </div>
                         </div>
-                    `;
-                });
+                    </article>
+                `).join("");
             } catch (err) {
-                grid.innerHTML = `<p>Failed to load coupons. ${err.message || ""}</p>`;
+                document.getElementById("metricStrategy").innerText = "Offline";
+                recommendationGrid.innerHTML = `<div class="panel empty">Unable to load recommendations right now. ${escapeHtml(err.message || "")}</div>`;
             }
         }
 
@@ -310,18 +657,22 @@
             window.location.href = `coupon-details.html?id=${coupon.id}`;
         }
 
-        const searchInput = document.querySelector(".search-box");
-        let searchTimer = null;
+        function applySearch() {
+            const value = searchInput.value.trim();
+            loadCoupons(value);
+        }
+
         searchInput.addEventListener("input", () => {
             clearTimeout(searchTimer);
             searchTimer = setTimeout(() => {
-                loadCoupons(searchInput.value.trim());
-            }, 250);
+                applySearch();
+            }, 260);
         });
 
+        renderChipButtons(defaultChips, false);
+        loadRecommendations();
         loadCoupons();
     </script>
-
 </body>
 
 </html>

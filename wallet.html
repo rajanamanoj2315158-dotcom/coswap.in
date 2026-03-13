@@ -4,190 +4,93 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Your Wallet – CoSwap</title>
+    <title>Platform Update – CoSwap</title>
+    <link rel="stylesheet" href="theme.css">
+    <script src="ui.js" defer></script>
 
     <style>
         * {
+            box-sizing: border-box;
             margin: 0;
             padding: 0;
-            box-sizing: border-box;
             font-family: Poppins, sans-serif;
         }
 
         body {
+            align-items: center;
             background: radial-gradient(circle at center, #141828, #0b0f1e, #05060a);
             color: white;
-            padding: 30px;
+            display: flex;
+            justify-content: center;
+            min-height: 100vh;
+            padding: 24px;
+        }
+
+        .card {
+            background: rgba(255, 255, 255, 0.09);
+            border: 1px solid rgba(255, 255, 255, 0.12);
+            border-radius: 22px;
+            box-shadow: 0 24px 48px rgba(0, 0, 0, 0.3);
+            max-width: 560px;
+            padding: 36px;
+            text-align: center;
         }
 
         h1 {
             font-size: 34px;
-            font-weight: 700;
-            margin-bottom: 20px;
+            margin-bottom: 14px;
         }
 
-        .wallet-box {
-            background: rgba(255, 255, 255, 0.09);
-            padding: 25px;
-            border-radius: 18px;
-            backdrop-filter: blur(16px);
-            border: 1px solid rgba(255, 255, 255, 0.15);
-            margin-bottom: 30px;
+        p {
+            color: rgba(255, 255, 255, 0.78);
+            font-size: 16px;
+            line-height: 1.7;
         }
 
-        .amount {
-            font-size: 38px;
-            font-weight: 700;
-            color: #4fd0ff;
-            margin-bottom: 8px;
+        .actions {
+            display: flex;
+            gap: 12px;
+            justify-content: center;
+            margin-top: 24px;
         }
 
-        .note {
-            font-size: 15px;
-            opacity: 0.8;
-            margin-bottom: 15px;
-        }
-
-        .pay-btn {
-            padding: 14px 20px;
+        .btn {
+            background: linear-gradient(135deg, #4fd0ff, #6f6cff);
             border: none;
             border-radius: 14px;
-            background: linear-gradient(90deg, #4fd0ff, #6f6cff);
             color: white;
-            font-size: 18px;
-            font-weight: 600;
             cursor: pointer;
-            margin-top: 10px;
-        }
-
-        .pay-btn:hover {
-            opacity: 0.9;
-        }
-
-        .freeze-warning {
-            background: rgba(255, 0, 0, 0.2);
-            border-left: 4px solid red;
-            padding: 15px;
-            border-radius: 12px;
-            margin-bottom: 20px;
             font-size: 15px;
+            font-weight: 700;
+            padding: 14px 18px;
         }
 
-        /* Payment History */
-        .history-title {
-            font-size: 26px;
-            margin-bottom: 15px;
-            font-weight: 600;
-        }
-
-        .history-item {
-            background: rgba(255, 255, 255, 0.08);
-            padding: 18px;
-            border-radius: 14px;
-            margin-bottom: 12px;
+        .btn.secondary {
+            background: rgba(255, 255, 255, 0.1);
             border: 1px solid rgba(255, 255, 255, 0.12);
         }
 
-        .history-item p {
-            margin-bottom: 6px;
-            opacity: 0.85;
-        }
-
-        .paid {
-            color: #4eff9c;
-            font-weight: 600;
+        @media (max-width: 640px) {
+            .actions {
+                flex-direction: column;
+            }
         }
     </style>
-
-    <link rel="stylesheet" href="theme.css">
-    <script src="ui.js" defer></script></head>
+</head>
 
 <body>
+    <div class="card">
+        <h1>Wallet removed from CoSwap</h1>
+        <p>
+            The old wallet and platform fee flow is no longer required. Selling, buying, and chat now continue directly
+            from the main product experience.
+        </p>
 
-    <h1>Your Wallet</h1>
-
-    <!-- Freeze Warning -->
-    <div id="freezeBox" class="freeze-warning" style="display:none;">
-        ⚠ Your account is frozen! Please clear your pending fees to continue selling coupons.
+        <div class="actions">
+            <button class="btn" onclick="window.location.href='dashboard.html'">Go to Dashboard</button>
+            <button class="btn secondary" onclick="window.location.href='chatlist.html'">Open Chat</button>
+        </div>
     </div>
-
-    <!-- Wallet Balance Section -->
-    <div class="wallet-box">
-        <p class="amount" id="pendingAmount">₹0</p>
-        <p class="note">Pending fee amount</p>
-
-        <button class="pay-btn" onclick="payNow()">Pay Fees</button>
-    </div>
-
-    <!-- Payment History -->
-    <h2 class="history-title">Payment History</h2>
-
-    <div id="historyList"></div>
-
-    <script src="api.js"></script>
-    <script>
-        if (!requireAuth("wallet.html")) {
-            // redirected
-        }
-
-        let pendingFee = 0;
-        let paymentHistory = [];
-
-        async function loadWallet() {
-            try {
-                const data = await apiRequest("/me/wallet");
-                pendingFee = Number(data.wallet.pending_fee || 0);
-                paymentHistory = data.wallet.payments || [];
-
-                document.getElementById("pendingAmount").innerText = "₹" + pendingFee;
-                if (pendingFee > 0) {
-                    document.getElementById("freezeBox").style.display = "block";
-                }
-
-                loadHistory();
-            } catch (err) {
-                alert(err.message || "Failed to load wallet.");
-            }
-        }
-
-        async function payNow() {
-            if (pendingFee <= 0) {
-                alert("No pending fees.");
-                return;
-            }
-
-            try {
-                await apiRequest("/me/wallet/pay", { method: "POST" });
-                alert("Payment recorded successfully!");
-                loadWallet();
-            } catch (err) {
-                alert(err.message || "Failed to record payment.");
-            }
-        }
-
-        function loadHistory() {
-            let list = document.getElementById("historyList");
-            list.innerHTML = "";
-
-            if (paymentHistory.length === 0) {
-                list.innerHTML = "<p>No payments yet.</p>";
-                return;
-            }
-
-            paymentHistory.forEach(h => {
-                list.innerHTML += `
-                    <div class="history-item">
-                        <p>Paid Amount: <b>₹${h.amount}</b></p>
-                        <p>Date: ${new Date(h.created_at).toLocaleString()}</p>
-                        <p class="paid">Status: ${(h.status || "paid").toUpperCase()} ✔</p>
-                    </div>
-                `;
-            });
-        }
-
-        loadWallet();
-    </script>
-
 </body>
 
 </html>

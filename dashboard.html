@@ -4,10 +4,11 @@
 <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width,initial-scale=1" />
-    <title>CoSwap – Dashboard</title>
+    <title>CoSwap Dashboard</title>
+    <link rel="stylesheet" href="theme.css">
+    <script src="ui.js" defer></script>
 
     <style>
-        /* ---------------- BASIC RESET & TYPOGRAPHY ---------------- */
         * {
             box-sizing: border-box;
         }
@@ -16,226 +17,410 @@
         body {
             height: 100%;
             margin: 0;
-            padding: 0;
         }
 
         body {
-            font-family: "Poppins", system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial;
             background: linear-gradient(135deg, #171e36 0%, #12172b 50%, #0e1222 100%);
             color: #ffffff;
-            -webkit-font-smoothing: antialiased;
-            -moz-osx-font-smoothing: grayscale;
-            padding: 28px 36px;
             min-height: 100vh;
+            padding: 28px 34px 36px;
         }
 
-        /* ---------------- TOP BAR ---------------- */
+        .page {
+            margin: 0 auto;
+            max-width: 1240px;
+        }
+
         .top-bar {
+            align-items: flex-start;
             display: flex;
-            align-items: center;
+            gap: 20px;
             justify-content: space-between;
-            gap: 16px;
-            margin-bottom: 28px;
+            margin-bottom: 26px;
+        }
+
+        .eyebrow {
+            color: #8adfff;
+            font-size: 12px;
+            font-weight: 700;
+            letter-spacing: 0.16em;
+            text-transform: uppercase;
         }
 
         .welcome {
-            font-size: 28px;
-            font-weight: 700;
-            letter-spacing: -0.2px;
+            font-size: clamp(34px, 6vw, 52px);
+            font-weight: 800;
+            letter-spacing: -0.05em;
+            line-height: 0.95;
+            margin: 10px 0 12px;
+        }
+
+        .subheading {
+            color: rgba(255, 255, 255, 0.74);
+            font-size: 15px;
+            line-height: 1.7;
+            max-width: 62ch;
         }
 
         .top-right {
             display: flex;
             gap: 12px;
-            align-items: center;
         }
 
         .btn {
-            display: inline-flex;
             align-items: center;
-            gap: 8px;
-            padding: 10px 16px;
-            border-radius: 12px;
-            font-weight: 600;
-            font-size: 14px;
             border: none;
+            border-radius: 14px;
             cursor: pointer;
-        }
-
-        .wallet-btn {
-            background: linear-gradient(180deg, rgba(79, 208, 255, 0.12) 0%, rgba(79, 208, 255, 0.06) 100%);
-            color: #eafcff;
-            border: 1px solid rgba(79, 208, 255, 0.22);
-            box-shadow: 0 6px 18px rgba(79, 208, 255, 0.04);
+            display: inline-flex;
+            font-size: 14px;
+            font-weight: 700;
+            gap: 8px;
+            padding: 12px 16px;
         }
 
         .chat-btn {
             background: linear-gradient(90deg, #4fd0ff, #7b5bff);
             color: #fff;
-            box-shadow: 0 10px 30px rgba(111, 108, 255, 0.12);
+            box-shadow: 0 14px 34px rgba(111, 108, 255, 0.14);
         }
 
         .logout-btn {
             background: rgba(255, 255, 255, 0.12);
+            border: 1px solid rgba(255, 255, 255, 0.08);
             color: #fff;
-            border: 1px solid rgba(255, 255, 255, 0.06);
         }
 
-        /* ---------------- HEADING ---------------- */
-        .heading {
+        .panel,
+        .action-card,
+        .recommendation-card,
+        .stat-card {
+            backdrop-filter: blur(16px);
+            background: linear-gradient(180deg, rgba(255, 255, 255, 0.055), rgba(255, 255, 255, 0.03));
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            border-radius: 22px;
+            box-shadow: 0 16px 34px rgba(0, 0, 0, 0.28);
+        }
+
+        .insight-strip {
+            align-items: stretch;
+            display: grid;
+            gap: 14px;
+            grid-template-columns: 1.2fr 0.8fr 0.8fr;
+            margin-bottom: 18px;
+        }
+
+        .stat-card {
+            min-height: 120px;
+            padding: 18px 20px;
+            position: relative;
+        }
+
+        .stat-label {
+            color: rgba(255, 255, 255, 0.62);
+            font-size: 12px;
+            letter-spacing: 0.12em;
+            text-transform: uppercase;
+        }
+
+        .stat-value {
+            font-size: 30px;
+            font-weight: 800;
+            letter-spacing: -0.04em;
+            margin-top: 10px;
+        }
+
+        .stat-copy {
+            color: rgba(255, 255, 255, 0.7);
+            font-size: 14px;
+            line-height: 1.6;
+            margin-top: 10px;
+        }
+
+        .droplet {
+            background:
+                radial-gradient(circle at 28% 22%, rgba(255, 255, 255, 0.5), transparent 20%),
+                linear-gradient(180deg, rgba(255, 255, 255, 0.14), rgba(79, 208, 255, 0.06));
+            border: 1px solid rgba(255, 255, 255, 0.12);
+            border-radius: 60% 40% 58% 42% / 44% 58% 42% 56%;
+            box-shadow: inset 0 14px 18px rgba(255, 255, 255, 0.05);
+            opacity: 0.55;
+            position: absolute;
+            right: 18px;
+            top: 16px;
+        }
+
+        .droplet.small {
+            height: 36px;
+            width: 30px;
+        }
+
+        .droplet.medium {
+            height: 56px;
+            width: 46px;
+        }
+
+        .section-title {
             font-size: 20px;
             font-weight: 700;
-            margin-bottom: 18px;
-            color: #f6f7fb;
+            margin: 28px 0 16px;
         }
 
-        .subheading {
-            margin-bottom: 18px;
-            color: rgba(255, 255, 255, 0.75);
-            font-size: 14px;
-        }
-
-        /* ---------------- GRID (Responsive) ---------------- */
-        .grid {
+        .actions-grid {
             display: grid;
-            grid-template-columns: repeat(3, 1fr);
-            gap: 28px;
-            align-items: start;
+            gap: 18px;
+            grid-template-columns: repeat(3, minmax(0, 1fr));
         }
 
-        @media (max-width: 1100px) {
-            .grid {
-                grid-template-columns: repeat(2, 1fr);
-            }
+        .action-card {
+            min-height: 220px;
+            padding: 22px;
         }
 
-        @media (max-width: 680px) {
-            .grid {
-                grid-template-columns: 1fr;
-            }
-
-            body {
-                padding: 18px;
-            }
+        .action-title {
+            font-size: 22px;
+            font-weight: 700;
+            line-height: 1.2;
+            margin-bottom: 10px;
         }
 
-        /* ---------------- CARD ---------------- */
-        .card {
-            background: linear-gradient(180deg, rgba(255, 255, 255, 0.03), rgba(255, 255, 255, 0.02));
-            border-radius: 18px;
-            padding: 20px;
-            min-height: 230px;
+        .action-desc {
+            color: rgba(255, 255, 255, 0.76);
+            font-size: 14px;
+            line-height: 1.65;
+        }
+
+        .action-footer {
+            margin-top: 22px;
+        }
+
+        .action-btn {
+            background: linear-gradient(135deg, #ff6bff 0%, #7b5bff 50%, #4fd0ff 100%);
+            border: none;
+            border-radius: 14px;
+            color: white;
+            cursor: pointer;
+            font-size: 15px;
+            font-weight: 700;
+            padding: 13px 16px;
+            width: 100%;
+        }
+
+        .recommendation-panel {
+            padding: 22px;
+        }
+
+        .recommendation-head {
+            align-items: center;
             display: flex;
-            flex-direction: column;
+            gap: 16px;
             justify-content: space-between;
-            border: 1px solid rgba(255, 255, 255, 0.06);
-            box-shadow: 0 6px 20px rgba(3, 8, 23, 0.35);
-            transition: transform .18s ease, box-shadow .18s ease;
-        }
-
-        .card:hover {
-            transform: translateY(-6px);
-            box-shadow: 0 18px 40px rgba(3, 8, 23, 0.45);
-        }
-
-        .card-head {
             margin-bottom: 16px;
         }
 
-        .card-title {
-            font-size: 20px;
+        .recommendation-head p {
+            color: rgba(255, 255, 255, 0.72);
+            margin-top: 6px;
+        }
+
+        .strategy-pill {
+            background: rgba(79, 208, 255, 0.14);
+            border: 1px solid rgba(79, 208, 255, 0.18);
+            border-radius: 999px;
+            color: #8adfff;
+            font-size: 12px;
             font-weight: 700;
-            margin-bottom: 8px;
-            color: #ffffff;
-            line-height: 1.15;
+            letter-spacing: 0.12em;
+            padding: 9px 12px;
+            text-transform: uppercase;
         }
 
-        .card-desc {
-            color: rgba(255, 255, 255, 0.75);
-            font-size: 14px;
-            margin: 0;
-            line-height: 1.5;
-            max-width: 100%;
+        .recommendation-grid {
+            display: grid;
+            gap: 14px;
+            grid-template-columns: repeat(3, minmax(0, 1fr));
         }
 
-        .card-controls {
-            margin-top: 18px;
-            display: flex;
-            flex-direction: column;
-            gap: 10px;
+        .recommendation-card {
+            overflow: hidden;
         }
 
-        .card-btn-primary {
+        .recommendation-card img {
+            display: block;
+            height: 160px;
+            object-fit: cover;
             width: 100%;
-            padding: 12px 16px;
-            background: linear-gradient(135deg, #ff6bff 0%, #7b5bff 50%, #4fd0ff 100%);
-            color: #fff;
-            border-radius: 12px;
-            border: none;
-            font-size: 15px;
+        }
+
+        .recommendation-body {
+            padding: 16px;
+        }
+
+        .recommendation-tag {
+            color: #8adfff;
+            font-size: 11px;
             font-weight: 700;
-            cursor: pointer;
-            box-shadow: 0 10px 30px rgba(111, 108, 255, 0.14);
-            transition: transform .12s ease, opacity .12s;
+            letter-spacing: 0.12em;
+            text-transform: uppercase;
         }
 
-        .card-btn-primary:hover {
-            opacity: .96;
-        }
-
-        .card-btn-primary:active {
-            transform: translateY(1px);
-        }
-
-        .card-btn-secondary {
-            width: 100%;
-            padding: 11px 14px;
-            background: rgba(255, 255, 255, 0.06);
-            color: #fff;
-            border-radius: 12px;
-            border: 1px solid rgba(255, 255, 255, 0.06);
-            font-size: 14px;
-            font-weight: 600;
-            cursor: pointer;
-            transition: background .12s ease;
-        }
-
-        .card-btn-secondary:hover {
-            background: rgba(255, 255, 255, 0.09);
-        }
-
-        .meta {
+        .recommendation-title {
+            font-size: 18px;
+            font-weight: 700;
+            line-height: 1.35;
             margin-top: 10px;
-            font-weight: 700;
-            color: #f8fbff;
-            font-size: 15px;
         }
 
-        p {
-            margin: 0;
+        .recommendation-copy {
+            color: rgba(255, 255, 255, 0.72);
+            font-size: 14px;
+            line-height: 1.6;
+            margin-top: 10px;
+            min-height: 44px;
+        }
+
+        .recommendation-meta {
+            align-items: center;
+            display: flex;
+            justify-content: space-between;
+            margin-top: 14px;
+        }
+
+        .recommendation-price {
+            color: #4fd0ff;
+            font-size: 20px;
+            font-weight: 800;
+        }
+
+        .recommendation-link {
+            background: rgba(255, 255, 255, 0.08);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 12px;
+            color: white;
+            cursor: pointer;
+            font-weight: 700;
+            padding: 10px 12px;
+        }
+
+        .footer-links {
+            color: rgba(255, 255, 255, 0.62);
+            display: flex;
+            gap: 16px;
+            justify-content: flex-end;
+            margin-top: 22px;
+        }
+
+        .footer-links a {
+            color: #8adfff;
+            font-weight: 600;
+            text-decoration: none;
+        }
+
+        @media (max-width: 1080px) {
+            .insight-strip,
+            .actions-grid,
+            .recommendation-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        @media (max-width: 760px) {
+            body {
+                padding: 18px;
+            }
+
+            .top-bar {
+                flex-direction: column;
+            }
+
+            .top-right {
+                width: 100%;
+            }
+
+            .top-right .btn {
+                justify-content: center;
+                width: 100%;
+            }
+
+            .recommendation-head {
+                align-items: flex-start;
+                flex-direction: column;
+            }
+
+            .footer-links {
+                justify-content: flex-start;
+            }
         }
     </style>
-    <link rel="stylesheet" href="theme.css">
-    <script src="ui.js" defer></script></head>
+</head>
 
 <body>
+    <main class="page">
+        <section class="top-bar">
+            <div>
+                <div class="eyebrow">CoSwap</div>
+                <div class="welcome">Overview for <span id="userName">your account</span>.</div>
+                <div class="subheading">
+                    Semantic search, recommendation systems, seller operations, and persistent chat are now connected
+                    into one cleaner dashboard surface.
+                </div>
+            </div>
 
-    <div class="top-bar">
-        <div>
-            <div class="welcome">Welcome, <span id="userName">Manoj</span> 👋</div>
-            <div class="subheading">Dashboard Overview</div>
+            <div class="top-right">
+                <button class="btn chat-btn" onclick="openChat()">Chat Workspace</button>
+                <button class="btn logout-btn" onclick="logout()">Logout</button>
+            </div>
+        </section>
+
+        <section class="insight-strip">
+            <article class="stat-card">
+                <div class="stat-label">Recommendation Mode</div>
+                <div class="stat-value" id="recommendationMode">Loading</div>
+                <div class="stat-copy">Adapts between personalized suggestions and trending marketplace picks.</div>
+                <span class="droplet medium"></span>
+            </article>
+
+            <article class="stat-card">
+                <div class="stat-label">Seller Level</div>
+                <div class="stat-value" id="sellerLevel">Level 1</div>
+                <div class="stat-copy">Your trust and seller performance overview.</div>
+                <span class="droplet small"></span>
+            </article>
+
+            <article class="stat-card">
+                <div class="stat-label">Persistent Chat</div>
+                <div class="stat-value" id="chatStatus">Always On</div>
+                <div class="stat-copy">Conversation threads remain available across returning visits.</div>
+                <span class="droplet small"></span>
+            </article>
+        </section>
+
+        <div class="section-title">Platform actions</div>
+        <section class="actions-grid" id="dashboardGrid"></section>
+
+        <div class="section-title">Recommended for you</div>
+        <section class="panel recommendation-panel">
+            <div class="recommendation-head">
+                <div>
+                    <div class="eyebrow">Recommendation System</div>
+                    <p>Personalized picks driven by your activity, seller quality, category relevance, and recent marketplace momentum.</p>
+                </div>
+                <div class="strategy-pill" id="strategyPill">Loading</div>
+            </div>
+
+            <div class="recommendation-grid" id="recommendationGrid">
+                <div class="recommendation-card">
+                    <div class="recommendation-body">Loading recommendations...</div>
+                </div>
+            </div>
+        </section>
+
+        <div class="footer-links">
+            <a href="about.html">About</a>
+            <a href="terms.html">Terms & Conditions</a>
+            <a href="how-it-works.html">How It Works</a>
         </div>
-
-        <div class="top-right">
-            <button class="btn wallet-btn" onclick="go('wallet.html')">💰 Wallet</button>
-            <button class="btn chat-btn" onclick="openChat()">💬 Chat</button>
-            <button class="btn logout-btn" onclick="logout()">Logout</button>
-        </div>
-    </div>
-
-    <div class="heading">Quick actions</div>
-
-    <div class="grid" id="dashboardGrid"></div>
+    </main>
 
     <script src="api.js"></script>
     <script>
@@ -244,68 +429,20 @@
         }
 
         const dashboardCards = [
-            { title: "Browse Coupons", desc: "Find the best deals posted by users.", action: "Explore", href: "browse.html" },
-            { title: "Sell Coupons", desc: "Post your coupon and earn money instantly.", action: "Sell Now", href: "sell.html" },
-            { title: "My Listings", desc: "Manage your active coupons.", action: "Manage", href: "mylistings.html" },
-            { title: "My Purchases", desc: "View all coupons you bought.", action: "History", href: "mypurchases.html" },
-            { title: "Profile", desc: "Check trust score, rating, and level.", action: "Profile", href: "sellerprofile.html" }
+            { title: "Semantic Browse", desc: "Search the marketplace using meaning, category intent, and expanded query understanding.", action: "Open Browse", href: "browse.html" },
+            { title: "Create Offer", desc: "Publish new coupons with a cleaner, friction-light selling flow.", action: "Sell Now", href: "sell.html" },
+            { title: "Seller Operations", desc: "Manage listings, track requests, and adjust active marketplace offers.", action: "Manage Listings", href: "mylistings.html" },
+            { title: "Purchase History", desc: "Review completed deals and reopen linked conversations instantly.", action: "View Purchases", href: "mypurchases.html" },
+            { title: "Trust Profile", desc: "Check rating, level, and fraud-signal visibility from one profile surface.", action: "Open Profile", href: "sellerprofile.html" },
+            { title: "Professional Chat", desc: "Continue persistent buyer-seller conversations inside the chat workspace.", action: "Open Chats", href: "chatlist.html" }
         ];
 
-        const grid = document.getElementById('dashboardGrid');
-
-        dashboardCards.forEach(card => {
-            const el = document.createElement('div');
-            el.className = 'card';
-            el.innerHTML = `
-                <div class="card-head">
-                    <div class="card-title">${escapeHtml(card.title)}</div>
-                    <p class="card-desc">${escapeHtml(card.desc)}</p>
-                </div>
-
-                <div class="card-controls">
-                    <button class="card-btn-primary" onclick="navigate('${encodeURIComponent(card.href)}')">
-                        ${escapeHtml(card.action)}
-                    </button>
-                </div>
-            `;
-            grid.appendChild(el);
-        });
-
-        function navigate(hrefEncoded) {
-            const href = decodeURIComponent(hrefEncoded);
-            window.location.href = href;
-        }
-
-        /* IMPORTANT: NOW OPENS CHATLIST (NOT chat.html) */
-        function openChat() {
-            window.location.href = "chatlist.html";
-        }
-
-        function go(page) { window.location.href = page; }
-
-        function logout() {
-            clearAuth();
-            window.location.href = 'login.html';
-        }
-
-        const user = getCurrentUser();
-        if (user && user.name) {
-            document.getElementById('userName').innerText = user.name;
-        }
-
-        (async function refreshUser() {
-            try {
-                const data = await apiRequest("/me");
-                if (data.user && data.user.name) {
-                    document.getElementById('userName').innerText = data.user.name;
-                }
-            } catch {
-                // ignore
-            }
-        })();
+        const grid = document.getElementById("dashboardGrid");
+        const recommendationGrid = document.getElementById("recommendationGrid");
+        const strategyPill = document.getElementById("strategyPill");
 
         function escapeHtml(str) {
-            if (!str) return '';
+            if (!str) return "";
             return String(str)
                 .replace(/&/g, "&amp;")
                 .replace(/</g, "&lt;")
@@ -313,8 +450,102 @@
                 .replace(/"/g, "&quot;")
                 .replace(/'/g, "&#39;");
         }
-    </script>
 
+        function renderActionCards() {
+            grid.innerHTML = dashboardCards.map((card) => `
+                <article class="action-card">
+                    <div>
+                        <div class="eyebrow">Action</div>
+                        <div class="action-title">${escapeHtml(card.title)}</div>
+                        <div class="action-desc">${escapeHtml(card.desc)}</div>
+                    </div>
+
+                    <div class="action-footer">
+                        <button class="action-btn" onclick="navigate('${encodeURIComponent(card.href)}')">
+                            ${escapeHtml(card.action)}
+                        </button>
+                    </div>
+                </article>
+            `).join("");
+        }
+
+        function navigate(hrefEncoded) {
+            window.location.href = decodeURIComponent(hrefEncoded);
+        }
+
+        function openChat() {
+            window.location.href = "chatlist.html";
+        }
+
+        function logout() {
+            clearAuth();
+            window.location.href = "login.html";
+        }
+
+        async function loadUserContext() {
+            const user = getCurrentUser();
+            if (user && user.name) {
+                document.getElementById("userName").innerText = user.name;
+            }
+
+            try {
+                const [userData, profileData] = await Promise.all([
+                    apiRequest("/me"),
+                    apiRequest("/me/profile")
+                ]);
+
+                if (userData.user && userData.user.name) {
+                    document.getElementById("userName").innerText = userData.user.name;
+                }
+
+                if (profileData.profile) {
+                    document.getElementById("sellerLevel").innerText = `Level ${profileData.profile.level || 1}`;
+                }
+            } catch {
+                // ignore
+            }
+        }
+
+        async function loadRecommendations() {
+            recommendationGrid.innerHTML = `<div class="recommendation-card"><div class="recommendation-body">Loading recommendations...</div></div>`;
+
+            try {
+                const data = await apiRequest("/recommendations?limit=6");
+                const recommendations = data.recommendations || [];
+                strategyPill.innerText = (data.strategy || "trending").toUpperCase();
+                document.getElementById("recommendationMode").innerText =
+                    data.strategy === "personalized" ? "Personalized" : "Trending";
+
+                if (!recommendations.length) {
+                    recommendationGrid.innerHTML = `<div class="recommendation-card"><div class="recommendation-body">No recommendations available yet.</div></div>`;
+                    return;
+                }
+
+                recommendationGrid.innerHTML = recommendations.map((item) => `
+                    <article class="recommendation-card">
+                        <img src="${escapeHtml(item.image_url || "bg.png")}" onerror="this.src='bg.png'" alt="${escapeHtml(item.title)}">
+                        <div class="recommendation-body">
+                            <div class="recommendation-tag">${escapeHtml(item.category || "Marketplace Pick")}</div>
+                            <div class="recommendation-title">${escapeHtml(item.title)}</div>
+                            <div class="recommendation-copy">${escapeHtml(item.recommendation_reason || "Recommended listing")}</div>
+                            <div class="recommendation-meta">
+                                <div class="recommendation-price">₹${escapeHtml(item.price)}</div>
+                                <button class="recommendation-link" onclick="window.location.href='coupon-details.html?id=${item.id}'">View</button>
+                            </div>
+                        </div>
+                    </article>
+                `).join("");
+            } catch (err) {
+                strategyPill.innerText = "UNAVAILABLE";
+                document.getElementById("recommendationMode").innerText = "Offline";
+                recommendationGrid.innerHTML = `<div class="recommendation-card"><div class="recommendation-body">Unable to load recommendations right now. ${escapeHtml(err.message || "")}</div></div>`;
+            }
+        }
+
+        renderActionCards();
+        loadUserContext();
+        loadRecommendations();
+    </script>
 </body>
 
 </html>
