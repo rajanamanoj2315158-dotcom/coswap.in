@@ -1,0 +1,9 @@
+{
+  "name": "coswap-root",
+  "version": "1.0.0",
+  "private": true,
+  "scripts": {
+    "install-backend": "npm install --prefix backend",
+    "start": "npm start --prefix backend"
+  }
+}
