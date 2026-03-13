@@ -1,37 +1,18 @@
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Seller Profile — CoSwap</title>
-    <meta name="description" content="View your seller profile, ratings, and trust level on CoSwap.">
-    <meta name="robots" content="noindex, nofollow">
-    <link rel="canonical" href="https://coswap.in/sellerprofile.html">
-    <meta property="og:title" content="Seller Profile — CoSwap">
-    <meta property="og:description" content="View your seller profile, ratings, and trust level on CoSwap.">
-    <meta property="og:image" content="https://coswap.in/logo.png">
-    <meta property="og:url" content="https://coswap.in/sellerprofile.html">
-    <!-- Google Analytics 4 -->
-    <!-- <script async src="https://www.googletagmanager.com/gtag/js?id=G-XXXXXXXXXX"></script>
-    <script>window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments)}gtag('js',new Date());gtag('config','G-XXXXXXXXXX');</script> -->
-
+    <link rel="stylesheet" href="theme.css">
+    <script src="api.js"></script>
+    <script src="ui.js" defer></script>
     <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-            font-family: Poppins, sans-serif;
-        }
-
-        body {
-            background: radial-gradient(circle at center, #1c2340, #12172b, #0b0f1d);
-            color: white;
-            padding: 35px;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: flex-start;
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        body { 
+            background: #000; 
+            color: white; 
+            font-family: "Inter", system-ui, -apple-system, sans-serif;
             min-height: 100vh;
         }
 

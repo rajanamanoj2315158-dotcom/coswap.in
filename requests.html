@@ -1,167 +1,252 @@
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Buy Requests — CoSwap</title>
-    <meta name="description" content="View and manage your buy requests on CoSwap marketplace.">
-    <meta name="robots" content="noindex, nofollow">
-    <link rel="canonical" href="https://coswap.in/requests.html">
-    <meta property="og:title" content="Buy Requests — CoSwap">
-    <meta property="og:description" content="View and manage your buy requests on CoSwap marketplace.">
-    <meta property="og:image" content="https://coswap.in/logo.png">
-    <meta property="og:url" content="https://coswap.in/requests.html">
-    <!-- Google Analytics 4 -->
-    <!-- <script async src="https://www.googletagmanager.com/gtag/js?id=G-XXXXXXXXXX"></script>
-    <script>window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments)}gtag('js',new Date());gtag('config','G-XXXXXXXXXX');</script> -->
-
+    <link rel="stylesheet" href="theme.css">
+    <script src="api.js"></script>
+    <script src="ui.js" defer></script>
     <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-            font-family: Poppins, sans-serif;
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        body { 
+            background: #000; 
+            color: white; 
+            font-family: "Inter", system-ui, -apple-system, sans-serif;
+            min-height: 100vh;
+            overflow-x: hidden;
         }
 
-        body {
-            background: radial-gradient(circle at center, #1c2340, #12172b, #0b0f1d);
-            color: white;
-            height: 100vh;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            padding: 20px;
+        /* Sidebar Styles (Consistent across Workspace) */
+        .sidebar {
+            width: 280px; height: 100vh; position: fixed; left: 0; top: 0;
+            background: rgba(11, 15, 29, 0.8); backdrop-filter: blur(20px);
+            border-right: 1px solid rgba(255, 255, 255, 0.08); padding: 32px 24px;
+            display: flex; flex-direction: column; z-index: 1000; transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
         }
+        .logo-area { display: flex; align-items: center; gap: 12px; margin-bottom: 48px; text-decoration: none; color: white; }
+        .logo-area img { width: 32px; height: 32px; }
+        .logo-area span { font-size: 20px; font-weight: 800; letter-spacing: -0.02em; }
 
-        .card {
-            width: 420px;
-            background: rgba(255, 255, 255, 0.08);
-            padding: 30px;
-            border-radius: 20px;
-            backdrop-filter: blur(14px);
-            border: 1px solid rgba(255, 255, 255, 0.1);
-            text-align: center;
-            box-shadow: 0 0 25px rgba(0, 0, 0, 0.4);
+        .nav-links { display: flex; flex-direction: column; gap: 8px; flex-grow: 1; }
+        .nav-link {
+            display: flex; align-items: center; gap: 12px; padding: 12px 16px; border-radius: 12px;
+            color: rgba(255, 255, 255, 0.5); text-decoration: none; font-size: 14px; font-weight: 600; transition: 0.2s;
         }
+        .nav-link:hover { background: rgba(255, 255, 255, 0.05); color: white; }
+        .nav-link.active { background: rgba(79, 208, 255, 0.1); color: #4fd0ff; }
+        .nav-link svg { width: 20px; height: 20px; stroke-width: 2; }
 
-        h2 {
-            font-size: 26px;
-            margin-bottom: 10px;
+        .sidebar-footer { padding-top: 24px; border-top: 1px solid rgba(255, 255, 255, 0.05); }
+
+        /* Main Content */
+        .main { margin-left: 280px; padding: 48px; min-height: 100vh; transition: 0.3s; }
+        .header { margin-bottom: 40px; }
+        .header h1 { font-size: 32px; font-weight: 800; letter-spacing: -0.02em; margin-bottom: 8px; }
+        .header p { color: rgba(255, 255, 255, 0.5); font-size: 16px; }
+
+        /* Mobile Header */
+        .mobile-header {
+            display: none; position: sticky; top: 0; z-index: 900;
+            background: rgba(11, 15, 29, 0.9); backdrop-filter: blur(20px);
+            padding: 16px 20px; border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+            align-items: center; justify-content: space-between;
         }
+        .hamburger { background: none; border: none; color: white; cursor: pointer; padding: 4px; }
 
-        .info {
-            opacity: 0.85;
-            margin-bottom: 20px;
-            line-height: 1.4;
+        /* Request Card */
+        .request-panel {
+            background: rgba(255, 255, 255, 0.03); border: 1px solid rgba(255, 255, 255, 0.08);
+            border-radius: 24px; padding: 48px 40px; text-align: center; max-width: 600px;
+            margin-top: 20px;
         }
+        .request-info { font-size: 20px; font-weight: 600; line-height: 1.5; margin-bottom: 24px; color: rgba(255,255,255,0.9); }
+        .timer-box { font-size: 32px; font-weight: 800; color: #4fd0ff; margin-bottom: 32px; font-variant-numeric: tabular-nums; }
 
-        #timer {
-            font-size: 20px;
-            margin-bottom: 20px;
-            color: #4fd0ff;
-            font-weight: 600;
+        .btn-stack { display: grid; gap: 12px; }
+        .btn-lg {
+            padding: 16px; border-radius: 14px; font-size: 16px; font-weight: 700;
+            cursor: pointer; text-decoration: none; transition: 0.2s; border: none;
         }
+        .btn-accept { background: linear-gradient(135deg, #4fd0ff, #6f6cff); color: white; }
+        .btn-accept:hover { transform: translateY(-1px); box-shadow: 0 4px 15px rgba(111, 108, 255, 0.4); }
+        .btn-ignore { background: rgba(255, 59, 48, 0.1); color: #ff3b30; border: 1px solid rgba(255, 59, 48, 0.2); }
+        .btn-ignore:hover { background: rgba(255, 59, 48, 0.2); }
 
-        .btn {
-            width: 100%;
-            padding: 14px;
-            border-radius: 14px;
-            border: none;
-            cursor: pointer;
-            margin-top: 12px;
-            font-size: 18px;
+        /* Empty / Waiting State */
+        .waiting-box { padding: 80px 40px; border-radius: 24px; background: rgba(255,255,255,0.02); 
+            border: 1px dashed rgba(255,255,255,0.1); text-align: center;
         }
+        .waiting-box h2 { font-size: 24px; font-weight: 800; margin-bottom: 12px; }
+        .waiting-box p { color: rgba(255,255,255,0.4); }
 
-        .accept {
-            background: linear-gradient(90deg, #4fd0ff, #6f6cff);
-            color: white;
-        }
-
-        .ignore {
-            background: rgba(255, 0, 0, 0.25);
-            border: 1px solid red;
-            color: white;
+        @media (max-width: 768px) {
+            .sidebar { transform: translateX(-100%); }
+            .sidebar.active { transform: translateX(0); }
+            .main { margin-left: 0; padding: 24px; }
+            .mobile-header { display: flex; }
+            .request-panel { padding: 32px 24px; }
         }
     </style>
-
-    <link rel="stylesheet" href="theme.css">
-    <script src="ui.js" defer></script></head>
-
+</head>
 <body class="soft-bg">
-
-    <div class="card">
-        <h2>Buy Request</h2>
-        <p class="info" id="requestInfo">Loading request...</p>
-
-        <p id="timer">--:--</p>
-        <p id="emptyHint" style="opacity:0.7; margin-top:8px; display:none;">
-            You can relax — we’ll notify you when a buyer sends a request.
-        </p>
-
-        <button class="btn accept" onclick="acceptRequest()">Accept Request</button>
-        <button class="btn ignore" onclick="ignoreRequest()">Ignore</button>
+    <div class="premium-bg" aria-hidden="true">
+        <div class="blob blob-1"></div>
+        <div class="blob blob-2"></div>
+        <div class="blob blob-3"></div>
     </div>
 
-    <script src="api.js"></script>
+    <!-- Mobile Header -->
+    <header class="mobile-header">
+        <button class="hamburger" id="menuToggle" aria-label="Toggle Menu">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="3" y1="12" x2="21" y2="12"></line><line x1="3" y1="6" x2="21" y2="6"></line><line x1="3" y1="18" x2="21" y2="18"></line></svg>
+        </button>
+        <span style="font-weight: 800; font-size: 18px;">Buy Requests</span>
+        <div style="width: 24px;"></div>
+    </header>
+
+    <aside class="sidebar" id="sidebar">
+        <a href="dashboard.html" class="logo-area">
+            <img src="logo.png" alt="CoSwap">
+            <span>CoSwap</span>
+        </a>
+
+        <nav class="nav-links">
+            <a href="dashboard.html" class="nav-link">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/></svg>
+                Dashboard
+            </a>
+            <a href="browse.html" class="nav-link">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+                Browse Coupons
+            </a>
+            <a href="sell.html" class="nav-link">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+                Sell Coupon
+            </a>
+            <a href="mylistings.html" class="nav-link">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
+                My Listings
+            </a>
+            <a href="mypurchases.html" class="nav-link">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M6 2L3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4Z"/><path d="M3 6h18"/><path d="M16 10a4 4 0 0 1-8 0"/></svg>
+                My Purchases
+            </a>
+            <a href="sellerprofile.html" class="nav-link">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+                My Profile
+            </a>
+            <a href="requests.html" class="nav-link active">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M22 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+                Requests
+            </a>
+            <a href="chatlist.html" class="nav-link">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+                Chat
+            </a>
+        </nav>
+
+        <div class="sidebar-footer">
+            <a href="profile.html" class="nav-link">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>
+                Settings
+            </a>
+        </div>
+    </aside>
+
+    <main class="main" id="mainContent">
+        <header class="header">
+            <h1>Buy Requests</h1>
+            <p>Manage incoming purchase inquiries and accept or decline potential sales.</p>
+        </header>
+
+        <section id="requestContent">
+            <div class="waiting-box">
+                <div style="font-size: 40px; margin-bottom: 16px;">⏳</div>
+                <h2>Checking for requests...</h2>
+                <p>Establishing real-time connection to the marketplace.</p>
+            </div>
+        </section>
+
+        <!-- Template for Active Request (vhidden) -->
+        <div id="activeTemplate" style="display:none;">
+            <div class="request-panel">
+                <div class="request-info" id="requestInfo">Loading...</div>
+                <div class="timer-box" id="timer">--:--</div>
+                <div class="btn-stack">
+                    <button class="btn-lg btn-accept" onclick="acceptRequest()">Accept Request</button>
+                    <button class="btn-lg btn-ignore" onclick="ignoreRequest()">Ignore</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Template for Waiting State (vhidden) -->
+        <div id="waitingTemplate" style="display:none;">
+            <div class="waiting-box">
+                <div style="font-size: 40px; margin-bottom: 24px;">🏝️</div>
+                <h2 style="font-size: 24px; font-weight: 800; margin-bottom: 12px;">No pending requests</h2>
+                <p style="color: rgba(255,255,255,0.4); max-width: 400px; margin: 0 auto;">You can relax — we'll notify you as soon as a buyer expresses interest in one of your listings.</p>
+            </div>
+        </div>
+    </main>
+
     <script>
         if (!requireAuth("requests.html")) {
             // redirected
         }
 
+        // Mobile Menu Toggle
+        const menuToggle = document.getElementById('menuToggle');
+        const sidebar = document.getElementById('sidebar');
+        const mainContent = document.getElementById('mainContent');
+
+        menuToggle.addEventListener('click', () => sidebar.classList.toggle('active'));
+        mainContent.addEventListener('click', () => sidebar.classList.remove('active'));
+
         let activeRequest = null;
         let countdown = null;
 
         async function loadRequest() {
+            const container = document.getElementById("requestContent");
             try {
                 const data = await apiRequest("/me/requests");
                 const pending = (data.asSeller || []).find(r => r.status === "pending");
 
                 if (!pending) {
-                    document.getElementById("requestInfo").innerText = "No pending requests.";
-                    document.getElementById("timer").innerText = "--:--";
-                    document.getElementById("emptyHint").style.display = "block";
-                    document.querySelector(".accept").style.display = "none";
-                    document.querySelector(".ignore").style.display = "none";
+                    container.innerHTML = document.getElementById("waitingTemplate").innerHTML;
                     return;
                 }
 
                 activeRequest = pending;
-                document.getElementById("emptyHint").style.display = "none";
-                document.querySelector(".accept").style.display = "block";
-                document.querySelector(".ignore").style.display = "block";
-                document.getElementById("requestInfo").innerText =
-                    `${pending.buyer_name} wants to buy your coupon: ${pending.coupon_title}.`;
-
-                startTimer(pending.expires_at);
+                container.innerHTML = document.getElementById("activeTemplate").innerHTML;
+                
+                // Re-bind IDs since we just innerHTML'd them
+                const info = container.querySelector("#requestInfo");
+                const timer = container.querySelector("#timer");
+                
+                info.innerText = `${pending.buyer_name} wants to buy your coupon: ${pending.coupon_title}.`;
+                startTimer(pending.expires_at, timer);
             } catch (err) {
-                document.getElementById("requestInfo").innerText =
-                    `Failed to load request. ${err.message || ""}`;
-                document.querySelector(".accept").style.display = "none";
-                document.querySelector(".ignore").style.display = "none";
+                container.innerHTML = `<div class="waiting-box"><h2>Failed to load</h2><p>${err.message}</p></div>`;
             }
         }
 
-        function startTimer(expiresAt) {
+        function startTimer(expiresAt, element) {
             if (countdown) clearInterval(countdown);
-
             function tick() {
                 const diff = new Date(expiresAt) - new Date();
                 if (diff <= 0) {
                     clearInterval(countdown);
-                    document.getElementById("timer").innerText = "00:00";
+                    element.innerText = "00:00";
                     alert("Request expired!");
-                    window.location.href = "dashboard.html";
+                    loadRequest(); // Refresh state
                     return;
                 }
-
                 const totalSeconds = Math.floor(diff / 1000);
                 const m = Math.floor(totalSeconds / 60);
                 const s = totalSeconds % 60;
-                document.getElementById("timer").innerText =
-                    `${m.toString().padStart(2, '0')}:${s.toString().padStart(2, '0')}`;
+                element.innerText = `${m.toString().padStart(2, '0')}:${s.toString().padStart(2, '0')}`;
             }
-
             tick();
             countdown = setInterval(tick, 1000);
         }
@@ -169,30 +254,22 @@
         async function acceptRequest() {
             if (!activeRequest) return;
             try {
-                const data = await apiRequest(`/requests/${activeRequest.id}/accept`, {
-                    method: "POST"
-                });
+                const data = await apiRequest(`/requests/${activeRequest.id}/accept`, { method: "POST" });
                 alert("Request accepted! Opening chat...");
                 window.location.href = `chat.html?id=${data.chat.id}`;
-            } catch (err) {
-                alert(err.message || "Failed to accept request.");
-            }
+            } catch (err) { alert(err.message || "Failed to accept"); }
         }
 
         async function ignoreRequest() {
             if (!activeRequest) return;
+            if(!confirm("Ignore this request?")) return;
             try {
                 await apiRequest(`/requests/${activeRequest.id}/ignore`, { method: "POST" });
-                alert("You ignored the request.");
-                window.location.href = "dashboard.html";
-            } catch (err) {
-                alert(err.message || "Failed to ignore request.");
-            }
+                loadRequest();
+            } catch (err) { alert(err.message || "Failed to ignore"); }
         }
 
         loadRequest();
     </script>
-
 </body>
-
 </html>

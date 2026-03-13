@@ -1,608 +1,306 @@
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
-    <!-- Primary SEO -->
-    <title>Browse Coupons &amp; Vouchers — CoSwap Marketplace</title>
-    <meta name="description" content="Browse active coupon listings on CoSwap. Find deals on OTT subscriptions, food vouchers, travel discounts, fashion, beauty and more in India.">
-    <meta name="keywords" content="buy coupons, discount vouchers, OTT deals, food coupons, travel vouchers, browse marketplace, CoSwap">
-    <meta name="robots" content="index, follow">
-    <link rel="canonical" href="https://coswap.in/browse.html">
-
-    <!-- Open Graph -->
-    <meta property="og:type" content="website">
-    <meta property="og:site_name" content="CoSwap">
-    <meta property="og:title" content="Browse Coupons — CoSwap Marketplace">
-    <meta property="og:description" content="Find deals on OTT, food, travel and fashion coupons on CoSwap India's coupon marketplace.">
-    <meta property="og:url" content="https://coswap.in/browse.html">
-    <meta property="og:image" content="https://coswap.in/logo.png">
-
-    <!-- Twitter Card -->
-    <meta name="twitter:card" content="summary_large_image">
-    <meta name="twitter:title" content="Browse Coupons — CoSwap">
-    <meta name="twitter:description" content="Discover discount coupons and vouchers on CoSwap.">
-    <meta name="twitter:image" content="https://coswap.in/logo.png">
-
-    <!-- Google Analytics 4 -->
-    <!-- <script async src="https://www.googletagmanager.com/gtag/js?id=G-XXXXXXXXXX"></script>
-    <script>window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments)}gtag('js',new Date());gtag('config','G-XXXXXXXXXX');</script> -->
-
+    <title>Browse Marketplace — CoSwap</title>
     <link rel="stylesheet" href="theme.css">
     <script src="ui.js" defer></script>
-
     <style>
-        * {
-            box-sizing: border-box;
-            margin: 0;
-            padding: 0;
-        }
-
-        body {
-            background: radial-gradient(circle at top, #1c2340, #12172b, #0b0f1d);
-            color: white;
-            display: flex;
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        body { 
+            background: #000; 
+            color: white; 
+            font-family: "Inter", system-ui, -apple-system, sans-serif;
             min-height: 100vh;
             overflow-x: hidden;
         }
 
-        .sidebar {
-            backdrop-filter: blur(15px);
-            background: rgba(255, 255, 255, 0.07);
-            border-right: 1px solid rgba(255, 255, 255, 0.12);
-            height: 100vh;
-            padding: 35px 20px;
-            position: fixed;
-            width: 260px;
+        .page-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 40px 24px 100px;
+            position: relative;
+            z-index: 1;
         }
 
-        .logo {
-            font-size: 30px;
-            font-weight: 700;
-            margin-bottom: 35px;
+        /* Top Nav */
+        .nav-wrapper {
+            position: sticky; top: 0; z-index: 100;
+            background: rgba(11, 15, 29, 0.8); backdrop-filter: blur(20px);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+        }
+        .nav-container {
+            max-width: 1200px; margin: 0 auto; padding: 16px 24px;
+            display: flex; align-items: center; justify-content: space-between;
+        }
+        .nav-left { display: flex; align-items: center; gap: 10px; text-decoration: none; color: white; font-weight: 800; }
+        .nav-left img { width: 32px; height: 32px; }
+        .nav-center { display: flex; gap: 24px; }
+        .nav-center a { color: rgba(255,255,255,0.6); text-decoration: none; font-size: 14px; font-weight: 500; transition: 0.2s; }
+        .nav-center a:hover { color: white; }
+        .nav-center a.active { color: white; }
+
+        /* Hero / Search Section */
+        .search-hero {
             text-align: center;
+            margin: 60px 0 40px;
         }
-
-        .menu-item {
-            border-radius: 12px;
-            cursor: pointer;
-            font-size: 16px;
-            margin-bottom: 12px;
-            padding: 14px 16px;
-            transition: .2s;
-        }
-
-        .menu-item:hover {
-            background: rgba(255, 255, 255, 0.18);
-        }
-
-        .active {
-            background: linear-gradient(90deg, #4fd0ff, #7b5bff);
-            font-weight: 600;
-        }
-
-        .main {
-            flex: 1;
-            margin-left: 260px;
-            padding: 30px 34px 38px;
-            min-width: 0;
-        }
-
-        .hero {
-            align-items: flex-start;
-            display: flex;
-            gap: 18px;
-            justify-content: space-between;
-            margin-bottom: 22px;
-        }
-
-        .eyebrow {
-            color: #8adfff;
-            font-size: 12px;
-            font-weight: 700;
-            letter-spacing: 0.16em;
-            text-transform: uppercase;
-        }
-
-        h1 {
-            font-size: clamp(34px, 6vw, 50px);
+        .search-hero h1 {
+            font-size: clamp(32px, 5vw, 48px);
             font-weight: 800;
-            letter-spacing: -0.05em;
-            line-height: 0.96;
-            margin: 10px 0 12px;
+            letter-spacing: -0.03em;
+            margin-bottom: 32px;
         }
-
-        .hero-copy {
-            color: rgba(255, 255, 255, 0.74);
-            line-height: 1.7;
-            max-width: 62ch;
+        .search-wrapper {
+            max-width: 700px;
+            margin: 0 auto;
+            position: relative;
         }
-
-        .top-actions {
+        .search-inner {
             display: flex;
             gap: 12px;
-        }
-
-        .top-btn,
-        .chip,
-        .browse-action {
-            border: none;
-            border-radius: 14px;
-            cursor: pointer;
-            font-weight: 700;
-        }
-
-        .top-btn {
-            background: rgba(255, 255, 255, 0.12);
-            color: white;
-            font-size: 14px;
-            padding: 12px 16px;
-        }
-
-        .top-btn.primary {
-            background: linear-gradient(90deg, #4fd0ff, #7b5bff);
-        }
-
-        .panel,
-        .coupon-card,
-        .recommendation-card,
-        .metric-card {
-            backdrop-filter: blur(16px);
-            background: rgba(255, 255, 255, 0.06);
+            background: rgba(255, 255, 255, 0.05);
             border: 1px solid rgba(255, 255, 255, 0.1);
-            border-radius: 22px;
-            box-shadow: 0 18px 36px rgba(0, 0, 0, 0.24);
+            border-radius: 20px;
+            padding: 8px;
+            backdrop-filter: blur(10px);
+            transition: 0.3s;
         }
-
-        .search-panel {
-            margin-bottom: 22px;
-            padding: 22px;
-            position: relative;
+        .search-inner:focus-within {
+            border-color: #4fd0ff;
+            box-shadow: 0 0 0 4px rgba(79, 208, 255, 0.1);
         }
-
-        .search-row {
-            align-items: center;
-            display: grid;
-            gap: 14px;
-            grid-template-columns: minmax(0, 1fr) auto;
-        }
-
         .search-box {
-            background: rgba(255, 255, 255, 0.1);
-            border: 1px solid rgba(255, 255, 255, 0.12);
-            border-radius: 18px;
+            flex: 1;
+            background: transparent;
+            border: none;
             color: white;
-            font-size: 16px;
+            font-size: 18px;
+            padding: 12px 20px;
             outline: none;
-            padding: 17px 18px;
-            width: 100%;
+        }
+        .search-btn {
+            background: white;
+            color: black;
+            border: none;
+            padding: 12px 24px;
+            border-radius: 14px;
+            font-weight: 700;
+            cursor: pointer;
+            transition: 0.2s;
+        }
+        .search-btn:hover {
+            background: #f0f0f0;
+            transform: translateY(-1px);
         }
 
-        .search-box:focus {
-            box-shadow: 0 0 0 3px rgba(79, 208, 255, 0.18);
-        }
-
-        .browse-action {
-            background: linear-gradient(135deg, #4fd0ff, #6f6cff);
-            color: white;
-            padding: 16px 18px;
-        }
-
-        .search-summary {
-            color: rgba(255, 255, 255, 0.7);
-            font-size: 14px;
-            line-height: 1.7;
-            margin-top: 14px;
-        }
-
-        .chip-row {
+        /* Category Chips */
+        .category-container {
             display: flex;
             flex-wrap: wrap;
+            justify-content: center;
             gap: 10px;
-            margin-top: 16px;
+            margin-top: 24px;
         }
-
         .chip {
             background: rgba(255, 255, 255, 0.08);
-            color: white;
-            font-size: 13px;
-            padding: 10px 14px;
-        }
-
-        .chip.semantic {
-            background: rgba(79, 208, 255, 0.14);
-            border: 1px solid rgba(79, 208, 255, 0.18);
-            color: #9be8ff;
-        }
-
-        .insights {
-            display: grid;
-            gap: 14px;
-            grid-template-columns: repeat(3, minmax(0, 1fr));
-            margin-bottom: 22px;
-        }
-
-        .metric-card {
-            min-height: 118px;
-            padding: 18px 20px;
-            position: relative;
-        }
-
-        .metric-label {
-            color: rgba(255, 255, 255, 0.62);
-            font-size: 12px;
-            letter-spacing: 0.12em;
-            text-transform: uppercase;
-        }
-
-        .metric-value {
-            font-size: 28px;
-            font-weight: 800;
-            margin-top: 10px;
-        }
-
-        .metric-copy {
-            color: rgba(255, 255, 255, 0.72);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            color: rgba(255, 255, 255, 0.8);
+            padding: 10px 18px;
+            border-radius: 30px;
             font-size: 14px;
-            line-height: 1.6;
-            margin-top: 10px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: 0.2s;
+        }
+        .chip:hover {
+            background: rgba(255, 255, 255, 0.15);
+            color: white;
+            transform: translateY(-1px);
+        }
+        .chip.active {
+            background: white;
+            color: black;
         }
 
-        .droplet {
-            background:
-                radial-gradient(circle at 28% 22%, rgba(255, 255, 255, 0.5), transparent 20%),
-                linear-gradient(180deg, rgba(255, 255, 255, 0.14), rgba(79, 208, 255, 0.06));
-            border: 1px solid rgba(255, 255, 255, 0.12);
-            border-radius: 60% 40% 58% 42% / 44% 58% 42% 56%;
-            box-shadow: inset 0 14px 18px rgba(255, 255, 255, 0.05);
-            opacity: 0.55;
-            position: absolute;
-            right: 16px;
-            top: 14px;
-        }
-
-        .droplet.small {
-            height: 34px;
-            width: 28px;
-        }
-
-        .section-head {
-            align-items: center;
+        /* Grids */
+        .section-header {
             display: flex;
+            align-items: center;
             justify-content: space-between;
-            margin: 24px 0 14px;
+            margin-bottom: 24px;
+            margin-top: 60px;
+        }
+        .section-header h2 {
+            font-size: 24px;
+            font-weight: 800;
+            letter-spacing: -0.02em;
         }
 
-        .section-head h2 {
-            font-size: 22px;
-            letter-spacing: -0.03em;
-        }
-
-        .section-head p {
-            color: rgba(255, 255, 255, 0.68);
-        }
-
-        .recommendation-grid,
         .results-grid {
             display: grid;
-            gap: 18px;
+            gap: 24px;
             grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
         }
 
-        .recommendation-card,
         .coupon-card {
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            border-radius: 20px;
             overflow: hidden;
+            transition: 0.3s;
+            display: flex;
+            flex-direction: column;
         }
-
-        .recommendation-card img,
-        .coupon-card img {
-            display: block;
-            height: 172px;
-            object-fit: cover;
+        .coupon-card:hover {
+            transform: translateY(-4px);
+            border-color: rgba(255, 255, 255, 0.2);
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.4);
+        }
+        .card-img {
+            height: 180px;
             width: 100%;
+            object-fit: cover;
+            background: #111;
         }
-
-        .recommendation-body,
-        .coupon-body {
-            padding: 16px;
+        .card-content {
+            padding: 20px;
+            flex: 1;
+            display: flex;
+            flex-direction: column;
         }
-
-        .item-tag {
-            color: #8adfff;
+        .card-tag {
             font-size: 11px;
             font-weight: 700;
-            letter-spacing: 0.12em;
             text-transform: uppercase;
+            letter-spacing: 0.05em;
+            color: #4fd0ff;
+            margin-bottom: 8px;
         }
-
-        .item-title {
+        .card-title {
             font-size: 18px;
             font-weight: 700;
-            line-height: 1.35;
-            margin-top: 10px;
+            margin-bottom: 12px;
+            line-height: 1.4;
         }
-
-        .item-copy {
-            color: rgba(255, 255, 255, 0.74);
-            font-size: 14px;
-            line-height: 1.6;
-            margin-top: 10px;
-            min-height: 44px;
-        }
-
-        .item-stats {
-            background: rgba(255, 255, 255, 0.08);
-            border-radius: 14px;
-            color: rgba(255, 255, 255, 0.78);
-            font-size: 13px;
-            line-height: 1.6;
-            margin-top: 12px;
-            padding: 10px 12px;
-        }
-
-        .item-meta {
-            align-items: center;
-            display: flex;
-            justify-content: space-between;
-            margin-top: 14px;
-        }
-
-        .item-price {
-            color: #4fd0ff;
+        .card-price {
             font-size: 20px;
             font-weight: 800;
+            color: white;
+            margin-bottom: 20px;
         }
-
-        .item-actions {
+        .card-footer {
+            margin-top: auto;
             display: grid;
             gap: 10px;
-            margin-top: 14px;
         }
-
-        .card-btn {
-            border: none;
-            border-radius: 14px;
-            cursor: pointer;
+        .btn-card {
+            padding: 12px;
+            border-radius: 12px;
             font-size: 14px;
             font-weight: 700;
-            padding: 12px;
+            text-align: center;
+            cursor: pointer;
+            transition: 0.2s;
+            border: none;
+            width: 100%;
         }
-
-        .card-btn.primary {
+        .btn-primary {
             background: linear-gradient(90deg, #4fd0ff, #7b5bff);
             color: white;
         }
-
-        .card-btn.secondary {
-            background: rgba(255, 255, 255, 0.12);
+        .btn-primary:hover { opacity: 0.9; transform: translateY(-1px); }
+        .btn-secondary {
+            background: rgba(255, 255, 255, 0.05);
             color: white;
+            border: 1px solid rgba(255, 255, 255, 0.1);
         }
+        .btn-secondary:hover { background: rgba(255, 255, 255, 0.1); }
 
-        .empty {
-            color: rgba(255, 255, 255, 0.72);
-            padding: 28px;
+        .empty-state {
             text-align: center;
+            padding: 60px 20px;
+            color: rgba(255, 255, 255, 0.4);
+            font-size: 16px;
         }
 
-        @media (max-width: 1080px) {
-            .insights {
-                grid-template-columns: 1fr;
-            }
-        }
-
-        @media (max-width: 820px) {
-            body {
-                display: block;
-            }
-
-            .sidebar {
-                height: auto;
-                position: static;
-                width: auto;
-            }
-
-            .main {
-                margin-left: 0;
-                padding: 20px;
-            }
-
-            .hero,
-            .search-row,
-            .section-head {
-                align-items: stretch;
-                flex-direction: column;
-                grid-template-columns: 1fr;
-            }
-
-            .top-actions {
-                flex-wrap: wrap;
-            }
-
-            .top-btn,
-            .browse-action {
-                width: 100%;
-            }
-        }
-
-        @media (min-width: 1280px) {
-            .main {
-                padding: 36px 48px 48px;
-            }
-
-            .hero {
-                gap: 22px;
-                margin-bottom: 28px;
-            }
-
-            .search-panel {
-                padding: 28px;
-                margin-bottom: 28px;
-            }
-
-            .insights {
-                gap: 18px;
-                margin-bottom: 28px;
-            }
-
-            .metric-card {
-                padding: 22px 24px;
-            }
-
-            .section-head {
-                margin: 28px 0 16px;
-            }
-
-            .recommendation-grid,
-            .results-grid {
-                grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
-                gap: 20px;
-            }
-        }
-
-        @media (min-width: 1440px) {
-            .main {
-                padding: 44px 56px 56px;
-            }
-
-            .results-grid {
-                grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
-            }
-
-            h1 {
-                font-size: clamp(38px, 4vw, 54px);
-            }
-        }
-
-        @media (min-width: 1920px) {
-            .main {
-                padding: 52px 72px 72px;
-                max-width: 1560px;
-            }
-
-            .results-grid {
-                grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
-            }
+        /* Mobile specific adjustments */
+        @media (max-width: 768px) {
+            .nav-center { display: none; }
+            .search-inner { flex-direction: column; padding: 12px; }
+            .search-btn { width: 100%; }
+            .page-container { padding-top: 20px; }
+            .search-hero { margin-top: 30px; }
+            .results-grid { grid-template-columns: 1fr; }
         }
     </style>
 </head>
-
 <body class="soft-bg has-mobile-nav">
     <div class="premium-bg" aria-hidden="true">
         <div class="blob blob-1"></div>
         <div class="blob blob-2"></div>
         <div class="blob blob-3"></div>
     </div>
-    <!-- Ambient droplets -->
-    <div class="droplet-ambient" aria-hidden="true">
-        <span class="drop"></span>
-        <span class="drop"></span>
-        <span class="drop"></span>
-    </div>
 
-    <!-- Sidebar overlay for mobile -->
-    <div class="sidebar-overlay" id="sidebarOverlay" onclick="closeSidebar()"></div>
-
-    <div class="sidebar" id="sidebar">
-        <div class="logo">CoSwap</div>
-        <div class="menu-item" onclick="go('dashboard.html')">Dashboard</div>
-        <div class="menu-item active">Browse Coupons</div>
-        <div class="menu-item" onclick="go('sell.html')">Sell a Coupon</div>
-        <div class="menu-item" onclick="go('mylistings.html')">My Listings</div>
-        <div class="menu-item" onclick="go('mypurchases.html')">My Purchases</div>
-        <div class="menu-item" onclick="go('sellerprofile.html')">My Profile</div>
-    </div>
-
-    <main class="main">
-        <!-- Mobile top bar -->
-        <div style="display:flex;align-items:center;gap:12px;margin-bottom:16px;" class="mobile-topbar">
-            <button class="hamburger-btn" id="hamburgerBtn" onclick="openSidebar()" aria-label="Open menu">
-                <svg viewBox="0 0 24 24"><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="18" x2="21" y2="18"/></svg>
-            </button>
-            <span style="font-weight:700;font-size:18px;">Browse Coupons</span>
+    <!-- Header -->
+    <nav class="nav-wrapper">
+        <div class="nav-container">
+            <a href="dashboard.html" class="nav-left">
+                <img src="logo.png" alt="CoSwap">
+                <span>CoSwap</span>
+            </a>
+            <div class="nav-center">
+                <a href="dashboard.html">Dashboard</a>
+                <a href="browse.html" class="active">Browse</a>
+                <a href="sell.html">Sell</a>
+                <a href="chatlist.html">Messages</a>
+            </div>
+            <div class="nav-right">
+                <a href="profile.html" class="profile-btn">
+                    <svg viewBox="0 0 24 24" style="width:20px;height:20px;fill:white;"><path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/></svg>
+                </a>
+            </div>
         </div>
-        <section class="hero">
-            <div>
-                <div class="eyebrow">Semantic Search Engine</div>
-                <h1>Search the marketplace by meaning, not only keywords.</h1>
-                <p class="hero-copy">
-                    Query categories like OTT, food, travel, shopping, gaming, or beauty and CoSwap will expand
-                    your intent across related coupon signals.
-                </p>
-            </div>
+    </nav>
 
-            <div class="top-actions">
-                <button class="top-btn primary" onclick="go('chatlist.html')">Chat Workspace</button>
-                <button class="top-btn" onclick="go('terms.html')">Terms</button>
-                <button class="top-btn" onclick="logout()">Logout</button>
-            </div>
-        </section>
-
-        <section class="panel search-panel">
-            <div class="search-row">
-                <input id="searchInput" class="search-box" placeholder="Try: OTT subscriptions, food offers, travel stays, beauty deals">
-                <button class="browse-action" onclick="applySearch()">Run Semantic Search</button>
-            </div>
-
-            <div class="search-summary" id="searchSummary">
-                Start with a broad intent like <strong>food</strong>, <strong>OTT</strong>, or <strong>shopping</strong>.
-            </div>
-
-            <div class="chip-row" id="chipRow">
-                <button class="chip" onclick="setSemanticQuery('OTT subscriptions')">OTT subscriptions</button>
-                <button class="chip" onclick="setSemanticQuery('food discounts')">Food discounts</button>
-                <button class="chip" onclick="setSemanticQuery('travel stays')">Travel stays</button>
-                <button class="chip" onclick="setSemanticQuery('fashion shopping')">Fashion shopping</button>
-                <button class="chip" onclick="setSemanticQuery('beauty and salon')">Beauty and salon</button>
-            </div>
-        </section>
-
-        <section class="insights">
-            <article class="metric-card">
-                <div class="metric-label">Search Mode</div>
-                <div class="metric-value" id="metricMode">Semantic</div>
-                <div class="metric-copy">Keyword expansion and category-intent matching are active.</div>
-                <span class="droplet small"></span>
-            </article>
-
-            <article class="metric-card">
-                <div class="metric-label">Result Count</div>
-                <div class="metric-value" id="metricCount">0</div>
-                <div class="metric-copy">Live count of matching marketplace listings.</div>
-                <span class="droplet small"></span>
-            </article>
-
-            <article class="metric-card">
-                <div class="metric-label">Recommendation Mode</div>
-                <div class="metric-value" id="metricStrategy">Loading</div>
-                <div class="metric-copy">Personalized when activity exists, trending otherwise.</div>
-                <span class="droplet small"></span>
-            </article>
-        </section>
-
-        <section>
-            <div class="section-head">
-                <div>
-                    <h2>Recommended for you</h2>
-                    <p>Live recommendation system using seller quality, history, and fresh marketplace signals.</p>
+    <main class="page-container">
+        <!-- Search Section -->
+        <section class="search-hero">
+            <h1>Find your next deal</h1>
+            <div class="search-wrapper">
+                <div class="search-inner">
+                    <input type="text" id="searchInput" class="search-box" placeholder="Search coupons (food, OTT, travel, shopping)">
+                    <button class="search-btn" onclick="applySearch()">Search</button>
+                </div>
+                <div class="category-container" id="categoryChips">
+                    <button class="chip" onclick="setQuery('OTT subscriptions')">OTT subscriptions</button>
+                    <button class="chip" onclick="setQuery('food discounts')">Food discounts</button>
+                    <button class="chip" onclick="setQuery('travel deals')">Travel deals</button>
+                    <button class="chip" onclick="setQuery('fashion shopping')">Fashion shopping</button>
+                    <button class="chip" onclick="setQuery('beauty & salon')">Beauty & salon</button>
                 </div>
             </div>
+        </section>
 
-            <div class="recommendation-grid" id="recommendationGrid">
-                <div class="panel empty">Loading recommendations...</div>
+        <!-- Marketplace Results -->
+        <section>
+            <div class="section-header">
+                <h2>Marketplace Results</h2>
+            </div>
+            <div id="grid" class="results-grid">
+                <div class="empty-state">Loading marketplace listings...</div>
             </div>
         </section>
 
+        <!-- Recommendations -->
         <section>
-            <div class="section-head">
-                <div>
-                    <h2>Marketplace results</h2>
-                    <p id="resultsCaption">Latest active listings across CoSwap.</p>
-                </div>
+            <div class="section-header">
+                <h2>Recommended for you</h2>
             </div>
-
-            <div id="grid" class="results-grid"></div>
+            <div id="recommendationGrid" class="results-grid">
+                <div class="empty-state">Finding best deals...</div>
+            </div>
         </section>
     </main>
 
@@ -610,23 +308,23 @@
     <nav class="mobile-nav" aria-label="Mobile navigation">
         <div class="mobile-nav-inner">
             <a class="mobile-nav-item" href="dashboard.html">
-                <svg viewBox="0 0 24 24"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/></svg>
-                Home
+                <svg viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/></svg>
+                Dashboard
             </a>
             <a class="mobile-nav-item active" href="browse.html">
-                <svg viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+                <svg viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
                 Browse
             </a>
             <a class="mobile-nav-item" href="sell.html">
-                <svg viewBox="0 0 24 24"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+                <svg viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
                 Sell
             </a>
             <a class="mobile-nav-item" href="chatlist.html">
-                <svg viewBox="0 0 24 24"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
-                Chats
+                <svg viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+                Messages
             </a>
-            <a class="mobile-nav-item" href="sellerprofile.html">
-                <svg viewBox="0 0 24 24"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+            <a class="mobile-nav-item" href="profile.html">
+                <svg viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
                 Profile
             </a>
         </div>
@@ -635,21 +333,11 @@
     <script src="api.js"></script>
     <script>
         const searchInput = document.getElementById("searchInput");
-        const chipRow = document.getElementById("chipRow");
-        const searchSummary = document.getElementById("searchSummary");
-        const resultsCaption = document.getElementById("resultsCaption");
         const grid = document.getElementById("grid");
         const recommendationGrid = document.getElementById("recommendationGrid");
 
         let coupons = [];
         let searchTimer = null;
-        const defaultChips = [
-            "OTT subscriptions",
-            "food discounts",
-            "travel stays",
-            "fashion shopping",
-            "beauty and salon"
-        ];
 
         function escapeHtml(str) {
             if (!str) return "";
@@ -661,134 +349,9 @@
                 .replace(/'/g, "&#39;");
         }
 
-        function go(page) {
-            window.location.href = page;
-        }
-
-        function logout() {
-            clearAuth();
-            window.location.replace("index.html");
-        }
-
-        function setSemanticQuery(query) {
+        function setQuery(query) {
             searchInput.value = query;
             applySearch();
-        }
-
-        function renderChipButtons(terms, semantic = false) {
-            chipRow.innerHTML = terms.map((term) => `
-                <button class="chip ${semantic ? "semantic" : ""}" onclick="setSemanticQuery(decodeURIComponent('${encodeURIComponent(term)}'))">
-                    ${escapeHtml(term)}
-                </button>
-            `).join("");
-        }
-
-        function renderCouponCards(items, semanticMeta) {
-            document.getElementById("metricCount").innerText = items.length;
-
-            if (!items.length) {
-                grid.innerHTML = `<div class="panel empty">No active listings matched this search. Try a broader semantic query like OTT, food, shopping, or travel.</div>`;
-                return;
-            }
-
-            grid.innerHTML = items.map((c, index) => `
-                <article class="coupon-card">
-                    <img src="${escapeHtml(c.image_url || "bg.png")}" onerror="this.src='bg.png'" alt="${escapeHtml(c.title)}">
-                    <div class="coupon-body">
-                        <div class="item-tag">${escapeHtml(c.category || "Marketplace listing")}</div>
-                        <div class="item-title">${escapeHtml(c.title)}</div>
-                        <div class="item-copy">${escapeHtml(c.details || "No description provided.")}</div>
-                        <div class="item-stats">
-                            ⭐ ${escapeHtml(c.seller_rating || "Not rated")} •
-                            Fraud ${escapeHtml(String(c.seller_fraud_percent ?? 0))}% •
-                            Level ${escapeHtml(String(c.seller_level || 1))}
-                            ${c.semanticReason ? ` • ${escapeHtml(c.semanticReason)}` : ""}
-                        </div>
-                        <div class="item-meta">
-                            <div class="item-price">₹${escapeHtml(c.price)}</div>
-                            <div>${escapeHtml(c.expiry || "No expiry")}</div>
-                        </div>
-                        <div class="item-actions">
-                            <button class="card-btn primary" onclick="handleBuy(${index})">Buy Now</button>
-                            <button class="card-btn secondary" onclick="handleDetails(${index})">Details</button>
-                        </div>
-                    </div>
-                </article>
-            `).join("");
-
-            if (semanticMeta && semanticMeta.expandedTerms && semanticMeta.expandedTerms.length) {
-                renderChipButtons(semanticMeta.expandedTerms, true);
-                searchSummary.innerHTML = `Semantic expansion active for <strong>${escapeHtml(semanticMeta.query)}</strong>. Matching related terms: ${semanticMeta.expandedTerms.map(escapeHtml).join(", ")}.`;
-                resultsCaption.innerText = `${semanticMeta.totalMatches || items.length} semantic matches ranked by relevance.`;
-            } else {
-                renderChipButtons(defaultChips, false);
-                searchSummary.innerText = "Start with a broad intent like food, OTT, shopping, or travel.";
-                resultsCaption.innerText = "Latest active listings across CoSwap.";
-            }
-        }
-
-        async function loadCoupons(searchTerm = "") {
-            grid.innerHTML = `<div class="panel empty">Loading listings...</div>`;
-
-            try {
-                const query = searchTerm ? `?search=${encodeURIComponent(searchTerm)}` : "";
-                const data = await apiRequest(`/coupons${query}`);
-                coupons = data.coupons || [];
-                renderCouponCards(coupons, data.semantic || null);
-            } catch (err) {
-                grid.innerHTML = `<div class="panel empty">Unable to load listings right now. ${escapeHtml(err.message || "")}</div>`;
-            }
-        }
-
-        async function loadRecommendations() {
-            recommendationGrid.innerHTML = `<div class="panel empty">Loading recommendations...</div>`;
-
-            try {
-                const data = await apiRequest("/recommendations?limit=6");
-                const recommendations = data.recommendations || [];
-                document.getElementById("metricStrategy").innerText =
-                    data.strategy === "personalized" ? "Personalized" : "Trending";
-
-                if (!recommendations.length) {
-                    recommendationGrid.innerHTML = `<div class="panel empty">No recommendations available yet.</div>`;
-                    return;
-                }
-
-                recommendationGrid.innerHTML = recommendations.map((item) => `
-                    <article class="recommendation-card">
-                        <img src="${escapeHtml(item.image_url || "bg.png")}" onerror="this.src='bg.png'" alt="${escapeHtml(item.title)}">
-                        <div class="recommendation-body">
-                            <div class="item-tag">${escapeHtml(item.category || "Recommended")}</div>
-                            <div class="item-title">${escapeHtml(item.title)}</div>
-                            <div class="item-copy">${escapeHtml(item.recommendation_reason || "Recommended listing")}</div>
-                            <div class="item-meta">
-                                <div class="item-price">₹${escapeHtml(item.price)}</div>
-                                <button class="card-btn secondary" onclick="window.location.href='coupon-details.html?id=${item.id}'">Open</button>
-                            </div>
-                        </div>
-                    </article>
-                `).join("");
-            } catch (err) {
-                document.getElementById("metricStrategy").innerText = "Offline";
-                recommendationGrid.innerHTML = `<div class="panel empty">Unable to load recommendations right now. ${escapeHtml(err.message || "")}</div>`;
-            }
-        }
-
-        function handleBuy(index) {
-            const coupon = coupons[index];
-
-            if (!getAuthToken()) {
-                localStorage.setItem("redirectAfterLogin", `buy.html?id=${coupon.id}`);
-                window.location.href = "login.html";
-                return;
-            }
-
-            window.location.href = `buy.html?id=${coupon.id}`;
-        }
-
-        function handleDetails(index) {
-            const coupon = coupons[index];
-            window.location.href = `coupon-details.html?id=${coupon.id}`;
         }
 
         function applySearch() {
@@ -796,27 +359,77 @@
             loadCoupons(value);
         }
 
-        searchInput.addEventListener("input", () => {
-            clearTimeout(searchTimer);
-            searchTimer = setTimeout(() => {
-                applySearch();
-            }, 260);
+        async function loadCoupons(searchTerm = "") {
+            grid.innerHTML = '<div class="empty-state">Searching marketplace...</div>';
+            try {
+                const query = searchTerm ? `?search=${encodeURIComponent(searchTerm)}` : "";
+                const data = await apiRequest(`/coupons${query}`);
+                coupons = data.coupons || [];
+                renderCoupons(coupons);
+            } catch (err) {
+                grid.innerHTML = `<div class="empty-state">Unable to load listings. ${escapeHtml(err.message)}</div>`;
+            }
+        }
+
+        function renderCoupons(items) {
+            if (!items.length) {
+                grid.innerHTML = '<div class="empty-state">No listings found.</div>';
+                return;
+            }
+            grid.innerHTML = items.map((c, idx) => `
+                <article class="coupon-card">
+                    <img src="${escapeHtml(c.image_url || 'bg.png')}" class="card-img" onerror="this.src='bg.png'">
+                    <div class="card-content">
+                        <div class="card-tag">${escapeHtml(c.category || 'Deal')}</div>
+                        <div class="card-title">${escapeHtml(c.title)}</div>
+                        <div class="card-price">₹${escapeHtml(String(c.price))}</div>
+                        <div class="card-footer">
+                            <button class="btn-card btn-primary" onclick="window.location.href='buy.html?id=${c.id}'">Buy Now</button>
+                            <button class="btn-card btn-secondary" onclick="window.location.href='coupon-details.html?id=${c.id}'">Details</button>
+                        </div>
+                    </div>
+                </article>
+            `).join("");
+        }
+
+        async function loadRecommendations() {
+            recommendationGrid.innerHTML = '<div class="empty-state">Finding best deals...</div>';
+            try {
+                const data = await apiRequest("/recommendations?limit=4");
+                const recs = data.recommendations || [];
+                if (!recs.length) {
+                    recommendationGrid.innerHTML = '<div class="empty-state">No recommendations available yet.</div>';
+                    return;
+                }
+                recommendationGrid.innerHTML = recs.map(item => `
+                    <article class="coupon-card">
+                        <img src="${escapeHtml(item.image_url || 'bg.png')}" class="card-img" onerror="this.src='bg.png'">
+                        <div class="card-content">
+                            <div class="card-tag">Recommended</div>
+                            <div class="card-title">${escapeHtml(item.title)}</div>
+                            <div class="card-price">₹${escapeHtml(String(item.price))}</div>
+                            <div class="card-footer">
+                                <button class="btn-card btn-primary" onclick="window.location.href='buy.html?id=${item.id}'">Buy Now</button>
+                            </div>
+                        </div>
+                    </article>
+                `).join("");
+            } catch (err) {
+                recommendationGrid.innerHTML = '<div class="empty-state">No recommendations available yet.</div>';
+            }
+        }
+
+        // Initialize
+        document.addEventListener("DOMContentLoaded", () => {
+            loadCoupons();
+            loadRecommendations();
         });
 
-        renderChipButtons(defaultChips, false);
-        loadRecommendations();
-        loadCoupons();
-
-        // Sidebar controls
-        function openSidebar() {
-            document.getElementById('sidebar').classList.add('sidebar-open');
-            document.getElementById('sidebarOverlay').classList.add('open');
-        }
-        function closeSidebar() {
-            document.getElementById('sidebar').classList.remove('sidebar-open');
-            document.getElementById('sidebarOverlay').classList.remove('open');
-        }
+        // Live search with debounce
+        searchInput.addEventListener("input", () => {
+            clearTimeout(searchTimer);
+            searchTimer = setTimeout(applySearch, 500);
+        });
     </script>
 </body>
-
 </html>

@@ -4,383 +4,124 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Terms & Conditions — CoSwap</title>
-    <meta name="description" content="Read the CoSwap terms and conditions for using our coupon marketplace.">
-    <meta name="robots" content="index, follow">
-    <link rel="canonical" href="https://coswap.in/terms.html">
-    <meta property="og:title" content="Terms & Conditions — CoSwap">
-    <meta property="og:description" content="Read the CoSwap terms and conditions for using our coupon marketplace.">
-    <meta property="og:image" content="https://coswap.in/logo.png">
-    <meta property="og:url" content="https://coswap.in/terms.html">
-    <!-- Google Analytics 4 -->
-    <!-- <script async src="https://www.googletagmanager.com/gtag/js?id=G-XXXXXXXXXX"></script>
-    <script>window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments)}gtag('js',new Date());gtag('config','G-XXXXXXXXXX');</script> -->
     <link rel="stylesheet" href="theme.css">
     <script src="ui.js" defer></script>
     <style>
-        * {
-            box-sizing: border-box;
-            margin: 0;
-            padding: 0;
-        }
-
-        body {
-            background:
-                radial-gradient(circle at 18% 14%, rgba(79, 208, 255, 0.14), transparent 25%),
-                linear-gradient(180deg, #0b1020, #0b1020 38%, #070b14 100%);
-            color: white;
-            min-height: 100vh;
-            padding: 28px;
-        }
-
-        .page {
-            margin: 0 auto;
-            max-width: 1120px;
-        }
-
-        .top-bar {
-            align-items: flex-start;
-            display: flex;
-            gap: 18px;
-            justify-content: space-between;
-            margin-bottom: 24px;
-        }
-
-        .eyebrow {
-            color: #92e6ff;
-            font-size: 12px;
-            font-weight: 700;
-            letter-spacing: 0.18em;
-            text-transform: uppercase;
-        }
-
-        h1 {
-            font-size: clamp(38px, 7vw, 66px);
-            letter-spacing: -0.06em;
-            line-height: 0.95;
-            margin: 12px 0 14px;
-            max-width: 11ch;
-        }
-
-        .intro {
-            color: rgba(255, 255, 255, 0.78);
-            font-size: 16px;
-            line-height: 1.8;
-            max-width: 68ch;
-        }
-
-        .actions {
-            display: flex;
-            gap: 12px;
-        }
-
-        .btn {
-            border-radius: 16px;
-            color: white;
-            font-size: 14px;
-            font-weight: 800;
-            padding: 14px 16px;
-        }
-
-        .btn.primary {
-            background: linear-gradient(135deg, #4fd0ff, #6f6cff);
-        }
-
-        .btn.secondary {
-            background: rgba(255, 255, 255, 0.08);
-            border: 1px solid rgba(255, 255, 255, 0.12);
-        }
-
-        .summary-grid {
-            display: grid;
-            gap: 14px;
-            grid-template-columns: repeat(3, minmax(0, 1fr));
-            margin-bottom: 20px;
-        }
-
-        .summary-card,
-        .term-card {
-            backdrop-filter: blur(16px);
-            background: rgba(255, 255, 255, 0.07);
-            border: 1px solid rgba(255, 255, 255, 0.12);
-            border-radius: 24px;
-            box-shadow: 0 20px 48px rgba(0, 0, 0, 0.22);
-        }
-
-        .summary-card {
-            min-height: 126px;
-            padding: 18px;
-        }
-
-        .summary-card strong {
-            display: block;
-            font-size: 28px;
-            margin-top: 10px;
-        }
-
-        .summary-card span {
-            color: rgba(255, 255, 255, 0.7);
-            display: block;
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        body { 
+            background: #000; 
+            color: white; 
+            font-family: "Inter", system-ui, -apple-system, sans-serif;
             line-height: 1.6;
-            margin-top: 10px;
+            min-height: 100vh;
         }
 
-        .terms-grid {
-            display: grid;
-            gap: 16px;
-            grid-template-columns: repeat(2, minmax(0, 1fr));
-        }
+        .container { max-width: 900px; margin: 0 auto; padding: 80px 24px; }
+        
+        .legal-header { margin-bottom: 64px; text-align: center; }
+        .legal-header h1 { font-size: 44px; font-weight: 800; letter-spacing: -0.02em; margin-bottom: 12px; }
+        .effective-date { display: inline-block; background: rgba(79, 208, 255, 0.1); padding: 8px 20px; border-radius: 99px; font-size: 13px; font-weight: 700; color: #4fd0ff; border: 1px solid rgba(79, 208, 255, 0.2); }
 
+        .intro-text { font-size: 18px; color: rgba(255,255,255,0.8); text-align: center; max-width: 700px; margin: 0 auto 64px; }
+
+        .terms-grid { display: grid; gap: 32px; }
         .term-card {
-            padding: 20px;
-            position: relative;
+            background: rgba(255, 255, 255, 0.03); border: 1px solid rgba(255, 255, 255, 0.08);
+            border-radius: 28px; padding: 40px; transition: transform 0.2s, background 0.2s;
         }
+        .term-card:hover { transform: translateY(-4px); background: rgba(255,255,255,0.05); border-color: rgba(255,255,255,0.15); }
+        .term-card h2 { font-size: 22px; font-weight: 800; margin-bottom: 16px; color: white; display: flex; align-items: center; gap: 12px; }
+        .term-card h2::before { content: ""; width: 8px; height: 16px; background: #4fd0ff; border-radius: 4px; }
+        .term-card p { color: rgba(255,255,255,0.6); font-size: 16px; line-height: 1.7; }
 
-        .term-card h2 {
-            font-size: 22px;
-            line-height: 1.3;
-            margin: 12px 0 10px;
+        .actions { display: flex; flex-direction: column; align-items: center; gap: 16px; margin-top: 80px; padding-top: 64px; border-top: 1px solid rgba(255,255,255,0.08); }
+        .btn-accept { 
+            padding: 18px 56px; border-radius: 16px; background: white; color: black;
+            font-size: 17px; font-weight: 800; cursor: pointer; border: none; transition: 0.2s;
         }
+        .btn-accept:hover { transform: scale(1.02); box-shadow: 0 12px 32px rgba(255,255,255,0.15); }
+        .btn-back { color: rgba(255,255,255,0.4); text-decoration: none; font-size: 15px; font-weight: 600; transition: 0.2s; }
+        .btn-back:hover { color: white; }
 
-        .term-card p {
-            color: rgba(255, 255, 255, 0.74);
-            line-height: 1.7;
-        }
-
-        .dot {
-            background:
-                radial-gradient(circle at 28% 24%, rgba(255, 255, 255, 0.5), transparent 20%),
-                linear-gradient(180deg, rgba(255, 255, 255, 0.18), rgba(79, 208, 255, 0.08));
-            border: 1px solid rgba(255, 255, 255, 0.12);
-            border-radius: 60% 40% 58% 42% / 42% 58% 42% 58%;
-            height: 34px;
-            opacity: 0.58;
-            position: absolute;
-            right: 18px;
-            top: 18px;
-            width: 28px;
-        }
-
-        .footer {
-            color: rgba(255, 255, 255, 0.65);
-            display: flex;
-            flex-wrap: wrap;
-            gap: 14px 18px;
-            justify-content: space-between;
-            margin-top: 28px;
-        }
-
-        .footer a {
-            color: #92e6ff;
-            font-weight: 700;
-        }
-
-        @media (max-width: 1024px) {
-            .summary-grid,
-            .terms-grid {
-                grid-template-columns: 1fr;
-            }
-
-            .top-bar {
-                flex-direction: column;
-            }
-        }
-
-        @media (max-width: 680px) {
-            body {
-                padding: 18px;
-            }
-
-            .actions,
-            .footer {
-                flex-direction: column;
-            }
-        }
-
-        @media (min-width: 1280px) {
-            body {
-                padding: 40px 56px;
-            }
-
-            .page {
-                max-width: 1240px;
-            }
-
-            .top-bar {
-                margin-bottom: 30px;
-            }
-
-            .summary-grid {
-                gap: 18px;
-                margin-bottom: 24px;
-            }
-
-            .terms-grid {
-                gap: 20px;
-            }
-
-            .term-card {
-                padding: 26px;
-            }
-        }
-
-        @media (min-width: 1440px) {
-            body {
-                padding: 48px 72px;
-            }
-
-            .page {
-                max-width: 1360px;
-            }
-        }
-
-        @media (min-width: 1920px) {
-            body {
-                padding: 56px 120px;
-            }
-
-            .page {
-                max-width: 1480px;
-            }
+        @media (max-width: 768px) {
+            .container { padding: 48px 20px; }
+            .legal-header h1 { font-size: 32px; }
+            .term-card { padding: 32px 24px; }
         }
     </style>
 </head>
-<body>
+<body class="soft-bg">
     <div class="premium-bg" aria-hidden="true">
         <div class="blob blob-1"></div>
         <div class="blob blob-2"></div>
         <div class="blob blob-3"></div>
     </div>
-    <main class="page">
-        <section class="top-bar">
-            <div>
-                <div class="eyebrow">Legal</div>
-                <h1>Terms &amp; Conditions for CoSwap</h1>
-                <p class="intro">
-                    Effective March 13, 2026. By creating an account, browsing listings, opening chat sessions, or
-                    using recommendation and search features on CoSwap, you agree to the terms below.
-                </p>
-            </div>
 
-            <div class="actions">
-                <a class="btn primary" href="signup.html">Accept and Create Account</a>
-                <a class="btn secondary" href="index.html">Back to Home</a>
-            </div>
-        </section>
+    <main class="container">
+        <header class="legal-header">
+            <h1>Terms & Conditions</h1>
+            <div class="effective-date">Effective Date: March 13, 2026</div>
+        </header>
 
-        <section class="summary-grid">
-            <article class="summary-card">
-                <div class="eyebrow">Accounts</div>
-                <strong>Required</strong>
-                <span>Signup requires accurate account information and acceptance of these Terms.</span>
-            </article>
-            <article class="summary-card">
-                <div class="eyebrow">Sessions</div>
-                <strong>Persistent</strong>
-                <span>Returning access may use browser storage and long-lived cookies for session continuity.</span>
-            </article>
-            <article class="summary-card">
-                <div class="eyebrow">Marketplace</div>
-                <strong>Moderated</strong>
-                <span>Reports, fraud signals, and seller trust indicators support marketplace integrity.</span>
-            </article>
-        </section>
+        <p class="intro-text">
+            These Terms & Conditions govern the use of the CoSwap platform, including browsing coupons, posting listings, and interacting with other users.
+        </p>
 
-        <section class="terms-grid">
-            <article class="term-card">
-                <span class="dot"></span>
-                <div class="eyebrow">1. Account Eligibility</div>
-                <h2>You are responsible for accurate registration details.</h2>
-                <p>
-                    You must provide truthful name, email, and password details, keep your credentials secure, and use
-                    only your own account. CoSwap may suspend or remove access for fraud, misuse, or abuse.
-                </p>
-            </article>
+        <div class="terms-grid">
+            <section class="term-card">
+                <h2>Accounts</h2>
+                <p>Users must provide accurate, complete, and up-to-date account information when registering on the platform. You are responsible for maintaining the confidentiality of your login credentials.</p>
+            </section>
 
-            <article class="term-card">
-                <span class="dot"></span>
-                <div class="eyebrow">2. Listings</div>
-                <h2>Only valid, transferable, and lawful coupon listings are allowed.</h2>
-                <p>
-                    Sellers are responsible for listing accuracy, expiry details, pricing, and transfer eligibility.
-                    Before a coupon is listed, sold, or purchased, the user must confirm that it can legally and
-                    practically be sold, transferred, or redeemed. Misleading listings, duplicate listings, or
-                    prohibited items may be removed without notice.
-                </p>
-            </article>
+            <section class="term-card">
+                <h2>Marketplace Listings</h2>
+                <p>Sellers are responsible for the accuracy of their coupon descriptions, expiration dates, and usage terms. CoSwap does not pre-verify every listing but reserves the right to remove non-compliant content.</p>
+            </section>
 
-            <article class="term-card">
-                <span class="dot"></span>
-                <div class="eyebrow">3. Semantic Search</div>
-                <h2>Discovery features assist matching but do not guarantee results.</h2>
-                <p>
-                    Semantic search and recommendation logic rank listings using marketplace signals. CoSwap does
-                    not guarantee discovery placement, sales volume, or a specific conversion outcome.
-                </p>
-            </article>
+            <section class="term-card">
+                <h2>Communication Between Users</h2>
+                <p>In-platform chat sessions are provided for finalizing deal details. Respectful conduct is required. Harassment, spamming, or attempting to move transactions off-platform is strictly prohibited.</p>
+            </section>
 
-            <article class="term-card">
-                <span class="dot"></span>
-                <div class="eyebrow">4. Recommendations</div>
-                <h2>Personalized ranking uses activity and quality signals.</h2>
-                <p>
-                    Recommendation systems may consider categories, history, seller trust, freshness, and engagement
-                    patterns. These rankings are platform guidance and not a warranty or endorsement.
-                </p>
-            </article>
+            <section class="term-card">
+                <h2>Payments and Pricing</h2>
+                <p>All prices are set by the sellers. CoSwap may facilitate transactions via secure payment gateways. Any applicable service fees will be clearly displayed before purchase completion.</p>
+            </section>
 
-            <article class="term-card">
-                <span class="dot"></span>
-                <div class="eyebrow">5. Chat Conduct</div>
-                <h2>Persistent chat is for legitimate transaction coordination only.</h2>
-                <p>
-                    Chat sessions may remain available across returning visits. Users must not use messaging for
-                    harassment, scams, malware, illegal content, impersonation, or off-platform abuse.
-                </p>
-            </article>
+            <section class="term-card">
+                <h2>User Conduct</h2>
+                <p>By using CoSwap, you agree not to post fraudulent listings, engage in deceptive practices, or disrupt the platform's technical integrity.</p>
+            </section>
 
-            <article class="term-card">
-                <span class="dot"></span>
-                <div class="eyebrow">6. Orders and Inventory</div>
-                <h2>Request acceptance, purchase completion, and inventory state must stay aligned.</h2>
-                <p>
-                    When a purchase or request changes listing availability, the platform may update listing state,
-                    notifications, and related chat access. Users must not attempt to bypass these controls.
-                </p>
-            </article>
+            <section class="term-card">
+                <h2>Fraud and Abuse</h2>
+                <p>We maintain a zero-tolerance policy for fraud. Reporting invalid coupons or chargeback abuse will result in immediate investigation and potential account suspension.</p>
+            </section>
 
-            <article class="term-card">
-                <span class="dot"></span>
-                <div class="eyebrow">7. Trust and Reviews</div>
-                <h2>Fraud reports and review-integrity signals may affect visibility and access.</h2>
-                <p>
-                    CoSwap may use moderation reports, fraud votes, fake-review detection signals, and seller
-                    analytics to warn, freeze, or remove users and content from the marketplace.
-                </p>
-            </article>
+            <section class="term-card">
+                <h2>Platform Rights</h2>
+                <p>CoSwap reserves the right to modify or discontinue services, update features, and moderate content to maintain the health of the marketplace.</p>
+            </section>
 
-            <article class="term-card">
-                <span class="dot"></span>
-                <div class="eyebrow">8. Liability</div>
-                <h2>Platform availability is provided on an as-is basis.</h2>
-                <p>
-                    CoSwap is a marketplace platform and is not the issuer, validator, or guarantor of listed coupons.
-                    If a coupon cannot be sold, cannot be transferred, cannot be redeemed, is already used, expires, is
-                    revoked, or is restricted by the original issuer, that risk belongs to the users involved in the
-                    deal and not to CoSwap. To the maximum extent permitted by law, CoSwap is not responsible for any
-                    user loss, failed transfer, invalid coupon, issuer restriction, payment dispute, or other damage
-                    arising from user-to-user transactions.
-                </p>
-            </article>
-        </section>
+            <section class="term-card">
+                <h2>Privacy</h2>
+                <p>Your data is handled according to our Privacy Policy. We do not sell personal identification information to third parties.</p>
+            </section>
 
-        <footer class="footer">
-            <div>Using CoSwap after March 13, 2026 indicates agreement with these terms.</div>
-            <div>
-                <a href="index.html">Home</a>
-                <a href="login.html">Login</a>
-                <a href="signup.html">Create Account</a>
-                <a href="how-it-works.html">How It Works</a>
-            </div>
+            <section class="term-card">
+                <h2>Termination</h2>
+                <p>You may close your account at any time. CoSwap reserves the right to terminate access for users found in breach of these terms.</p>
+            </section>
+
+            <section class="term-card">
+                <h2>Liability</h2>
+                <p>CoSwap acts as a marketplace facilitator. We are not liable for the individual quality of coupons provided by third-party sellers, though we provide dispute resolution tools.</p>
+            </section>
+        </div>
+
+        <footer class="actions">
+            <button class="btn-accept" onclick="window.history.back()">Accept Terms</button>
+            <a href="index.html" class="btn-back">Back to Home</a>
         </footer>
     </main>
 </body>

@@ -1,454 +1,231 @@
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Messages — CoSwap</title>
-    <meta name="description" content="Your buyer-seller chat sessions on CoSwap. View all accepted deal conversations.">
-    <meta name="robots" content="noindex, nofollow">
-    <link rel="canonical" href="https://coswap.in/chatlist.html">
-    <meta property="og:title" content="Messages — CoSwap">
-    <meta property="og:description" content="Manage buyer-seller conversations on CoSwap marketplace.">
-    <meta property="og:image" content="https://coswap.in/logo.png">
-    <!-- Google Analytics 4 -->
-    <!-- <script async src="https://www.googletagmanager.com/gtag/js?id=G-XXXXXXXXXX"></script>
-    <script>window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments)}gtag('js',new Date());gtag('config','G-XXXXXXXXXX');</script> -->
     <link rel="stylesheet" href="theme.css">
+    <script src="api.js"></script>
     <script src="ui.js" defer></script>
-
     <style>
-        * {
-            box-sizing: border-box;
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        body { 
+            background: #000; 
+            color: white; 
+            font-family: "Inter", system-ui, -apple-system, sans-serif;
+            height: 100vh;
+            overflow: hidden;
         }
 
-        body {
-            background:
-                radial-gradient(circle at 18% 14%, rgba(79, 208, 255, 0.18), transparent 24%),
-                linear-gradient(180deg, #0b0f1d 0%, #11162a 52%, #090c15 100%);
-            color: white;
-            margin: 0;
-            min-height: 100vh;
-            padding: 30px;
+        /* Sidebar Styles */
+        .sidebar {
+            width: 280px; height: 100vh; position: fixed; left: 0; top: 0;
+            background: rgba(11, 15, 29, 0.8); backdrop-filter: blur(20px);
+            border-right: 1px solid rgba(255, 255, 255, 0.08); padding: 32px 24px;
+            display: flex; flex-direction: column; z-index: 1000; transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
         }
+        .logo-area { display: flex; align-items: center; gap: 12px; margin-bottom: 48px; text-decoration: none; color: white; }
+        .logo-area img { width: 32px; height: 32px; }
+        .logo-area span { font-size: 20px; font-weight: 800; }
 
-        .page-shell {
-            margin: 0 auto;
-            max-width: 1040px;
+        .nav-links { display: flex; flex-direction: column; gap: 8px; flex-grow: 1; }
+        .nav-link {
+            display: flex; align-items: center; gap: 12px; padding: 12px 16px; border-radius: 12px;
+            color: rgba(255, 255, 255, 0.5); text-decoration: none; font-size: 14px; font-weight: 600;
         }
+        .nav-link.active { background: rgba(79, 208, 255, 0.1); color: #4fd0ff; }
 
-        .hero {
-            align-items: flex-end;
-            display: flex;
-            gap: 18px;
-            justify-content: space-between;
-            margin-bottom: 28px;
+        /* Split View Layout */
+        .wrapper { margin-left: 280px; display: flex; height: 100vh; width: calc(100% - 280px); }
+        
+        /* Left: Chat List */
+        .chat-list-pane {
+            width: 380px; border-right: 1px solid rgba(255, 255, 255, 0.08);
+            display: flex; flex-direction: column; background: rgba(255,255,255,0.01);
         }
+        .pane-header { padding: 32px 24px; border-bottom: 1px solid rgba(255, 255, 255, 0.05); }
+        .pane-header h1 { font-size: 24px; font-weight: 800; }
 
-        .hero h1 {
-            font-size: clamp(34px, 5vw, 50px);
-            letter-spacing: -0.05em;
-            margin-bottom: 10px;
-        }
-
-        .hero p {
-            color: rgba(255, 255, 255, 0.72);
-            max-width: 60ch;
-        }
-
-        .hero .actions {
-            display: flex;
-            gap: 10px;
-        }
-
-        .btn {
-            background: rgba(255, 255, 255, 0.08);
-            border: 1px solid rgba(255, 255, 255, 0.12);
-            border-radius: 14px;
-            color: white;
-            cursor: pointer;
-            font-size: 14px;
-            font-weight: 700;
-            padding: 12px 16px;
-        }
-
-        .btn.primary {
-            background: linear-gradient(135deg, #4fd0ff, #6f6cff);
-            border: none;
-        }
-
-        .stats {
-            display: grid;
-            gap: 12px;
-            grid-template-columns: repeat(3, minmax(0, 1fr));
-            margin-bottom: 20px;
-        }
-
-        .stat-card,
+        .chat-list-scroll { flex: 1; overflow-y: auto; padding: 12px; }
         .chat-card {
-            backdrop-filter: blur(16px);
-            background: rgba(255, 255, 255, 0.06);
-            border: 1px solid rgba(255, 255, 255, 0.1);
-            border-radius: 20px;
-            box-shadow: 0 22px 44px rgba(0, 0, 0, 0.22);
+            display: flex; gap: 16px; padding: 16px; border-radius: 16px; border: 1px solid transparent;
+            cursor: pointer; transition: 0.2s; margin-bottom: 4px;
+        }
+        .chat-card:hover { background: rgba(255, 255, 255, 0.03); }
+        .chat-card.active { background: rgba(255, 255, 255, 0.05); border-color: rgba(255, 255, 255, 0.1); }
+        
+        .chat-avatar {
+            width: 48px; height: 48px; border-radius: 14px; background: linear-gradient(135deg, #4fd0ff, #6f6cff);
+            display: flex; align-items: center; justify-content: center; font-weight: 700; font-size: 18px;
+        }
+        .chat-info { flex: 1; min-width: 0; }
+        .chat-info h3 { font-size: 15px; font-weight: 700; margin-bottom: 2px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+        .chat-info .listing { font-size: 12px; color: #4fd0ff; margin-bottom: 4px; display: block; }
+        .chat-info p { font-size: 13px; color: rgba(255, 255, 255, 0.4); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+
+        /* Right: Message Window */
+        .message-window { flex: 1; display: flex; flex-direction: column; background: #000; position: relative; }
+        .window-header { 
+            padding: 16px 32px; border-bottom: 1px solid rgba(255,255,255,0.08); 
+            display: flex; align-items: center; gap: 16px; min-height: 80px;
+        }
+        .empty-window { 
+            flex: 1; display: flex; flex-direction: column; align-items: center; justify-content: center; 
+            color: rgba(255,255,255,0.3); text-align: center; padding: 40px;
         }
 
-        .stat-card {
-            padding: 16px 18px;
+        /* Mobile Adjustments */
+        .mobile-header {
+            display: none; position: fixed; top: 0; left: 0; right: 0; z-index: 900;
+            background: rgba(11, 15, 29, 0.95); backdrop-filter: blur(20px);
+            padding: 16px 20px; border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+            align-items: center; justify-content: space-between;
+        }
+        .hamburger { background: none; border: none; color: white; cursor: pointer; }
+
+        @media (max-width: 1024px) {
+            .chat-list-pane { width: 320px; }
         }
 
-        .stat-label {
-            color: rgba(255, 255, 255, 0.62);
-            font-size: 12px;
-            letter-spacing: 0.12em;
-            text-transform: uppercase;
-        }
-
-        .stat-value {
-            font-size: 28px;
-            font-weight: 800;
-            margin-top: 8px;
-        }
-
-        .list {
-            display: grid;
-            gap: 14px;
-        }
-
-        .chat-card {
-            align-items: center;
-            cursor: pointer;
-            display: grid;
-            gap: 16px;
-            grid-template-columns: 60px minmax(0, 1fr) auto;
-            padding: 18px;
-            transition: transform 0.18s ease, border-color 0.18s ease, background 0.18s ease;
-        }
-
-        .chat-card:hover {
-            background: rgba(255, 255, 255, 0.08);
-            border-color: rgba(79, 208, 255, 0.2);
-            transform: translateY(-2px);
-        }
-
-        .avatar {
-            align-items: center;
-            background: linear-gradient(135deg, rgba(79, 208, 255, 0.28), rgba(111, 108, 255, 0.2));
-            border: 1px solid rgba(79, 208, 255, 0.28);
-            border-radius: 18px;
-            display: flex;
-            font-size: 22px;
-            font-weight: 800;
-            height: 60px;
-            justify-content: center;
-            width: 60px;
-        }
-
-        .name {
-            font-size: 18px;
-            font-weight: 700;
-            line-height: 1.35;
-        }
-
-        .last-msg {
-            color: rgba(255, 255, 255, 0.72);
-            font-size: 14px;
-            line-height: 1.6;
-            margin-top: 8px;
-        }
-
-        .meta {
-            align-items: flex-end;
-            display: flex;
-            flex-direction: column;
-            gap: 10px;
-        }
-
-        .status {
-            border-radius: 999px;
-            font-size: 11px;
-            font-weight: 700;
-            letter-spacing: 0.12em;
-            padding: 7px 10px;
-            text-transform: uppercase;
-        }
-
-        .pending {
-            background: rgba(255, 210, 0, 0.14);
-            color: #ffd76b;
-        }
-
-        .active {
-            background: rgba(0, 255, 150, 0.14);
-            color: #87ffbf;
-        }
-
-        .expired {
-            background: rgba(255, 80, 80, 0.14);
-            color: #ff9e9e;
-        }
-
-        .completed {
-            background: rgba(79, 208, 255, 0.14);
-            color: #87e8ff;
-        }
-
-        .open-label {
-            color: rgba(255, 255, 255, 0.6);
-            font-size: 12px;
-            letter-spacing: 0.12em;
-            text-transform: uppercase;
-        }
-
-        .empty-state {
-            color: rgba(255, 255, 255, 0.72);
-            padding: 28px;
-            text-align: center;
-        }
-
-        .footer-links {
-            color: rgba(255, 255, 255, 0.64);
-            display: flex;
-            flex-wrap: wrap;
-            gap: 14px 16px;
-            justify-content: space-between;
-            margin-top: 22px;
-        }
-
-        .footer-links a {
-            color: #8fe5ff;
-            font-weight: 700;
-        }
-
-        @media (max-width: 780px) {
-            body {
-                padding: 18px;
-            }
-
-            .hero {
-                align-items: stretch;
-                flex-direction: column;
-            }
-
-            .stats {
-                grid-template-columns: 1fr;
-            }
-
-            .chat-card {
-                grid-template-columns: 52px minmax(0, 1fr);
-            }
-
-            .meta {
-                align-items: flex-start;
-                grid-column: 2 / 3;
-            }
-        }
-
-        @media (min-width: 1280px) {
-            body {
-                padding: 40px 56px;
-            }
-
-            .page-shell {
-                max-width: 1100px;
-            }
-
-            .hero {
-                margin-bottom: 32px;
-            }
-
-            .stats {
-                gap: 16px;
-                margin-bottom: 24px;
-            }
-
-            .stat-card {
-                padding: 20px 22px;
-            }
-
-            .list {
-                gap: 16px;
-            }
-
-            .chat-card {
-                padding: 22px 24px;
-            }
-        }
-
-        @media (min-width: 1440px) {
-            body {
-                padding: 48px 72px;
-            }
-
-            .page-shell {
-                max-width: 1160px;
-            }
-        }
-
-        @media (min-width: 1920px) {
-            body {
-                padding: 56px 120px;
-            }
-
-            .page-shell {
-                max-width: 1280px;
-            }
+        @media (max-width: 768px) {
+            .sidebar { transform: translateX(-100%); }
+            .sidebar.active { transform: translateX(0); }
+            .wrapper { margin-left: 0; width: 100%; padding-top: 60px; }
+            .chat-list-pane { width: 100%; display: block; }
+            .message-window { display: none; position: fixed; inset: 0; z-index: 1100; padding-top: 60px; }
+            .message-window.active { display: flex; }
+            .mobile-header { display: flex; }
+            .window-header { padding: 12px 20px; }
         }
     </style>
 </head>
-
-<body class="has-mobile-nav">
+<body class="soft-bg">
     <div class="premium-bg" aria-hidden="true">
         <div class="blob blob-1"></div>
         <div class="blob blob-2"></div>
         <div class="blob blob-3"></div>
     </div>
-    <!-- Ambient droplets -->
-    <div class="droplet-ambient" aria-hidden="true">
-        <span class="drop"></span><span class="drop"></span><span class="drop"></span>
+
+    <header class="mobile-header">
+        <button class="hamburger" id="menuToggle">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="3" y1="12" x2="21" y2="12"></line><line x1="3" y1="6" x2="21" y2="6"></line><line x1="3" y1="18" x2="21" y2="18"></line></svg>
+        </button>
+        <span style="font-weight: 800;">Messages</span>
+        <div id="closeChatMobile" style="display:none; cursor:pointer;" onclick="closeChat()">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
+        </div>
+        <div style="width:24px;" id="placeholderMenu"></div>
+    </header>
+
+    <aside class="sidebar" id="sidebar">
+        <a href="dashboard.html" class="logo-area">
+            <img src="logo.png" alt="CoSwap">
+            <span>CoSwap</span>
+        </a>
+        <nav class="nav-links">
+            <a href="dashboard.html" class="nav-link">Dashboard</a>
+            <a href="browse.html" class="nav-link">Browse Coupons</a>
+            <a href="sell.html" class="nav-link">Sell Coupon</a>
+            <a href="mylistings.html" class="nav-link">My Listings</a>
+            <a href="mypurchases.html" class="nav-link">My Purchases</a>
+            <a href="sellerprofile.html" class="nav-link">My Profile</a>
+            <a href="requests.html" class="nav-link">Requests</a>
+            <a href="chatlist.html" class="nav-link active">Chat</a>
+        </nav>
+    </aside>
+
+    <div class="wrapper" id="mainWrapper">
+        <aside class="chat-list-pane">
+            <div class="pane-header">
+                <h1>Messages</h1>
+            </div>
+            <div class="chat-list-scroll" id="chatList">
+                <!-- Chats load here -->
+            </div>
+        </aside>
+
+        <main class="message-window" id="messageWindow">
+            <!-- Iframe for the actual chat.html window to handle real-time logic -->
+            <div class="empty-window" id="emptyState">
+                <div style="font-size: 48px; margin-bottom: 24px;">💬</div>
+                <h3 style="color:white; margin-bottom:8px;">Your Conversations</h3>
+                <p>Select a message from the list to start chatting.</p>
+                <a href="browse.html" class="btn-primary" style="margin-top:24px; padding: 12px 24px; text-decoration:none; border-radius:12px; display:inline-block; background:white; color:black; font-weight:700;">Browse Listings</a>
+            </div>
+            <iframe id="chatIframe" style="width:100%; height:100%; border:none; display:none;"></iframe>
+        </main>
     </div>
-    <main class="page-shell">
-        <section class="hero">
-            <div>
-                <h1>Professional chat sessions</h1>
-                <p>Persistent conversation threads for accepted requests, completed purchases, and repeat engagement across returning visits.</p>
-            </div>
 
-            <div class="actions">
-                <button class="btn" onclick="window.location.href='dashboard.html'">Dashboard</button>
-                <button class="btn" onclick="window.location.href='terms.html'">Terms</button>
-                <button class="btn primary" onclick="window.location.href='browse.html'">Browse Listings</button>
-            </div>
-        </section>
-
-        <section class="stats" id="chatStats">
-            <div class="stat-card">
-                <div class="stat-label">Total</div>
-                <div class="stat-value" id="statTotal">0</div>
-            </div>
-            <div class="stat-card">
-                <div class="stat-label">Active</div>
-                <div class="stat-value" id="statActive">0</div>
-            </div>
-            <div class="stat-card">
-                <div class="stat-label">Completed</div>
-                <div class="stat-value" id="statCompleted">0</div>
-            </div>
-        </section>
-
-        <section class="list" id="chatList">
-            <div class="empty-state">Loading conversations...</div>
-        </section>
-
-        <div class="footer-links">
-            <div>Persistent chat sessions stay connected to your marketplace activity.</div>
-            <div>
-                <a href="about.html">About</a>
-                <a href="how-it-works.html">How It Works</a>
-                <a href="terms.html">Terms &amp; Conditions</a>
-            </div>
-        </div>
-    </main>
-
-    <!-- Mobile Bottom Navigation -->
-    <nav class="mobile-nav" aria-label="Mobile navigation">
-        <div class="mobile-nav-inner">
-            <a class="mobile-nav-item" href="dashboard.html"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/></svg>Home</a>
-            <a class="mobile-nav-item" href="browse.html"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>Browse</a>
-            <a class="mobile-nav-item" href="sell.html"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>Sell</a>
-            <a class="mobile-nav-item active" href="chatlist.html"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>Chats</a>
-            <a class="mobile-nav-item" href="sellerprofile.html"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>Profile</a>
-        </div>
-    </nav>
-
-    <script src="api.js"></script>
     <script>
-        if (!requireAuth("chatlist.html")) {
-            // redirected
-        }
+        if (!requireAuth("chatlist.html")) {}
 
-        function escapeHtml(str) {
-            if (!str) return "";
-            return String(str)
-                .replace(/&/g, "&amp;")
-                .replace(/</g, "&lt;")
-                .replace(/>/g, "&gt;")
-                .replace(/"/g, "&quot;")
-                .replace(/'/g, "&#39;");
-        }
+        // Menu Logic
+        const menuToggle = document.getElementById('menuToggle');
+        const sidebar = document.getElementById('sidebar');
+        menuToggle.addEventListener('click', () => sidebar.classList.toggle('active'));
 
-        function formatRelative(ts) {
-            if (!ts) return "Just opened";
-
-            const date = new Date(ts);
-            if (Number.isNaN(date.getTime())) {
-                return "Recently updated";
-            }
-
-            return date.toLocaleString([], {
-                month: "short",
-                day: "numeric",
-                hour: "2-digit",
-                minute: "2-digit"
-            });
-        }
-
-        function updateStats(chats) {
-            const active = chats.filter((chat) => (chat.status || "active") === "active").length;
-            const completed = chats.filter((chat) => (chat.status || "") === "completed").length;
-
-            document.getElementById("statTotal").innerText = chats.length;
-            document.getElementById("statActive").innerText = active;
-            document.getElementById("statCompleted").innerText = completed;
-        }
-
-        async function loadChats() {
-            const list = document.getElementById("chatList");
-            list.innerHTML = `<div class="empty-state">Loading conversations...</div>`;
-
+        async function loadConversations() {
+            const listEl = document.getElementById("chatList");
             try {
                 const data = await apiRequest("/chats");
                 const chats = data.chats || [];
-                const me = getCurrentUser();
-
-                updateStats(chats);
 
                 if (chats.length === 0) {
-                    list.innerHTML = `<div class="empty-state">No conversations yet. Once a request is accepted, the session will appear here.</div>`;
+                    listEl.innerHTML = `<div style="padding:40px; text-align:center; opacity:0.4;">No conversations yet.</div>`;
                     return;
                 }
 
-                list.innerHTML = chats.map((chat) => {
-                    const other = chat.buyer_id === me.id ? chat.seller_name : chat.buyer_name;
-                    const initial = escapeHtml((other || "U").charAt(0).toUpperCase());
-                    const status = chat.status || "active";
+                listEl.innerHTML = chats.map(c => `
+                    <div class="chat-card" onclick="openChat('${c.id}', this)" data-id="${c.id}">
+                        <div class="chat-avatar">${(c.other_user_name || "?")[0].toUpperCase()}</div>
+                        <div class="chat-info">
+                            <h3>${c.other_user_name}</h3>
+                            <span class="listing">${c.coupon_title}</span>
+                            <p>${c.last_message || "No messages yet"}</p>
+                        </div>
+                    </div>
+                `).join("");
 
-                    return `
-                        <article class="chat-card" onclick="openChat('${chat.id}')">
-                            <div class="avatar">${initial}</div>
-                            <div>
-                                <div class="name">${escapeHtml(other || "Unknown User")} • ${escapeHtml(chat.coupon_title || "Untitled listing")}</div>
-                                <div class="last-msg">${escapeHtml(chat.last_message || "No messages yet. Open this session to start the conversation.")}</div>
-                            </div>
-                            <div class="meta">
-                                <div class="status ${status}">${escapeHtml(status)}</div>
-                                <div class="open-label">${escapeHtml(formatRelative(chat.last_message_at || chat.created_at))}</div>
-                            </div>
-                        </article>
-                    `;
-                }).join("");
+                // If URL has ID, open it
+                const params = new URLSearchParams(window.location.search);
+                const activeId = params.get("id");
+                if (activeId) {
+                    const card = [...document.querySelectorAll('.chat-card')].find(el => el.dataset.id === activeId);
+                    if (card) openChat(activeId, card);
+                }
+
             } catch (err) {
-                document.getElementById("chatList").innerHTML =
-                    `<div class="empty-state">Unable to load conversations right now. ${escapeHtml(err.message || "")}</div>`;
+                listEl.innerHTML = `<div style="padding:24px; color:red;">Error loading chats</div>`;
             }
         }
 
-        function openChat(id) {
-            window.location.href = `chat.html?id=${id}`;
+        function openChat(id, el) {
+            document.querySelectorAll('.chat-card').forEach(c => c.classList.remove('active'));
+            if (el) el.classList.add('active');
+
+            const iframe = document.getElementById("chatIframe");
+            const empty = document.getElementById("emptyState");
+            const window = document.getElementById("messageWindow");
+
+            iframe.src = `chat.html?id=${id}&embed=true`;
+            iframe.style.display = "block";
+            empty.style.display = "none";
+            
+            // Mobile specific
+            if (innerWidth <= 768) {
+                window.classList.add("active");
+                document.getElementById("closeChatMobile").style.display = "block";
+                document.getElementById("placeholderMenu").style.display = "none";
+            }
         }
 
-        loadChats();
+        function closeChat() {
+            document.getElementById("messageWindow").classList.remove("active");
+            document.getElementById("closeChatMobile").style.display = "none";
+            document.getElementById("placeholderMenu").style.display = "block";
+        }
+
+        loadConversations();
     </script>
 </body>
-
 </html>
