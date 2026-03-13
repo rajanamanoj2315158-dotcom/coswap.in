@@ -16,12 +16,7 @@
             min-height: 100vh;
         }
 
-        .ambient-orbs {
-            position: fixed; inset: 0; z-index: -1; pointer-events: none; overflow: hidden;
-        }
-        .orb { position: absolute; border-radius: 50%; filter: blur(80px); opacity: 0.5; }
-        .orb-1 { width: 500px; height: 500px; background: radial-gradient(circle, rgba(79, 208, 255, 0.1), transparent 70%); top: -100px; left: -100px; animation: orbFloat 20s infinite; }
-        @keyframes orbFloat { 0%, 100% { transform: translate(0,0); } 50% { transform: translate(30px, -20px); } }
+
 
         /* SaaS Header */
         .nav-wrapper {
@@ -81,7 +76,11 @@
     </style>
 </head>
 <body class="soft-bg">
-    <div class="ambient-orbs"><div class="orb orb-1"></div></div>
+    <div class="premium-bg" aria-hidden="true">
+        <div class="blob blob-1"></div>
+        <div class="blob blob-2"></div>
+        <div class="blob blob-3"></div>
+    </div>
 
     <nav class="nav-wrapper">
         <div class="nav-container">

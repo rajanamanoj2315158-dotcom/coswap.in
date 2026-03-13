@@ -9,15 +9,19 @@
   --success: #067d62;
   --text-soft: rgba(255, 255, 255, 0.82);
   --card-border: rgba(255, 255, 255, 0.14);
-  --card-bg: #232f3e;
-  --shadow-soft: 0 4px 12px rgba(0, 0, 0, 0.15);
-  --focus-ring: 0 0 0 2px rgba(255, 153, 0, 0.55);
-  --radius-lg: 8px;
-  --radius-md: 4px;
+  --card-bg: #1e2a3a;
+  --shadow-soft: 0 4px 18px rgba(0, 0, 0, 0.22);
+  --shadow-hover: 0 14px 40px rgba(0, 0, 0, 0.36);
+  --focus-ring: 0 0 0 3px rgba(79, 208, 255, 0.3);
+  --radius-lg: 16px;
+  --radius-md: 12px;
+  --radius-sm: 8px;
   --transition-fast: 0.2s ease;
   --transition-slow: 0.45s ease;
-  --surface: #232f3e;
-  --surface-2: #37475a;
+  --surface: #1e2a3a;
+  --surface-2: #2b3d52;
+  --glow-blue: rgba(79, 208, 255, 0.18);
+  --glow-purple: rgba(111, 108, 255, 0.18);
 }
 
 * {
@@ -60,13 +64,22 @@ select,
 textarea {
   border-radius: var(--radius-md);
   border: 1px solid rgba(255, 255, 255, 0.14);
-  background: rgba(255, 255, 255, 0.1);
+  background: rgba(255, 255, 255, 0.09);
   color: #fff;
 }
 
 input::placeholder,
 textarea::placeholder {
-  color: rgba(255, 255, 255, 0.5);
+  color: rgba(255, 255, 255, 0.42);
+}
+
+input:focus,
+select:focus,
+textarea:focus {
+  outline: none;
+  border-color: rgba(79, 208, 255, 0.5);
+  background: rgba(255, 255, 255, 0.13);
+  box-shadow: 0 0 0 3px rgba(79, 208, 255, 0.14);
 }
 
 button,
@@ -74,30 +87,51 @@ button,
   border-radius: var(--radius-md);
   border: none;
   font-weight: 600;
-  letter-spacing: 0.2px;
+  letter-spacing: 0.3px;
   min-height: 44px;
   min-width: 44px;
+  cursor: pointer;
+  position: relative;
+  overflow: hidden;
+}
+
+/* Shimmer layer on hover */
+button::after,
+.btn::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(135deg, rgba(255,255,255,0.12) 0%, transparent 60%);
+  opacity: 0;
+  transition: opacity 0.2s ease;
+  border-radius: inherit;
+  pointer-events: none;
+}
+
+button:hover::after,
+.btn:hover::after {
+  opacity: 1;
 }
 
 button:hover,
 .btn:hover {
-  transform: translateY(-1px);
+  transform: translateY(-2px);
+  box-shadow: 0 8px 26px rgba(0, 0, 0, 0.3);
 }
 
 button:active,
 .btn:active {
   transform: translateY(0);
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.18);
 }
 
-input:focus,
-select:focus,
-textarea:focus,
 button:focus-visible,
 .btn:focus-visible {
   outline: none;
   box-shadow: var(--focus-ring);
 }
 
+/* ─── Card System ─────────────────────────────────────────────────────────── */
 .card,
 .table-container,
 .wallet-box,
@@ -111,42 +145,143 @@ button:focus-visible,
   border: 1px solid var(--card-border);
   box-shadow: var(--shadow-soft);
   background: var(--card-bg);
+  transition: transform 0.22s ease, box-shadow 0.22s ease, border-color 0.22s ease;
 }
 
+.purchase-card:hover,
+.transaction-card:hover,
+.notif-card:hover,
+.history-item:hover,
+.card:hover {
+  transform: translateY(-3px);
+  box-shadow: var(--shadow-hover);
+  border-color: rgba(79, 208, 255, 0.2);
+}
+
+/* ─── Primary Buttons ─────────────────────────────────────────────────────── */
 .btn-primary,
 .btn-main,
 .btn-login,
 .pay-btn,
 .save-btn {
-  background: linear-gradient(to bottom, #f0c040, #e8a820);
+  background: linear-gradient(135deg, #f0c040, #e8a820);
   border: 1px solid #c88a00;
   color: #111;
-  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.3);
+  box-shadow: 0 4px 12px rgba(232, 168, 32, 0.22);
+  font-weight: 700;
+}
+
+.btn-primary:hover,
+.btn-main:hover,
+.btn-login:hover,
+.pay-btn:hover,
+.save-btn:hover {
+  box-shadow: 0 8px 28px rgba(232, 168, 32, 0.38);
 }
 
 .btn-secondary {
-  background: rgba(255, 255, 255, 0.12);
+  background: rgba(255, 255, 255, 0.1);
+  border: 1px solid rgba(255, 255, 255, 0.14);
 }
 
-/* Professional motion */
+.btn-secondary:hover {
+  background: rgba(255, 255, 255, 0.16);
+  border-color: rgba(255, 255, 255, 0.22);
+}
+
+/* ─── Gradient Text Utility ───────────────────────────────────────────────── */
+.gradient-text {
+  background: linear-gradient(90deg, #4fd0ff, #a78bff);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+/* ─── Professional motion ─────────────────────────────────────────────────── */
 .card,
 .purchase-card,
 .transaction-card,
 .notif-card,
 .chat-card {
-  animation: riseIn 0.55s var(--transition-slow);
+  animation: riseIn 0.55s var(--transition-slow) both;
 }
 
 @keyframes riseIn {
   0% {
     opacity: 0;
-    transform: translateY(16px);
+    transform: translateY(18px);
   }
 
   100% {
     opacity: 1;
     transform: translateY(0);
   }
+}
+
+/* ─── Premium Living Interface (Global Background System) ─────────────────── */
+.premium-bg {
+  pointer-events: none;
+  position: fixed;
+  inset: 0;
+  z-index: -1;
+  overflow: hidden;
+}
+
+.blob {
+  position: absolute;
+  border-radius: 50%;
+  filter: blur(80px);
+  opacity: 0.15;
+  will-change: transform;
+}
+
+.blob-1 {
+  width: 600px;
+  height: 600px;
+  background: radial-gradient(circle, #4fd0ff, transparent 70%);
+  top: -150px;
+  left: -100px;
+  animation: blobFloat 45s ease-in-out infinite;
+}
+
+.blob-2 {
+  width: 500px;
+  height: 500px;
+  background: radial-gradient(circle, #6f6cff, transparent 70%);
+  bottom: -100px;
+  right: -50px;
+  animation: blobFloat 60s ease-in-out infinite reverse;
+}
+
+.blob-3 {
+  width: 400px;
+  height: 400px;
+  background: radial-gradient(circle, #a78bff, transparent 70%);
+  top: 40%;
+  left: 60%;
+  animation: blobFloat 52s ease-in-out infinite;
+  animation-delay: -15s;
+}
+
+@keyframes blobFloat {
+  0%, 100% { transform: translate(0, 0) scale(1); }
+  33%       { transform: translate(40px, -60px) scale(1.1); }
+  66%       { transform: translate(-30px, 40px) scale(0.95); }
+}
+
+/* Glass Transparency for Cards to show depth */
+.card,
+.action-card,
+.notif-card,
+.chat-card,
+.purchase-card,
+.transaction-card,
+.panel-card,
+.settings-card {
+  background: rgba(255, 255, 255, 0.03) !important;
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border: 1px solid rgba(255, 255, 255, 0.08) !important;
 }
 
 /* ─── Mobile Bottom Navigation ────────────────────────────────────────────── */

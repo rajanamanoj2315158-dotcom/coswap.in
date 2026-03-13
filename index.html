@@ -179,6 +179,7 @@
             max-width: 800px;
             background: linear-gradient(180deg, #ffffff 0%, rgba(255, 255, 255, 0.7) 100%);
             -webkit-background-clip: text;
+            background-clip: text;
             -webkit-text-fill-color: transparent;
         }
 
@@ -348,6 +349,7 @@
             margin-bottom: 24px;
             display: -webkit-box;
             -webkit-line-clamp: 2;
+            line-clamp: 2;
             -webkit-box-orient: vertical;
             overflow: hidden;
         }
@@ -487,10 +489,10 @@
     </style>
 </head>
 <body>
-    <div class="bg-layer"></div>
-    <div class="ambient-orbs">
-        <div class="orb orb-1"></div>
-        <div class="orb orb-2"></div>
+    <div class="premium-bg" aria-hidden="true">
+        <div class="blob blob-1"></div>
+        <div class="blob blob-2"></div>
+        <div class="blob blob-3"></div>
     </div>
 
     <nav class="nav-wrapper">
