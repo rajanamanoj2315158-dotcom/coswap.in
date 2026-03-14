@@ -1,17 +1,23 @@
 const mongoose = require("mongoose");
 
-const MONGODB_URI = process.env.MONGODB_URI || "mongodb://localhost:27017/coswap";
+let MONGODB_URI = process.env.MONGODB_URI || "mongodb://localhost:27017/coswap";
+
+// Strip problematic legacy majority parameters if present and re-add them correctly
+if (MONGODB_URI.includes("majority") && !MONGODB_URI.includes("w=majority")) {
+  MONGODB_URI = MONGODB_URI.replace(/majority/g, "w=majority");
+}
+if (MONGODB_URI.startsWith("mongodb+srv") && !MONGODB_URI.includes("retryWrites")) {
+  MONGODB_URI += (MONGODB_URI.includes("?") ? "&" : "?") + "retryWrites=true&w=majority";
+}
 
 async function initDb() {
   if (mongoose.connection.readyState === 0) {
     await mongoose.connect(MONGODB_URI, {
-      maxPoolSize: 20, // Increased for better concurrency
-      minPoolSize: 5,  // Keep some connections warm
       serverSelectionTimeoutMS: 5000,
       socketTimeoutMS: 45000,
       connectTimeoutMS: 10000,
     });
-    console.log("MongoDB connected:", MONGODB_URI.split("@").pop());
+    console.log("MongoDB connected:", MONGODB_URI.split("@").pop().split("?")[0]);
     await ensureIndexes();
   }
   return mongoose;

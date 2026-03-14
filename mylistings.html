@@ -9,154 +9,65 @@
     <link rel="canonical" href="https://coswap.in/mylistings.html">
 </head>
 <body class="soft-bg">
-    <!-- Premium Background Effects -->
-    <div class="premium-bg" aria-hidden="true">
-        <div class="blob blob-1"></div>
-        <div class="blob blob-2"></div>
-        <div class="blob blob-3"></div>
-        <div class="mist-container"></div>
-    </div>
+    <nav class="navbar">
+        <a href="index.html" class="logo" style="display: flex; align-items: center; gap: 12px; text-decoration: none; color: white;">
+            <img src="logo.png" alt="CoSwap" style="width: 32px; height: 32px;">
+            <span style="font-size: 20px; font-weight: 800; letter-spacing: -0.04em;">CoSwap</span>
+        </a>
+        
+        <div class="nav-menu">
+            <a href="browse.html" class="nav-link">Browse</a>
+            <a href="sell.html" class="nav-link">Sell</a>
+            <a href="dashboard.html" class="nav-link active">My Listings</a>
+            <a href="chatlist.html" class="nav-link">Messages</a>
+            <a href="profile.html" class="nav-link">Profile</a>
+        </div>
 
-    <main>
-        <!-- Top Nav (Desktop) -->
-        <nav class="nav-wrapper desktop-only" style="background: rgba(15, 19, 36, 0.82); backdrop-filter: blur(20px); height: 72px;">
-            <div class="content-container" style="display:flex; align-items:center; justify-content:space-between; height: 100%;">
-                <a href="index.html" class="brand" style="display: flex; align-items: center; gap: 12px; text-decoration: none; color: white;">
-                    <img src="logo.png" alt="CoSwap" style="width: 32px; height: 32px;" loading="lazy">
-                    <span style="font-size: 20px; font-weight: 800; letter-spacing: -0.02em;">CoSwap</span>
-                </a>
-                <div style="display: flex; gap: 12px; align-items: center;">
-                    <a href="chatlist.html" class="btn-icon" title="Messages"><i data-lucide="message-square"></i></a>
-                    <a href="terms.html" class="btn-icon" title="Terms"><i data-lucide="file-text"></i></a>
-                    <a href="profile.html" class="btn-icon" title="Profile"><i data-lucide="user"></i></a>
-                    <a href="login.html" class="btn-icon" title="Logout" style="margin-left:8px; color: var(--danger);"><i data-lucide="log-out"></i></a>
-                </div>
-            </div>
-        </nav>
-
-        <section class="content-container" style="padding: 60px 24px;">
-            <div style="text-align: center; margin-bottom: 48px;">
-                <h1 class="heading-elite">My Active Listings</h1>
-                <p class="subtext-elite" style="margin: 0 auto;">Manage your posted coupons and track your sales progress.</p>
-            </div>
-
-            <div id="grid" class="glass-card-grid">
-                <!-- Dynamically filled -->
-                <div class="empty-box" style="grid-column: 1 / -1;">
-                    <p>You haven't posted any coupons yet.</p>
-                    <button onclick="location.href='sell.html'" class="btn-primary" style="padding: 16px 32px; border-radius: 12px;">Sell a Coupon</button>
-                </div>
-            </div>
-        </section>
-    </main>
-
-        /* RESPONSIVENESS */
-        @media (max-width: 768px) {
-            .sidebar { transform: translateX(-100%); width: 280px; }
-            .sidebar.open { transform: translateX(0); }
-            .sidebar-overlay.open { display: block; }
-            .mobile-header { display: flex; }
-            .main { margin-left: 0; padding: 32px 24px; }
-            .grid { grid-template-columns: 1fr; }
-        }
-    </style>
-    <!-- Load Lucide Icons -->
-    <script src="https://unpkg.com/lucide@latest"></script>
-</head>
-<body class="soft-bg has-mobile-nav">
-    <div class="premium-bg" aria-hidden="true">
-        <div class="blob blob-1"></div>
-        <div class="blob blob-2"></div>
-        <div class="blob blob-3"></div>
-        <div class="mist-container"></div>
-    </div>
-
-    <!-- Desktop Nav (Icon Based) -->
-    <nav class="nav-wrapper desktop-only" style="background: rgba(15, 19, 36, 0.8); backdrop-filter: blur(20px); border-bottom: 1px solid rgba(255, 255, 255, 0.08); height: 72px; position: sticky; top: 0; z-index: 1000;">
-        <div class="content-container" style="display:flex; align-items:center; justify-content:space-between; height: 100%;">
-            <a href="dashboard.html" class="brand" style="display: flex; align-items: center; gap: 12px; text-decoration: none; color: white;">
-                <img src="logo.png" alt="CoSwap" style="width: 32px; height: 32px;">
-                <span style="font-size: 20px; font-weight: 800; letter-spacing: -0.02em;">CoSwap</span>
-            </a>
-            
-            <div style="display: flex; gap: 32px; align-items: center;">
-                <a href="dashboard.html" style="color: rgba(255,255,255,0.7); font-weight: 600; text-decoration: none;">Dashboard</a>
-                <a href="browse.html" style="color: rgba(255,255,255,0.7); font-weight: 600; text-decoration: none;">Browse</a>
-                <a href="sell.html" style="color: rgba(255,255,255,0.7); font-weight: 600; text-decoration: none;">Sell</a>
-                <a href="mylistings.html" style="color: #4fd0ff; font-weight: 600; text-decoration: none;">My Listings</a>
-            </div>
-
-            <div style="display: flex; gap: 12px; align-items: center;">
-                <a href="chatlist.html" class="btn-icon" title="Messages"><i data-lucide="message-square"></i></a>
-                <a href="profile.html" class="btn-icon" title="Profile"><i data-lucide="user"></i></a>
-                <a href="login.html" class="btn-icon" title="Logout" style="color: var(--danger);"><i data-lucide="log-out"></i></a>
-            </div>
+        <div class="nav-right">
+            <img src="https://api.dicebear.com/7.x/avataaars/svg?seed=coswap" alt="Avatar" class="user-avatar" onclick="window.location.href='profile.html'">
+            <i data-lucide="log-out" class="logout-icon" onclick="handleLogout()" style="width: 20px;"></i>
         </div>
     </nav>
 
-    <!-- Mobile Header -->
-    <header class="mobile-header" style="display: none; padding: 16px 20px; align-items: center; justify-content: space-between; position: sticky; top: 0; z-index: 1000; background: rgba(15, 19, 36, 0.9); backdrop-filter: blur(20px);">
-        <a href="dashboard.html" style="display: flex; align-items: center; gap: 8px; text-decoration: none; color: white;">
-            <img src="logo.png" alt="CoSwap" style="width: 28px; height: 28px;">
-            <span style="font-weight: 800; font-size: 18px;">CoSwap</span>
-        </a>
-        <div style="display: flex; gap: 16px; align-items: center;">
-            <a href="chatlist.html" style="color: white;"><i data-lucide="message-square"></i></a>
-            <a href="profile.html" style="color: white;"><i data-lucide="user"></i></a>
-            <button id="menuToggle" style="background: none; border: none; color: white;"><i data-lucide="menu"></i></button>
-        </div>
-    </header>
+    <main class="container" style="padding: 40px 24px 80px;">
+        <header style="margin-bottom: 48px; text-align: center;">
+            <h1 class="heading-elite">My Active Listings</h1>
+            <p class="subtext-elite" style="margin: 0 auto;">Manage your posted coupons and track your sales progress.</p>
+        </header>
 
-    <div class="sidebar-overlay" id="overlay" onclick="toggleSidebar()"></div>
-
-    <!-- SIDEBAR -->
-    <div class="sidebar" id="sidebar">
-        <div class="logo">CoSwap</div>
-        <div class="menu-item" onclick="go('dashboard.html')">Dashboard</div>
-        <div class="menu-item" onclick="go('browse.html')">Browse Coupons</div>
-        <div class="menu-item" onclick="go('sell.html')">Sell a Coupon</div>
-        <div class="menu-item active" onclick="go('mylistings.html')">My Listings</div>
-        <div class="menu-item" onclick="go('mypurchases.html')">My Purchases</div>
-        <div class="menu-item" onclick="go('profile.html')">My Profile</div>
-        <div class="menu-item" onclick="go('requests.html')">Requests</div>
-        <div class="menu-item" onclick="go('chatlist.html')">Chat</div>
-    </div>
-
-    <!-- MAIN -->
-    <main class="main">
-        <div class="header-section">
-            <h1>My Coupon Listings</h1>
-            <p>Manage, edit or remove your posted coupons.</p>
+        <div id="listingsGrid" style="display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 24px;">
+            <!-- Loaded via API -->
         </div>
 
-        <div id="listingsGrid" class="grid"></div>
-
-        <div id="emptyState" class="empty-box" style="display:none;">
-            <p>No coupons listed yet.</p>
-            <button class="sell-btn" onclick="go('sell.html')">Post Your First Coupon</button>
+        <div id="emptyState" class="card" style="display:none; text-align: center; padding: 60px 40px;">
+            <i data-lucide="ticket" style="width: 48px; height: 48px; margin-bottom: 16px; opacity: 0.1;"></i>
+            <p style="color: rgba(255,255,255,0.5); margin-bottom: 24px;">You haven't listed any coupons yet.</p>
+            <button class="button-primary" onclick="window.location.href='sell.html'" style="padding: 0 32px;">Sell Your First Coupon</button>
         </div>
     </main>
 
     <!-- DELETE POPUP -->
-    <div id="deletePopup" style="position:fixed; inset:0; background:rgba(0,0,0,0.8); backdrop-filter:blur(10px); z-index:2000; display:none; align-items:center; justify-content:center; padding:24px;">
-        <div style="background:rgba(255,255,255,0.05); border:1px solid rgba(255,255,255,0.1); border-radius:24px; padding:32px; width:100%; max-width:400px; text-align:center;">
-            <h3 style="font-size:20px; margin-bottom:12px;">Delete Coupon?</h3>
-            <p style="color:rgba(255,255,255,0.5); margin-bottom:24px;">This action cannot be undone and your listing will be removed from the marketplace.</p>
+    <div id="deletePopup" style="position:fixed; inset:0; background:rgba(2, 6, 23, 0.8); backdrop-filter:blur(12px); z-index:2000; display:none; align-items:center; justify-content:center; padding:24px;">
+        <div class="card" style="max-width:400px; width: 100%; text-align:center; padding: 32px;">
+            <h3 style="font-size:20px; font-weight: 800; margin-bottom:12px;">Delete Listing?</h3>
+            <p style="color:rgba(255,255,255,0.5); margin-bottom:24px;">This action cannot be undone. Your coupon will be removed from the marketplace.</p>
             <div style="display:flex; gap:12px;">
-                <button onclick="closePopup()" style="flex:1; padding:12px; border-radius:12px; border:none; background:rgba(255,255,255,0.1); color:white; font-weight:700; cursor:pointer;">Cancel</button>
-                <button id="confirmBtn" style="flex:1; padding:12px; border-radius:12px; border:none; background:#ff3b30; color:white; font-weight:700; cursor:pointer;">Delete</button>
+                <button onclick="closePopup()" class="button-secondary" style="flex:1;">Cancel</button>
+                <button id="confirmBtn" class="button-primary" style="flex:1; background: #ef4444;">Delete</button>
             </div>
         </div>
     </div>
 
     <script src="api.js"></script>
     <script>
-        function go(p) { window.location.href = p; }
-        function toggleSidebar() {
-            document.getElementById('sidebar').classList.toggle('open');
-            document.getElementById('overlay').classList.toggle('open');
-        }
+        document.addEventListener("DOMContentLoaded", () => {
+            if (typeof requireAuth === 'function' && !requireAuth()) return;
+            load();
+            lucide.createIcons();
+        });
 
+        function go(p) { window.location.href = p; }
+        
         let listings = [];
         let delId = null;
 
@@ -176,25 +87,32 @@
                 
                 empty.style.display = 'none';
                 grid.innerHTML = listings.map(c => `
-                    <div class="card">
-                        <div class="card-tag" style="font-size:11px; font-weight:700; color:${c.status === 'sold' ? '#ff3b30' : '#00ff9d'}; text-transform:uppercase; margin-bottom:8px;">
-                            ${c.status === 'sold' ? 'Sold' : 'Active'}
+                    <div class="card" style="display: flex; flex-direction: column; gap: 16px;">
+                        <div style="display: flex; justify-content: space-between; align-items: center;">
+                            <div style="font-size: 11px; font-weight: 800; color: ${c.status === 'sold' ? '#ff4d4d' : '#22c55e'}; text-transform: uppercase; letter-spacing: 0.05em; background: ${c.status === 'sold' ? 'rgba(255, 77, 77, 0.1)' : 'rgba(34, 197, 94, 0.1)'}; padding: 4px 8px; border-radius: 4px;">
+                                ${c.status === 'sold' ? 'Sold' : 'Active'}
+                            </div>
+                            <div style="font-size: 12px; color: rgba(255,255,255,0.3); font-family: monospace;">#${c.id.slice(-6)}</div>
                         </div>
-                        <div class="card-title">${escapeHtml(c.title)}</div>
-                        <div class="card-price">₹${escapeHtml(String(c.price))}</div>
-                        <div class="card-meta">
-                            <span>ID: ${c.id.slice(-6)}</span>
-                            <span>•</span>
-                            <span>Expires: ${escapeHtml(c.expiry || 'N/A')}</span>
+                        
+                        <div style="flex: 1;">
+                            <h3 style="font-size: 18px; font-weight: 700; margin-bottom: 8px; line-height: 1.4;">${escapeHtml(c.title)}</h3>
+                            <div style="font-size: 24px; font-weight: 800; color: #38bdf8; margin-bottom: 12px;">₹${escapeHtml(String(c.price))}</div>
+                            <div style="font-size: 12px; color: rgba(255,255,255,0.5); display: flex; align-items: center; gap: 6px;">
+                                <i data-lucide="calendar" style="width: 12px;"></i> Expires: ${escapeHtml(c.expiry || 'N/A')}
+                            </div>
                         </div>
-                        <div class="btn-row">
-                            <button class="btn btn-edit" onclick="go('editcoupon.html?id=${c.id}')">Edit</button>
-                            <button class="btn btn-delete" onclick="openPopup('${c.id}')">Delete</button>
+
+                        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px; pt-4">
+                            <button class="button-secondary" onclick="go('editcoupon.html?id=${c.id}')" style="height: 40px; font-size: 13px;">Edit</button>
+                            <button class="button-secondary" onclick="openPopup('${c.id}')" style="height: 40px; font-size: 13px; color: #ff4d4d; border-color: rgba(255, 77, 77, 0.2);">Delete</button>
                         </div>
                     </div>
                 `).join('');
+                
+                lucide.createIcons();
             } catch (err) {
-                grid.innerHTML = `<p style="color:#ff3b30;">Error loading listings. Please try again.</p>`;
+                grid.innerHTML = `<div class="card" style="color: #ff4d4d; text-align: center;">Error loading listings. Please refresh.</div>`;
             }
         }
 
@@ -209,11 +127,16 @@
             } catch (err) { alert('Failed to delete listing.'); }
         };
 
+        function handleLogout() {
+            if (confirm("Sign out from CoSwap?")) {
+                if (typeof clearAuth === 'function') clearAuth();
+                window.location.href = "login.html";
+            }
+        }
+
         function escapeHtml(s) {
             return s ? String(s).replace(/[&<>"']/g, m => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m])) : '';
         }
-
-        load();
     </script>
 </body>
 </html>

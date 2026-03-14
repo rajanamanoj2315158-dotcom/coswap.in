@@ -570,9 +570,20 @@ app.post("/auth/verify-otp", async (req, res) => {
     const { email, otp } = req.body || {};
     if (!email || !otp) return res.status(400).json({ error: "Email and OTP are required." });
 
-    const record = await PasswordReset.findOne({ email: email.trim().toLowerCase(), otp: String(otp).trim(), used_at: null }).sort({ _id: -1 });
-    if (!record) return res.status(400).json({ error: "Invalid OTP." });
+    const cleanEmail = email.trim().toLowerCase();
+    const record = await PasswordReset.findOne({ 
+      email: cleanEmail, 
+      used_at: null 
+    }).sort({ _id: -1 });
+
+    if (!record) return res.status(400).json({ error: "No reset request found." });
     if (new Date(record.expires_at) < new Date()) return res.status(400).json({ error: "OTP expired." });
+
+    // Track attempts in PasswordReset schema (adding locally if not in schema yet)
+    // For now purely checking validity as per existing schema but one-time use is enforced by used_at
+    if (record.otp !== String(otp).trim()) {
+      return res.status(400).json({ error: "Invalid OTP." });
+    }
 
     res.json({ resetToken: record.reset_token });
   } catch (err) { res.status(500).json({ error: err.message }); }
@@ -837,17 +848,108 @@ app.get("/coupons/:id", async (req, res) => {
   } catch (err) { res.status(500).json({ error: err.message }); }
 });
 
+// Rate limiting and Anti-spam state
+const listingUsage = new Map(); // user_id -> timestamp[]
+
 app.post("/coupons", authMiddleware, async (req, res) => {
   try {
     const { title, details, expiry, price, category, image } = req.body || {};
     if (!title || !price) return res.status(400).json({ error: "Title and price are required." });
 
-    const seller = await User.findById(req.user.id).lean();
-    if (!seller) return res.status(404).json({ error: "User not found." });
-    if (seller.status === "frozen") return res.status(403).json({ error: "Account frozen. Please contact support." });
+    const cleanTitle = title.trim();
+    const numPrice = Number(price);
+    const now = new Date();
+    const todayStr = now.toISOString().split("T")[0];
 
-    const coupon = await Coupon.create({ title: title.trim(), details: details || "", expiry: expiry || null, price: Number(price), category: category || "", image_url: image || "bg.png", seller_id: req.user.id, status: "active", created_at: new Date().toISOString() });
-    res.json({ coupon: { ...coupon.toObject(), id: String(coupon._id), seller_id: String(coupon.seller_id), seller_name: seller.name } });
+    // 1. Basic Validation
+    if (numPrice < 1) return res.status(400).json({ error: "Price must be at least ₹1." });
+    
+    // 2. Expiry Validation
+    if (expiry && expiry < todayStr) {
+      return res.status(400).json({ error: "Expiry date cannot be in the past." });
+    }
+
+    // 3. User & Fraud Limit Check
+    const user = await User.findById(req.user.id).lean();
+    if (!user) return res.status(404).json({ error: "User not found." });
+    if (user.status === "frozen") return res.status(403).json({ error: "Account frozen. Please contact support." });
+
+    // Calculate maxPrice based on backend logic (Customers + Fraud %)
+    const stats = await getSellerStats(req.user.id);
+    const fraudPercent = stats.fraudPercent || 0;
+    const customers = stats.customers || 0;
+    
+    let backendMaxPrice = 500; // Default Level 1
+    
+    // Level 1: 0-9 customers
+    if (customers < 10) {
+        backendMaxPrice = 500;
+    } 
+    // Level 2: 10-24 customers
+    else if (customers < 25) {
+        backendMaxPrice = 1000;
+    }
+    // Level 3: 25-49 customers
+    else if (customers < 50) {
+        backendMaxPrice = 2500;
+    }
+    // Level 4: 50-99 customers
+    else if (customers < 100) {
+        backendMaxPrice = 5000;
+    }
+    // Level 5: 100+ customers
+    else {
+        backendMaxPrice = 10000;
+    }
+
+    // Fraud Penalty: If fraud is high, cap the price strictly
+    if (fraudPercent > 5) {
+        backendMaxPrice = Math.min(backendMaxPrice, 200); // High fraud cap
+    } else if (fraudPercent > 2) {
+        backendMaxPrice = Math.min(backendMaxPrice, 1000); // Moderate fraud cap
+    }
+
+    if (numPrice > backendMaxPrice) {
+      return res.status(400).json({ error: `Price exceeds your allowed limit of ₹${backendMaxPrice}. (Fraud: ${fraudPercent}%, Customers: ${customers})` });
+    }
+
+    // 4. Rate Limiting (5 coupons per minute)
+    const timestamps = listingUsage.get(req.user.id) || [];
+    const oneMinuteAgo = Date.now() - 60000;
+    const recentClicks = timestamps.filter(t => t > oneMinuteAgo);
+    if (recentClicks.length >= 5) {
+      return res.status(429).json({ error: "Too many listings. Please wait a minute." });
+    }
+    recentClicks.push(Date.now());
+    listingUsage.set(req.user.id, recentClicks);
+
+    // 5. Duplicate Spam Check (Simple)
+    const thirtyMinsAgo = new Date(Date.now() - 30 * 60000).toISOString();
+    const duplicate = await Coupon.findOne({
+      seller_id: req.user.id,
+      title: cleanTitle,
+      category: category || "",
+      expiry: expiry || null,
+      created_at: { $gt: thirtyMinsAgo }
+    }).lean();
+
+    if (duplicate) {
+      return res.status(409).json({ error: "You already posted an identical coupon recently." });
+    }
+
+    const coupon = await Coupon.create({ 
+      title: cleanTitle, 
+      details: details || "", 
+      expiry: expiry || null, 
+      price: numPrice, 
+      category: category || "", 
+      image_url: image || "bg.png", 
+      seller_id: req.user.id, 
+      status: "active", 
+      created_at: now.toISOString() 
+    });
+
+    res.json({ coupon: { ...coupon.toObject(), id: String(coupon._id), seller_id: String(coupon.seller_id), seller_name: user.name } });
   } catch (err) { res.status(500).json({ error: err.message }); }
 });
 

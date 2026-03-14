@@ -1,6 +1,5 @@
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -9,492 +8,226 @@
     <link rel="stylesheet" href="theme.css">
     <script src="https://unpkg.com/lucide@latest"></script>
     <style>
-        :root {
-            --ai-accent: #a78bff;
+        .sell-card {
+            background: rgba(15, 23, 42, 0.85);
+            backdrop-filter: blur(12px);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            border-radius: 20px;
+            padding: 32px;
+            box-shadow: 0 25px 50px rgba(0, 0, 0, 0.4);
         }
-
-        body {
-            color: white;
-            min-height: 100vh;
-        }
-
-        .sell-container {
-            max-width: 600px;
-            margin: 60px auto 100px;
-            animation: riseIn 0.6s var(--transition-slow) both;
-        }
-
-        .header-section {
+        
+        /* Vibrant Premium Header */
+        .header-gradient {
+            background: linear-gradient(135deg, #1e293b 0%, #3b82f6 50%, #1d4ed8 100%);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            padding: 70px 0;
             margin-bottom: 40px;
             text-align: center;
+            position: relative;
+            overflow: hidden;
         }
 
-        .header-section h1 {
-            font-size: 36px;
-            font-weight: 800;
-            letter-spacing: -0.03em;
-            margin-bottom: 8px;
-        }
-
-        .header-section p {
-            color: var(--text-soft);
-            font-size: 16px;
-        }
-
-        .glass-card {
-            padding: 40px;
-            border-radius: 24px;
-            display: flex;
-            flex-direction: column;
-            gap: 20px;
+        .header-gradient::before {
+            content: "";
+            position: absolute;
+            top: 0; left: 0; right: 0; bottom: 0;
+            background: radial-gradient(circle at 70% 30%, rgba(255,255,255,0.1) 0%, transparent 60%);
+            pointer-events: none;
         }
 
         .form-group {
             display: flex;
             flex-direction: column;
             gap: 8px;
-            position: relative;
+            margin-bottom: 20px;
         }
 
         .form-group label {
-            font-size: 14px;
-            font-weight: 600;
-            color: rgba(255, 255, 255, 0.7);
-            margin-left: 4px;
-        }
-
-        .form-group input, 
-        .form-group select, 
-        .form-group textarea {
-            width: 100%;
-            padding: 14px 18px;
-            font-size: 16px;
-            background: rgba(255, 255, 255, 0.05);
-            border: 1px solid rgba(255, 255, 255, 0.1);
-            border-radius: 14px;
-            color: white;
-            transition: all 0.2s ease;
-        }
-
-        .form-group select {
-            appearance: none;
-            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24' fill='none' stroke='white' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='m6 9 6 6 6-6'/%3E%3C/svg%3E");
-            background-repeat: no-repeat;
-            background-position: right 16px center;
-            background-size: 18px;
-        }
-
-        /* Removed max-height from select as it was causing invisible options in some browsers */
-        #categoryInput {
-            cursor: pointer;
-        }
-
-        .form-group textarea {
-            height: 120px;
-            resize: none;
-        }
-
-        .form-group input:focus {
-            border-color: #4fd0ff;
-            box-shadow: 0 0 0 4px rgba(79, 208, 255, 0.1);
-        }
-
-        /* AI Suggestion Box */
-        .ai-suggestion {
-            display: none;
-            background: linear-gradient(135deg, rgba(167, 139, 255, 0.1), rgba(79, 208, 255, 0.1));
-            border: 1px solid rgba(167, 139, 255, 0.3);
-            border-radius: 12px;
-            padding: 12px 16px;
-            margin-top: 8px;
-            font-size: 13px;
-            color: #d1c4ff;
-            cursor: pointer;
-            transition: all 0.2s ease;
-            animation: fadeIn 0.3s ease;
-        }
-
-        .ai-suggestion:hover {
-            border-color: rgba(167, 139, 255, 0.6);
-            background: rgba(167, 139, 255, 0.15);
-        }
-
-        .ai-suggestion i {
-            margin-right: 8px;
-            vertical-align: middle;
-        }
-
-        .suspicious-warn {
-            color: #ff6b6b;
-            border-color: rgba(255, 107, 107, 0.3);
-            background: rgba(255, 107, 107, 0.05);
-            cursor: default;
-        }
-
-        .info-row {
-            display: flex;
-            justify-content: space-between;
-            padding: 16px;
-            background: rgba(255, 255, 255, 0.03);
-            border-radius: 16px;
-            border: 1px solid rgba(255, 255, 255, 0.05);
-            margin-bottom: 10px;
-        }
-
-        .info-item {
-            display: flex;
-            flex-direction: column;
-            gap: 4px;
-        }
-
-        .info-item span:first-child {
-            font-size: 11px;
-            text-transform: uppercase;
-            letter-spacing: 0.1em;
+            font-size: 12px;
+            font-weight: 700;
             color: rgba(255, 255, 255, 0.4);
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
         }
 
-        .info-item span:last-child {
-            font-size: 18px;
-            font-weight: 800;
-            color: #4fd0ff;
+        #categoryInput, #expiryInput, #priceInput {
+            background: #020617 !important;
+            color: #e5e7eb !important;
+            border: 1px solid rgba(255,255,255,0.1);
         }
 
-        .btn-post {
-            background: linear-gradient(135deg, #4fd0ff, #6f6cff);
-            color: white;
-            padding: 18px;
-            border-radius: 16px;
-            font-size: 18px;
-            font-weight: 800;
-            border: none;
+        #expiryInput {
             cursor: pointer;
-            margin-top: 10px;
-            transition: all 0.2s ease;
-        }
-
-        .btn-post:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 12px 32px rgba(79, 208, 255, 0.3);
-        }
-
-        @media (max-width: 640px) {
-            .sell-container { margin-top: 30px; padding: 0 16px; }
-            .glass-card { padding: 24px; }
-            .header-section h1 { font-size: 28px; }
-        }
-
-        @media (max-width: 900px) {
-            .mobile-header { display: flex !important; }
-            .desktop-only { display: none !important; }
-            .sell-container { margin-top: 30px; padding: 0 16px; }
-        }
-
-        .dropdown-panel {
-            background: #1e2a3a;
-            color: white;
-            border: 1px solid rgba(255, 255, 255, 0.1);
-            border-radius: 12px;
-        }
-
-        /* Prevent system white background for selects in dark mode */
-        select option {
-            background-color: #1e2a3a;
-            color: white;
         }
     </style>
 </head>
 
-<body class="soft-bg has-mobile-nav">
-    <div class="premium-bg">
-        <div class="blob blob-1"></div>
-        <div class="blob blob-2"></div>
-        <div class="blob blob-3"></div>
-        <div class="mist-container"></div>
-    </div>
-
-    <!-- Navigation Area -->
-    <header class="nav-bar" style="position: sticky; top: 0; z-index: 1000; background: rgba(10, 13, 24, 0.82); backdrop-filter: blur(20px); border-bottom: 1px solid rgba(255, 255, 255, 0.08);">
-        <div class="content-container" style="height: 72px; display: flex; align-items: center; justify-content: space-between;">
-            <a href="index.html" style="display: flex; align-items: center; gap: 10px; text-decoration: none; color: white;">
+<body class="soft-bg">
+    <nav class="navbar">
+        <div class="container" style="display: flex; justify-content: space-between; align-items: center; height: 100%;">
+            <a href="index.html" class="logo" style="display: flex; align-items: center; gap: 12px; text-decoration: none; color: white;">
                 <img src="logo.png" alt="CoSwap" style="width: 32px; height: 32px;">
                 <span style="font-size: 20px; font-weight: 800; letter-spacing: -0.04em;">CoSwap</span>
             </a>
             
-            <nav style="display: flex; gap: 28px; align-items: center;" class="desktop-only">
-                <a href="browse.html" style="color: rgba(255,255,255,0.6); font-weight: 600; font-size: 15px;">Browse</a>
-                <a href="sell.html" style="color: white; font-weight: 600; font-size: 15px;">Sell</a>
-                <a href="dashboard.html" style="color: rgba(255,255,255,0.6); font-weight: 600; font-size: 15px;">Listings</a>
-                <a href="chatlist.html" style="color: rgba(255,255,255,0.6); font-weight: 600; font-size: 15px;">Messages</a>
-                <img src="https://api.dicebear.com/7.x/avataaars/svg?seed=coswap" alt="P" style="width: 34px; height: 34px; border-radius: 50%; border: 2px solid rgba(255,255,255,0.1); cursor: pointer;" onclick="window.location.href='profile.html'">
-            </nav>
+            <div class="nav-menu">
+                <a href="browse.html" class="nav-link">Browse</a>
+                <a href="sell.html" class="nav-link active">Sell</a>
+                <a href="dashboard.html" class="nav-link">My Listings</a>
+                <a href="chatlist.html" class="nav-link">Messages</a>
+                <a href="profile.html" class="nav-link">Profile</a>
+            </div>
 
-            <!-- Mobile Menu Toggle -->
-             <button id="menuToggle" style="display: none; background: none; border: none; color: white;" class="mobile-only">
-                <i data-lucide="menu"></i>
-             </button>
-        </div>
-    </header>
-
-    <!-- Mobile Navigation -->
-    <nav class="mobile-nav">
-        <div class="mobile-nav-inner">
-            <a href="index.html" class="mobile-nav-item"><i data-lucide="home"></i><span>Home</span></a>
-            <a href="browse.html" class="mobile-nav-item"><i data-lucide="search"></i><span>Browse</span></a>
-            <a href="sell.html" class="mobile-nav-item active"><i data-lucide="plus-circle"></i><span>Sell</span></a>
-            <a href="chatlist.html" class="mobile-nav-item"><i data-lucide="message-square"></i><span>Chat</span></a>
+            <div class="nav-right">
+                <img src="https://api.dicebear.com/7.x/avataaars/svg?seed=coswap" alt="Avatar" class="user-avatar" onclick="window.location.href='profile.html'">
+            </div>
         </div>
     </nav>
 
-    <main class="sell-container">
-        <header class="header-section" style="margin-top: 40px; text-align: center; margin-bottom: 48px;">
-            <h1 class="gradient-text" style="font-size: 42px; font-weight: 800; letter-spacing: -0.04em; margin-bottom: 12px;">Sell a Coupon</h1>
-            <p style="color: rgba(255,255,255,0.6); font-size: 17px;">Turn your unused vouchers into instant cash securely.</p>
-        </header>
+    <header class="header-gradient">
+        <div class="container">
+            <h1 style="font-size: 48px; font-weight: 800; letter-spacing: -0.04em; margin-bottom: 12px; color: white; text-shadow: 0 2px 10px rgba(0,0,0,0.2);">List Your Coupon</h1>
+            <p style="color: rgba(255,255,255,0.9); font-size: 18px; max-width: 600px; margin: 0 auto;">Reach thousands of buyers instantly. Fast, secure, and transparent marketplace.</p>
+        </div>
+    </header>
 
-        <form onsubmit="listCoupon(event)" class="glass-card" style="box-shadow: 0 20px 50px rgba(0,0,0,0.3);">
-            <div class="info-row" style="background: rgba(79, 208, 255, 0.05); border: 1px solid rgba(79, 208, 255, 0.1); padding: 20px; border-radius: 16px; display: flex; justify-content: space-around; margin-bottom: 24px;">
-                <div class="info-item" style="text-align: center;">
+    <main class="container" style="padding-bottom: 100px;">
+        <div class="sell-card" style="max-width: 540px; margin: 0 auto;">
+            <div style="margin-bottom: 32px; display: grid; grid-template-columns: 1fr 1fr; gap: 24px; padding-bottom: 24px; border-bottom: 1px solid rgba(255, 255, 255, 0.1);">
+                <div>
                     <span style="font-size: 11px; text-transform: uppercase; color: rgba(255,255,255,0.4); letter-spacing: 0.1em; display: block; margin-bottom: 4px;">Trust Score</span>
-                    <span id="trustPercent" style="font-size: 20px; font-weight: 800; color: #4fd0ff;">100%</span>
+                    <span id="trustPercent" style="font-size: 20px; font-weight: 800; color: #38bdf8;">--%</span>
                 </div>
-                <div class="info-item" style="text-align: center;">
+                <div style="text-align: right;">
                     <span style="font-size: 11px; text-transform: uppercase; color: rgba(255,255,255,0.4); letter-spacing: 0.1em; display: block; margin-bottom: 4px;">Selling Limit</span>
-                    <span id="maxAllowedPrice" style="font-size: 20px; font-weight: 800; color: #4fd0ff;">₹500</span>
+                    <span id="maxAllowedPrice" style="font-size: 20px; font-weight: 800; color: #38bdf8;">₹--</span>
                 </div>
             </div>
 
-            <div class="form-group">
-                <label for="titleInput">Coupon Title*</label>
-                <input type="text" id="titleInput" placeholder="e.g. Netflix Premium 1 Month" maxlength="120" required>
-                <div id="aiTitle" class="ai-suggestion" onclick="applySuggestion('titleInput', this.dataset.value)">
-                    <i data-lucide="sparkles" style="width: 14px;"></i> <span>Suggestion: </span> <b id="titleSugText"></b>
+            <form id="sellForm" onsubmit="handleListCoupon(event)">
+                <div class="form-group">
+                    <label for="titleInput">Coupon Title*</label>
+                    <input type="text" id="titleInput" placeholder="e.g. Amazon Gift Card ₹1000" maxlength="120" required>
                 </div>
-            </div>
 
-            <div class="form-group">
-                <label for="categoryInput">Category*</label>
-                <select id="categoryInput" required>
-                    <option value="">Loading categories...</option>
-                </select>
-                <div id="aiCategory" class="ai-suggestion" onclick="applySuggestion('categoryInput', this.dataset.value)">
-                    <i data-lucide="tag" style="width: 14px;"></i> <span>Match: </span> <b id="catSugText"></b>
+                <div class="form-group">
+                    <label for="categoryInput">Category*</label>
+                    <select id="categoryInput" required>
+                        <option value="" disabled selected>Select Category</option>
+                        <option value="OTT">OTT</option>
+                        <option value="Food">Food</option>
+                        <option value="Travel">Travel</option>
+                        <option value="Shopping">Shopping</option>
+                        <option value="Beauty">Beauty</option>
+                        <option value="Electronics">Electronics</option>
+                        <option value="Gift Cards">Gift Cards</option>
+                        <option value="Gaming">Gaming</option>
+                    </select>
                 </div>
-            </div>
 
-            <div class="form-group">
-                <label>Price (₹)*</label>
-                <input type="number" id="priceInput" placeholder="Min ₹1" min="1" step="1" required class="dark-input">
-                <div id="priceLimitInfo" style="font-size: 12px; color: rgba(255,255,255,0.4); margin-top: 4px;">Min ₹1. Max ₹500 based on your trust.</div>
-                <div id="priceError" class="error-text" style="color: #ff6b6b; font-size: 12px; margin-top: 6px; display: none;">Price cannot exceed your account limit.</div>
-            </div>
-
-            <div class="form-group">
-                <label for="expiryInput">Expiry Date*</label>
-                <input type="date" id="expiryInput" required>
-            </div>
-
-            <div class="form-group">
-                <label for="detailsInput">Offer Details*</label>
-                <textarea id="detailsInput" placeholder="Describe what the buyer gets. Include terms and conditions if any." required></textarea>
-                <div id="aiDetails" class="ai-suggestion" onclick="applySuggestion('detailsInput', this.dataset.value)">
-                    <i data-lucide="file-text" style="width: 14px;"></i> <span>Helper: </span> <b id="detSugText">Format description</b>
+                <div class="form-group">
+                    <label for="priceInput">Listing Price (₹)*</label>
+                    <input type="number" id="priceInput" placeholder="Min ₹1" min="1" step="1" required>
+                    <span id="priceHint" style="font-size: 12px; color: rgba(255,255,255,0.3); margin-top: 4px;">Loading limit...</span>
                 </div>
-            </div>
 
-            <div class="form-group" style="margin-top: 10px;">
-                <button type="submit" class="btn-post" id="sellButton" style="width: 100%; border-radius: 14px;">Publish Listing</button>
-            </div>
-        </form>
+                <div class="form-group">
+                    <label for="expiryInput">Expiry Date*</label>
+                    <input type="date" id="expiryInput" readonly required placeholder="Choose Date" onclick="this.showPicker()">
+                    <span style="font-size: 12px; color: rgba(255,255,255,0.3); margin-top: 4px;">Select from calendar only.</span>
+                </div>
+
+                <div class="form-group">
+                    <label for="detailsInput">Offer Details*</label>
+                    <textarea id="detailsInput" placeholder="Describe the terms, conditions, and what the buyer gets." style="min-height: 100px;" required></textarea>
+                </div>
+
+                <button type="submit" class="primary-btn" id="submitBtn" style="width: 100%; margin-top: 12px; height: 54px; font-size: 16px;">Publish Listing</button>
+            </form>
+        </div>
     </main>
+
+    <div id="toast" class="toast"></div>
 
     <script src="api.js"></script>
     <script src="ui.js"></script>
     <script>
         lucide.createIcons();
 
-        // 1. Auth & Initial Load
-        if (!requireAuth("sell.html")) { /* Handled by helper */ }
-
-        let sellerMaxPrice = 500;
+        let userMaxPrice = 500;
 
         async function initPage() {
+            if (!getAuthToken()) {
+                window.location.href = "login.html";
+                return;
+            }
+
+            // Expiry Date Hardening
+            const today = new Date().toISOString().split("T")[0];
+            const expiry = document.getElementById("expiryInput");
+            expiry.setAttribute("min", today);
+            
+            // Block keyboard completely
+            expiry.addEventListener("keydown", (e) => e.preventDefault());
+            expiry.addEventListener("mousedown", (e) => {
+                // Ensure calendar opens on click
+                if (typeof expiry.showPicker === 'function') {
+                    expiry.showPicker();
+                }
+            });
+
             try {
                 const data = await apiRequest("/me/profile");
-                const profile = data.user || data.profile || {}; 
-                const fraud = profile.fraud_percent || profile.fraudPercent || 0;
-                sellerMaxPrice = profile.max_price || profile.maxPrice || 500;
+                const profile = data.profile || {};
+                userMaxPrice = profile.maxPrice || 500;
+                const fraud = profile.fraudPercent || 0;
                 
-                document.getElementById("trustPercent").innerText = `${(100 - fraud).toFixed(0)}%`;
-                document.getElementById("maxAllowedPrice").innerText = `₹${sellerMaxPrice}`;
-                document.getElementById("priceLimitInfo").innerText = `Min ₹1. Max ₹${sellerMaxPrice} based on your trust.`;
-                
-                // Set min date for expiry
-                const today = new Date().toISOString().split('T')[0];
-                document.getElementById('expiryInput').min = today;
-
-                loadCategories();
-                
+                document.getElementById("trustPercent").innerText = `${100 - fraud}%`;
+                document.getElementById("maxAllowedPrice").innerText = `₹${userMaxPrice}`;
+                document.getElementById("priceHint").innerText = `Max allowed: ₹${userMaxPrice} (based on trust & sales)`;
             } catch (err) {
                 console.error("Profile load failed", err);
-                loadCategories(); // Still try categories
+                document.getElementById("priceHint").innerText = "Failed to load limits.";
             }
         }
 
-        async function loadCategories() {
-            const select = document.getElementById('categoryInput');
-            const fallback = ["OTT", "Food", "Travel", "Shopping", "Beauty", "Electronics", "Gift Cards", "Gaming"];
-            
-            try {
-                const data = await apiRequest("/categories");
-                const cats = data.categories || fallback;
-                renderCategories(cats);
-            } catch (err) {
-                console.warn("Category API failed, using fallback");
-                renderCategories(fallback);
-            }
-        }
-
-        function renderCategories(list) {
-            const select = document.getElementById('categoryInput');
-            select.innerHTML = '<option value="">Select Category</option>';
-            list.forEach(c => {
-                const opt = document.createElement('option');
-                opt.value = c;
-                opt.textContent = c;
-                select.appendChild(opt);
-            });
-        }
-        initPage();
-
-        // 2. AI Assistance Logic
-        const brands = {
-            "netflix": "OTT", "spotify": "OTT", "hotstar": "OTT", "prim": "OTT", "ott": "OTT", "disney": "OTT",
-            "swiggy": "Food", "zomato": "Food", "pizza": "Food", "domino": "Food", "kfc": "Food",
-            "amazon": "Shopping", "flipkart": "Shopping", "myntra": "Shopping", "ajio": "Shopping", "fashion": "Shopping",
-            "indigo": "Travel", "makemytrip": "Travel", "mmt": "Travel", "uber": "Travel", "ola": "Travel", "hotel": "Travel",
-            "nykaa": "Beauty", "salon": "Beauty", "makeup": "Beauty",
-            "steam": "Gaming", "pubg": "Gaming", "roblox": "Gaming", "xbox": "Gaming", "playstation": "Gaming"
-        };
-
-        const titleInput = document.getElementById('titleInput');
-        const aiTitle = document.getElementById('aiTitle');
-        const aiCategory = document.getElementById('aiCategory');
-        const detailsInput = document.getElementById('detailsInput');
-        const aiDetails = document.getElementById('aiDetails');
-
-        titleInput.addEventListener('input', (e) => {
-            const val = e.target.value.trim();
-            if (val.length < 3) {
-                aiTitle.style.display = 'none';
-                aiCategory.style.display = 'none';
-                return;
-            }
-
-            // A. Title Formatting Suggestion
-            const words = val.split(' ');
-            const formatted = words.map(w => w.charAt(0).toUpperCase() + w.slice(1).toLowerCase()).join(' ');
-            const finalSug = formatted.includes('Deal') || formatted.includes('Coupon') ? formatted : formatted + ' Voucher';
-            
-            if (finalSug !== val) {
-                document.getElementById('titleSugText').innerText = finalSug;
-                aiTitle.dataset.value = finalSug;
-                aiTitle.style.display = 'block';
-            } else {
-                aiTitle.style.display = 'none';
-            }
-
-            // B. Brand Detection
-            const lower = val.toLowerCase();
-            let matchedCat = "";
-            for (let brand in brands) {
-                if (lower.includes(brand)) {
-                    matchedCat = brands[brand];
-                    break;
-                }
-            }
-
-            if (matchedCat && document.getElementById('categoryInput').value !== matchedCat) {
-                document.getElementById('catSugText').innerText = `Suggest ${matchedCat}`;
-                aiCategory.dataset.value = matchedCat;
-                aiCategory.style.display = 'block';
-            } else {
-                aiCategory.style.display = 'none';
-            }
-
-            // C. Suspicious check
-            const redFlags = ['hack', 'infinite', 'glitch', 'free money', 'scam', 'unlimited'];
-            const foundFlag = redFlags.find(rf => lower.includes(rf));
-            if (foundFlag) {
-                aiTitle.innerHTML = `<i data-lucide="alert-triangle" style="width:14px; color:#ff6b6b"></i> Suspicious text detected: "${foundFlag}"`;
-                aiTitle.className = "ai-suggestion suspicious-warn";
-                aiTitle.style.display = 'block';
-                lucide.createIcons();
-            } else {
-                aiTitle.className = "ai-suggestion";
-            }
-        });
-
-        detailsInput.addEventListener('focus', () => {
-            const title = titleInput.value.trim();
-            if (title.length > 5) {
-                const sug = `This is a verified ${title}. Valid across India. No minimum purchase required unless stated.`;
-                document.getElementById('detSugText').innerText = "Use standard template";
-                aiDetails.dataset.value = sug;
-                aiDetails.style.display = 'block';
-            }
-        });
-
-        function applySuggestion(id, val) {
-            const el = document.getElementById(id);
-            el.value = val;
-            // Hide the box
-            event.currentTarget.style.display = 'none';
-            // Trigger events if needed
-            el.dispatchEvent(new Event('input'));
-        }
-
-        // 3. Form Submission
-        async function listCoupon(e) {
+        async function handleListCoupon(e) {
             e.preventDefault();
-            const btn = document.getElementById('sellButton');
-            const originalText = btn.innerText;
+            const btn = document.getElementById("submitBtn");
+            const price = parseInt(document.getElementById("priceInput").value);
 
-            const title = document.getElementById('titleInput').value.trim();
-            const category = document.getElementById('categoryInput').value;
-            const price = document.getElementById('priceInput').value;
-            const expiry = document.getElementById('expiryInput').value;
-            const details = document.getElementById('detailsInput').value.trim();
-            if (!category) {
-                showToast("Please select a category before posting the coupon.", "error");
+            if (price > userMaxPrice) {
+                showToast(`Price cannot exceed your limit of ₹${userMaxPrice}`, "error");
                 return;
             }
 
-            if (parseInt(price) > sellerMaxPrice) {
-                showToast(`Price cannot exceed your trust limit of ₹${sellerMaxPrice}`, "error");
-                return;
-            }
+            const payload = {
+                title: document.getElementById("titleInput").value.trim(),
+                category: document.getElementById("categoryInput").value,
+                price: price,
+                expiry: document.getElementById("expiryInput").value,
+                details: document.getElementById("detailsInput").value.trim()
+            };
 
             try {
                 btn.disabled = true;
-                btn.innerText = "Processing...";
-
+                btn.innerText = "Publishing Listing...";
                 await apiRequest("/coupons", {
                     method: "POST",
-                    body: JSON.stringify({
-                        title, category, price, expiry, details
-                    })
+                    body: JSON.stringify(payload)
                 });
 
                 showToast("Coupon listed successfully!", "success");
                 setTimeout(() => window.location.href = "mylistings.html", 1500);
             } catch (err) {
-                showToast(err.message || "Failed to list coupon", "error");
+                showToast(err.message || "Failed to publish coupon", "error");
                 btn.disabled = false;
-                btn.innerText = originalText;
+                btn.innerText = "Publish Listing";
             }
         }
+
+        initPage();
     </script>
 </body>
-
 </html>

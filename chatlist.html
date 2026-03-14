@@ -103,104 +103,225 @@
     <script src="https://unpkg.com/lucide@latest"></script>
 </head>
 <body class="soft-bg">
-    <nav class="nav-wrapper desktop-only" style="background: rgba(15, 19, 36, 0.8); backdrop-filter: blur(20px); border-bottom: 1px solid rgba(255, 255, 255, 0.08); height: 72px; position: sticky; top: 0; z-index: 1000;">
-        <div class="content-container" style="display:flex; align-items:center; justify-content:space-between; height: 100%;">
-            <a href="dashboard.html" class="brand" style="display: flex; align-items: center; gap: 12px; text-decoration: none; color: white;">
-                <img src="logo.png" alt="CoSwap" style="width: 32px; height: 32px;">
-                <span style="font-size: 20px; font-weight: 800; letter-spacing: -0.02em;">CoSwap</span>
-            </a>
-            
-            <div style="display: flex; gap: 32px; align-items: center;">
-                <a href="dashboard.html" style="color: rgba(255,255,255,0.7); font-weight: 600; text-decoration: none;">Dashboard</a>
-                <a href="browse.html" style="color: rgba(255,255,255,0.7); font-weight: 600; text-decoration: none;">Browse</a>
-                <a href="sell.html" style="color: rgba(255,255,255,0.7); font-weight: 600; text-decoration: none;">Sell</a>
-                <a href="mylistings.html" style="color: rgba(255,255,255,0.7); font-weight: 600; text-decoration: none;">My Listings</a>
-            </div>
+    <nav class="navbar">
+        <a href="index.html" class="logo" style="display: flex; align-items: center; gap: 12px; text-decoration: none; color: white;">
+            <img src="logo.png" alt="CoSwap" style="width: 32px; height: 32px;">
+            <span style="font-size: 20px; font-weight: 800; letter-spacing: -0.04em;">CoSwap</span>
+        </a>
+        
+        <div class="nav-menu">
+            <a href="browse.html" class="nav-link">Browse</a>
+            <a href="sell.html" class="nav-link">Sell</a>
+            <a href="dashboard.html" class="nav-link">My Listings</a>
+            <a href="chatlist.html" class="nav-link active">Messages</a>
+            <a href="profile.html" class="nav-link">Profile</a>
+        </div>
 
-            <div style="display: flex; gap: 12px; align-items: center;">
-                <a href="chatlist.html" class="btn-icon" title="Messages" style="color: #4fd0ff; background: rgba(79, 208, 255, 0.1);"><i data-lucide="message-square"></i></a>
-                <a href="profile.html" class="btn-icon" title="Profile"><i data-lucide="user"></i></a>
-                <a href="login.html" class="btn-icon" title="Logout" style="color: var(--danger);"><i data-lucide="log-out"></i></a>
-            </div>
+        <div class="nav-right">
+            <img src="https://api.dicebear.com/7.x/avataaars/svg?seed=coswap" alt="Avatar" class="user-avatar" onclick="window.location.href='profile.html'">
+            <i data-lucide="log-out" class="logout-icon" onclick="handleLogout()" style="width: 20px;"></i>
         </div>
     </nav>
 
-    <!-- Mobile Header -->
-    <header class="mobile-header" style="padding: 16px 20px; align-items: center; justify-content: space-between; position: sticky; top: 0; z-index: 1000; background: rgba(15, 19, 36, 0.9); backdrop-filter: blur(20px);">
-        <a href="dashboard.html" style="display: flex; align-items: center; gap: 8px; text-decoration: none; color: white;">
-            <img src="logo.png" alt="CoSwap" style="width: 28px; height: 28px;">
-            <span style="font-weight: 800; font-size: 18px;">CoSwap</span>
-        </a>
-        <div style="display: flex; gap: 16px; align-items: center;">
-            <a href="chatlist.html" style="color: #4fd0ff;"><i data-lucide="message-square"></i></a>
-            <a href="profile.html" style="color: white;"><i data-lucide="user"></i></a>
-            <button id="menuToggle" style="background: none; border: none; color: white;"><i data-lucide="menu"></i></button>
-        </div>
-    </header>
-
-    <main class="content-container" style="padding: 40px 24px 80px;">
-        <header style="margin-bottom: 32px;">
-            <h1 style="font-size: 32px; font-weight: 800; letter-spacing: -0.02em;">Messages</h1>
-            <p style="color: rgba(255,255,255,0.5);">Instant communication with your buyers and sellers.</p>
+    <main class="container" style="padding: 40px 24px; height: calc(100vh - 72px); display: flex; flex-direction: column;">
+        <header style="margin-bottom: 24px;">
+            <h1 class="heading-elite">Messages</h1>
+            <p class="subtext-elite">Chat with buyers and sellers in real-time.</p>
         </header>
 
-        <div class="chat-layout glass-card" style="display: grid; grid-template-columns: 350px 1fr; height: 700px; border-radius: 20px;">
-            <!-- Thread List -->
-            <div style="border-right: 1px solid rgba(255,255,255,0.08); overflow-y: auto;" id="threadList">
-                <div style="padding: 24px; text-align: center; opacity: 0.5;">Loading threads...</div>
+        <div class="card" style="flex: 1; display: grid; grid-template-columns: 350px 1fr; overflow: hidden; padding: 0;">
+            <!-- Left Side: Thread List -->
+            <div style="border-right: 1px solid rgba(255,255,255,0.05); display: flex; flex-direction: column; background: rgba(255,255,255,0.01);">
+                <div style="padding: 16px 20px; border-bottom: 1px solid rgba(255,255,255,0.05); font-weight: 700; font-size: 14px; text-transform: uppercase; color: rgba(255,255,255,0.4);">Recent Converstations</div>
+                <div id="threadList" style="flex: 1; overflow-y: auto;">
+                    <div style="padding: 24px; text-align: center; opacity: 0.5;">Loading...</div>
+                </div>
             </div>
-            
-            <!-- Active Conversation -->
-            <div style="display: flex; flex-direction: column;" id="activeChat">
-                <div style="flex: 1; display: flex; align-items: center; justify-content: center; color: rgba(255,255,255,0.3); flex-direction: column;">
-                    <i data-lucide="message-square" style="width: 48px; height: 48px; margin-bottom: 16px; opacity: 0.2;"></i>
+
+            <!-- Right Side: Active Chat -->
+            <div id="activeChat" style="display: flex; flex-direction: column; background: rgba(0,0,0,0.2);">
+                <div style="flex: 1; display: flex; align-items: center; justify-content: center; color: rgba(255,255,255,0.2); flex-direction: column; gap: 16px;">
+                    <i data-lucide="message-square" style="width: 48px; height: 48px; opacity: 0.1;"></i>
                     <p>Select a conversation to start chatting</p>
                 </div>
             </div>
         </div>
     </main>
 
-    <!-- Bottom Nav Mobile -->
-    <nav class="mobile-nav">
-        <div class="mobile-nav-inner">
-            <a href="dashboard.html" class="mobile-nav-item"><i data-lucide="layout-dashboard"></i><span>Home</span></a>
-            <a href="browse.html" class="mobile-nav-item"><i data-lucide="search"></i><span>Browse</span></a>
-            <a href="sell.html" class="mobile-nav-item"><i data-lucide="plus-circle"></i><span>Sell</span></a>
-            <a href="chatlist.html" class="mobile-nav-item active"><i data-lucide="message-square"></i><span>Chat</span></a>
-        </div>
-    </nav>
+    <style>
+        .thread-item {
+            padding: 20px;
+            border-bottom: 1px solid rgba(255,255,255,0.03);
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+        .thread-item:hover { background: rgba(255,255,255,0.03); }
+        .thread-item.active { background: rgba(79, 208, 255, 0.05); border-left: 3px solid #38bdf8; }
+        
+        .chat-header-elite {
+            padding: 16px 24px;
+            border-bottom: 1px solid rgba(255,255,255,0.08);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            background: rgba(15, 23, 42, 0.3);
+        }
+
+        #messages {
+            flex: 1;
+            overflow-y: auto;
+            padding: 24px;
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+
+        .msg {
+            max-width: 80%;
+            padding: 12px 16px;
+            border-radius: 16px;
+            font-size: 14px;
+            line-height: 1.5;
+            position: relative;
+        }
+        .msg.sent {
+            align-self: flex-end;
+            background: #38bdf8;
+            color: #020617;
+            font-weight: 500;
+            border-bottom-right-radius: 2px;
+        }
+        .msg.received {
+            align-self: flex-start;
+            background: rgba(255,255,255,0.08);
+            color: white;
+            border-bottom-left-radius: 2px;
+        }
+        
+        .chat-input-elite {
+            padding: 20px 24px;
+            border-top: 1px solid rgba(255,255,255,0.08);
+            display: flex;
+            gap: 12px;
+        }
+        .chat-input-elite input {
+            flex: 1;
+            background: rgba(255,255,255,0.05);
+            border: 1px solid rgba(255,255,255,0.1);
+            border-radius: 12px;
+            padding: 12px 16px;
+            color: white;
+            outline: none;
+        }
+        .chat-input-elite input:focus { border-color: #38bdf8; }
+    </style>
 
     <script>
-        lucide.createIcons();
-        if (!requireAuth("chatlist.html")) {}
+        let currentChatId = null;
+        let pollInterval = null;
+
+        document.addEventListener("DOMContentLoaded", () => {
+            if (typeof requireAuth === 'function' && !requireAuth()) return;
+            loadThreads();
+            lucide.createIcons();
+        });
 
         async function loadThreads() {
             const list = document.getElementById("threadList");
-             try {
+            try {
                 const data = await apiRequest("/chats");
                 const threads = data.chats || [];
                 
                 if (threads.length === 0) {
-                    list.innerHTML = `<div style="padding: 40px; text-align: center; opacity: 0.5;">No messages yet.</div>`;
+                    list.innerHTML = `<div style="padding: 40px; text-align: center; opacity: 0.3;">No messages yet.</div>`;
                     return;
                 }
 
                 list.innerHTML = threads.map(t => `
-                    <div class="thread-item" onclick="openChat(${t.id})" style="padding: 24px; border-bottom: 1px solid rgba(255,255,255,0.05); cursor: pointer; transition: 0.2s;">
-                        <div style="font-weight: 700; margin-bottom: 6px; font-size: 16px;">${t.other_user_name}</div>
-                        <div style="font-size: 14px; color: rgba(255,255,255,0.5); white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">${t.last_message || 'No messages yet'}</div>
+                    <div class="thread-item ${currentChatId == t.id ? 'active' : ''}" onclick="selectChat(${t.id}, '${t.other_user_name}', '${t.coupon_title}')">
+                        <div style="font-weight: 700; font-size: 15px; margin-bottom: 4px; color: ${currentChatId == t.id ? '#38bdf8' : 'white'}">${t.other_user_name}</div>
+                        <div style="font-size: 12px; color: rgba(255,255,255,0.4); white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">${t.coupon_title}</div>
                     </div>
                 `).join("");
             } catch (err) {
-                list.innerHTML = `<div style="padding: 40px; text-align: center; color: var(--danger);">Failed to load conversations.</div>`;
+                list.innerHTML = `<div style="padding: 24px; text-align: center; color: #ff4d4d;">Failed to load.</div>`;
             }
         }
 
-        function openChat(id) {
-            window.location.href = `chat.html?id=${id}`;
+        async function selectChat(id, name, title) {
+            currentChatId = id;
+            loadThreads(); // Update active state
+            
+            const activeChat = document.getElementById("activeChat");
+            activeChat.innerHTML = `
+                <div class="chat-header-elite">
+                    <div>
+                        <div style="font-weight: 800; font-size: 16px;">${name}</div>
+                        <div style="font-size: 12px; color: #38bdf8; font-weight: 600;">${title}</div>
+                    </div>
+                </div>
+                <div id="messages"></div>
+                <form class="chat-input-elite" onsubmit="handleSendMessage(event)">
+                    <input type="text" id="messageInput" placeholder="Type a message..." autocomplete="off">
+                    <button type="submit" class="button-primary" style="padding: 0 20px; height: 44px; font-size: 14px;">Send</button>
+                </form>
+            `;
+            
+            lucide.createIcons();
+            fetchMessages();
+            
+            if (pollInterval) clearInterval(pollInterval);
+            pollInterval = setInterval(fetchMessages, 3000);
         }
 
-        loadThreads();
+        async function fetchMessages() {
+            if (!currentChatId) return;
+            try {
+                const data = await apiRequest(`/chats/${currentChatId}`);
+                renderMessages(data.messages);
+            } catch (err) {}
+        }
+
+        function renderMessages(msgs) {
+            const box = document.getElementById("messages");
+            if (!box) return;
+            const currentUserId = getCurrentUser()?.id;
+            
+            const html = msgs.map(m => `
+                <div class="msg ${m.sender_id == currentUserId ? 'sent' : 'received'}">
+                    ${m.content}
+                </div>
+            `).join("");
+            
+            const wasAtBottom = box.scrollHeight - box.scrollTop <= box.clientHeight + 50;
+            box.innerHTML = html;
+            if (wasAtBottom) box.scrollTop = box.scrollHeight;
+        }
+
+        async function handleSendMessage(e) {
+            e.preventDefault();
+            const input = document.getElementById("messageInput");
+            const content = input.value.trim();
+            if (!content || !currentChatId) return;
+
+            input.value = "";
+            try {
+                await apiRequest(`/chats/${currentChatId}/messages`, {
+                    method: "POST",
+                    body: JSON.stringify({ content })
+                });
+                fetchMessages();
+            } catch (err) {
+                alert("Failed to send: " + err.message);
+            }
+        }
+
+        function handleLogout() {
+            if (confirm("Sign out from CoSwap?")) {
+                if (typeof clearAuth === 'function') clearAuth();
+                window.location.href = "login.html";
+            }
+        }
     </script>
 </body>
 </html>

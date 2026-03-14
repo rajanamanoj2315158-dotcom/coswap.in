@@ -4,319 +4,51 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Sign In — CoSwap</title>
-    <meta name="description" content="Sign in to CoSwap to buy and sell unused coupons and vouchers in India.">
-    <meta name="robots" content="noindex, nofollow">
-    <link rel="canonical" href="https://coswap.in/login.html">
-    <meta property="og:title" content="Sign In — CoSwap">
-    <meta property="og:description" content="Sign in to CoSwap to manage your coupon listings and purchases.">
-    <meta property="og:image" content="https://coswap.in/logo.png">
-    <!-- Google Analytics 4 -->
-    <!-- <script async src="https://www.googletagmanager.com/gtag/js?id=G-XXXXXXXXXX"></script>
-    <script>window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments)}gtag('js',new Date());gtag('config','G-XXXXXXXXXX');</script> -->
+    <meta name="description" content="Sign in to CoSwap to manage your coupon listings and purchases.">
     <link rel="stylesheet" href="theme.css">
     <script src="ui.js" defer></script>
     <script src="https://accounts.google.com/gsi/client" async defer></script>
-    <style>
-        * {
-            box-sizing: border-box;
-            margin: 0;
-            padding: 0;
-        }
-
-        body {
-            min-height: 100vh;
-            background:
-                radial-gradient(circle at 15% 15%, rgba(79, 208, 255, 0.18), transparent 24%),
-                radial-gradient(circle at 82% 18%, rgba(111, 108, 255, 0.18), transparent 26%),
-                linear-gradient(180deg, #0b1020, #090d18 52%, #060910 100%);
-            color: white;
-            overflow: hidden;
-            position: relative;
-        }
-
-        .ambient {
-            inset: 0;
-            overflow: hidden;
-            pointer-events: none;
-            position: fixed;
-        }
-
-        .droplet {
-            animation: drift 18s ease-in-out infinite;
-            background:
-                radial-gradient(circle at 28% 24%, rgba(255, 255, 255, 0.5), transparent 18%),
-                linear-gradient(180deg, rgba(255, 255, 255, 0.18), rgba(79, 208, 255, 0.07));
-            border: 1px solid rgba(255, 255, 255, 0.12);
-            border-radius: 58% 42% 60% 40% / 42% 60% 40% 58%;
-            box-shadow: inset 0 16px 18px rgba(255, 255, 255, 0.06), 0 18px 40px rgba(0, 0, 0, 0.2);
-            opacity: 0.52;
-            position: absolute;
-        }
-
-        .droplet.one {
-            height: 146px;
-            left: 6%;
-            top: 14%;
-            width: 118px;
-        }
-
-        .droplet.two {
-            animation-duration: 21s;
-            bottom: 12%;
-            height: 82px;
-            left: 14%;
-            width: 66px;
-        }
-
-        .droplet.three {
-            animation-duration: 23s;
-            height: 168px;
-            right: 7%;
-            top: 8%;
-            width: 138px;
-        }
-
-        .droplet.four {
-            animation-duration: 16s;
-            bottom: 14%;
-            height: 94px;
-            right: 20%;
-            width: 76px;
-        }
-
-        .page {
-            align-items: center;
-            display: flex;
-            justify-content: center;
-            min-height: 100vh;
-            padding: 28px;
-            position: relative;
-            z-index: 1;
-        }
-
-        .panel {
-            backdrop-filter: blur(18px);
-            background: rgba(255, 255, 255, 0.08);
-            border: 1px solid rgba(255, 255, 255, 0.12);
-            border-radius: 28px;
-            box-shadow: 0 30px 60px rgba(0, 0, 0, 0.28);
-            max-width: 460px;
-            padding: 32px 30px 28px;
-            width: 100%;
-        }
-
-        .brand {
-            align-items: center;
-            display: flex;
-            flex-direction: column;
-            gap: 12px;
-            margin-bottom: 26px;
-            text-align: center;
-        }
-
-        .brand img {
-            display: block;
-            width: 74px;
-        }
-
-        .brand-name {
-            font-size: 42px;
-            font-weight: 800;
-            letter-spacing: -0.05em;
-            line-height: 0.95;
-        }
-
-        .brand-copy {
-            color: rgba(255, 255, 255, 0.7);
-            font-size: 15px;
-            line-height: 1.7;
-        }
-
-        .login-form {
-            display: flex;
-            flex-direction: column;
-            gap: 16px;
-        }
-
-        .field {
-            display: flex;
-            flex-direction: column;
-            gap: 8px;
-        }
-
-        .field span {
-            font-size: 14px;
-            font-weight: 700;
-        }
-
-        .field input {
-            background: rgba(255, 255, 255, 0.1);
-            border: 1px solid rgba(255, 255, 255, 0.12);
-            border-radius: 18px;
-            color: white;
-            font-size: 16px;
-            outline: none;
-            padding: 16px 18px;
-        }
-
-        .field input:focus {
-            box-shadow: 0 0 0 3px rgba(79, 208, 255, 0.18);
-        }
-
-        .form-row {
-            display: flex;
-            justify-content: flex-end;
-            margin-top: 2px;
-        }
-
-        .form-row a,
-        .signup-text a {
-            color: #8adfff;
-            font-weight: 700;
-        }
-
-        .submit-btn {
-            background: linear-gradient(135deg, #4fd0ff, #6f6cff);
-            border: none;
-            border-radius: 18px;
-            box-shadow: 0 18px 36px rgba(79, 208, 255, 0.18);
-            color: white;
-            cursor: pointer;
-            font-size: 17px;
-            font-weight: 800;
-            margin-top: 6px;
-            padding: 16px 18px;
-        }
-
-        .submit-btn:disabled {
-            cursor: not-allowed;
-            opacity: 0.7;
-        }
-
-        .signup-text {
-            color: rgba(255, 255, 255, 0.72);
-            font-size: 14px;
-            margin-top: 18px;
-            text-align: center;
-        }
-
-        @keyframes drift {
-            0%,
-            100% {
-                transform: translate3d(0, 0, 0);
-            }
-
-            50% {
-                transform: translate3d(16px, -20px, 0);
-            }
-        }
-
-        @media (max-width: 640px), (max-height: 760px) {
-            body {
-                overflow: auto;
-            }
-
-            .page {
-                align-items: flex-start;
-                padding: 18px;
-                padding-top: 24px;
-                padding-bottom: 24px;
-            }
-
-            .panel {
-                padding: 26px 22px 24px;
-            }
-
-            .brand-name {
-                font-size: 36px;
-            }
-        }
-
-        @media (min-width: 1280px) {
-            .panel {
-                max-width: 480px;
-                padding: 40px 36px 36px;
-            }
-
-            .brand img {
-                width: 82px;
-            }
-
-            .brand-name {
-                font-size: 46px;
-            }
-        }
-
-        @media (min-width: 1440px) {
-            .panel {
-                max-width: 500px;
-                padding: 44px 40px 40px;
-            }
-        }
-    </style>
 </head>
-<body>
-    <div class="premium-bg" aria-hidden="true">
-        <div class="blob blob-1"></div>
-        <div class="blob blob-2"></div>
-        <div class="blob blob-3"></div>
-        <div class="mist-container"></div>
-    </div>
-
-    <main class="page">
-        <section class="panel">
-            <div class="brand">
-                <img src="logo.png" alt="CoSwap logo" loading="lazy" width="74" height="74">
-                <div class="brand-name">CoSwap</div>
-                <div class="brand-copy">Sign in to continue.</div>
+<body class="soft-bg">
+    <main class="container" style="min-height: 100vh; display: flex; align-items: center; justify-content: center; padding: 24px 0;">
+        <section class="login-card">
+            <div style="text-align: center; margin-bottom: 32px;">
+                <img src="logo.png" alt="CoSwap" style="width: 64px; height: 64px; margin-bottom: 16px;">
+                <h1 style="font-size: 32px; font-weight: 800; letter-spacing: -0.04em; margin-bottom: 8px;">Welcome Back</h1>
+                <p style="color: rgba(255,255,255,0.5); font-size: 14px;">Sign in to your CoSwap account</p>
             </div>
 
-            <form class="login-form" id="loginForm">
-                <label class="field">
-                    <span>Email address</span>
-                    <input id="email" type="email" placeholder="name@company.com" autocomplete="email">
-                </label>
-
-                <label class="field">
-                    <span>Password</span>
-                    <input id="password" type="password" placeholder="Enter your password" autocomplete="current-password">
-                </label>
-
-                <div class="form-row">
-                    <a href="forgot.html">Forgot password?</a>
+            <form id="loginForm" style="display: flex; flex-direction: column; gap: 20px;">
+                <div style="display: flex; flex-direction: column; gap: 8px;">
+                    <label for="email" style="font-size: 13px; font-weight: 700; color: rgba(255,255,255,0.4); text-transform: uppercase;">Email Address</label>
+                    <input id="email" type="email" placeholder="name@email.com" required>
                 </div>
 
-                <button class="submit-btn" id="loginButton" type="submit">Sign in</button>
+                <div style="display: flex; flex-direction: column; gap: 8px;">
+                    <div style="display: flex; justify-content: space-between; align-items: center;">
+                        <label for="password" style="font-size: 13px; font-weight: 700; color: rgba(255,255,255,0.4); text-transform: uppercase;">Password</label>
+                        <a href="forgot.html" style="font-size: 12px; color: #38bdf8; text-decoration: none; font-weight: 600;">Forgot password?</a>
+                    </div>
+                    <input id="password" type="password" placeholder="••••••••" required>
+                </div>
+
+                <button class="primary-btn" id="loginButton" type="submit" style="width: 100%; margin-top: 8px;">Sign In</button>
             </form>
 
-            <div class="separator" style="display: flex; align-items: center; text-align: center; margin: 24px 0; color: rgba(255,255,255,0.3); font-size: 13px; font-weight: 600;">
-                <div style="flex: 1; height: 1px; background: rgba(255,255,255,0.08);"></div>
-                <span style="padding: 0 16px;">OR</span>
-                <div style="flex: 1; height: 1px; background: rgba(255,255,255,0.08);"></div>
+            <div style="margin: 24px 0; display: flex; align-items: center; gap: 16px; color: rgba(255,255,255,0.1);">
+                <div style="flex: 1; height: 1px; background: currentColor;"></div>
+                <span style="font-size: 12px; font-weight: 700; opacity: 0.5;">OR</span>
+                <div style="flex: 1; height: 1px; background: currentColor;"></div>
             </div>
 
-            <div style="width: 100%; display: flex; justify-content: center;">
-                <div id="g_id_onload"
-                     data-client_id="633777352427-d46e8ks94tgkkug8sei8n90mhub6q786.apps.googleusercontent.com"
-                     data-context="signin"
-                     data-ux_mode="popup"
-                     data-callback="handleGoogleSignIn"
-                     data-auto_prompt="false">
-                </div>
-                <div class="g_id_signin"
-                     data-type="standard"
-                     data-shape="rectangular"
-                     data-theme="filled_black"
-                     data-text="continue_with"
-                     data-size="large"
-                     data-logo_alignment="left"
-                     data-width="100%">
-                </div>
-            </div>
+            <button class="google-btn" id="googleLoginBtn">
+                <img src="https://www.gstatic.com/images/branding/product/1x/gsa_512dp.png" alt="Google">
+                Continue with Google
+            </button>
 
-            <p class="signup-text">
-                New user? <a href="signup.html">Create an account</a>
-            </p>
+            <div style="margin-top: 32px; text-align: center; font-size: 14px; color: rgba(255,255,255,0.5);">
+                Don't have an account? <a href="signup.html" style="color: #38bdf8; text-decoration: none; font-weight: 700;">Join CoSwap</a>
+            </div>
         </section>
     </main>
 
@@ -324,65 +56,47 @@
 
     <script src="api.js"></script>
     <script>
+        const GOOGLE_CLIENT_ID = "633777352427-d46e8ks94tgkkug8sei8n90mhub6q786.apps.googleusercontent.com";
+
+        // Auto-skip if logged in
         if (typeof getAuthToken === "function" && getAuthToken()) {
             window.location.replace("dashboard.html");
         }
 
-        (function persistRedirect() {
-            const params = new URLSearchParams(window.location.search);
-            const redirect = params.get("redirect");
+        window.onload = function() {
+            google.accounts.id.initialize({
+                client_id: GOOGLE_CLIENT_ID,
+                callback: handleGoogleCredential
+            });
 
-            if (!redirect) return;
-
-            const map = {
-                sell: "sell.html",
-                buy: "buy.html",
-                browse: "browse.html",
-                dashboard: "dashboard.html"
+            document.getElementById('googleLoginBtn').onclick = () => {
+                google.accounts.id.prompt();
             };
+        };
 
-            const target = map[redirect] || (redirect.endsWith(".html") ? redirect : null);
-            if (target) {
-                localStorage.setItem("redirectAfterLogin", target);
-            }
-        })();
+        async function handleGoogleCredential(response) {
+            try {
+                const data = await apiRequest("/auth/google", {
+                    method: "POST",
+                    body: JSON.stringify({ idToken: response.credential })
+                });
 
-        function isValidEmail(value) {
-            return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value);
-        }
-
-        function setSubmitting(isSubmitting) {
-            const button = document.getElementById("loginButton");
-            button.disabled = isSubmitting;
-            button.textContent = isSubmitting ? "Signing in..." : "Sign in";
-        }
-
-        function handleRedirect() {
-            const redirectPage = localStorage.getItem("redirectAfterLogin");
-
-            if (redirectPage) {
-                localStorage.removeItem("redirectAfterLogin");
-                window.location.href = redirectPage;
-            } else {
+                setAuth(data.token, data.user);
+                showToast("Login successful.");
                 window.location.href = "dashboard.html";
+            } catch (err) {
+                showToast(err.message || "Google login failed.");
             }
         }
 
-        async function loginUser() {
+        async function loginUser(event) {
+            event.preventDefault();
             const email = document.getElementById("email").value.trim();
             const password = document.getElementById("password").value.trim();
 
-            if (!email || !password) {
-                showToast("Enter both email and password.");
-                return;
-            }
-
-            if (!isValidEmail(email)) {
-                showToast("Enter a valid email address.");
-                return;
-            }
-
-            setSubmitting(true);
+            const btn = document.getElementById("loginButton");
+            btn.disabled = true;
+            btn.textContent = "Checking...";
 
             try {
                 const data = await apiRequest("/auth/login", {
@@ -392,33 +106,16 @@
 
                 setAuth(data.token, data.user);
                 showToast("Login successful.");
-                window.setTimeout(handleRedirect, 250);
+                window.location.href = "dashboard.html";
             } catch (err) {
-                showToast(err.message || "Unable to sign in right now.");
+                showToast(err.message || "Invalid credentials.");
             } finally {
-                setSubmitting(false);
+                btn.disabled = false;
+                btn.textContent = "Sign In";
             }
         }
 
-        document.getElementById("loginForm").addEventListener("submit", (event) => {
-            event.preventDefault();
-            loginUser();
-        });
-
-        async function handleGoogleSignIn(response) {
-            try {
-                const data = await apiRequest("/auth/google", {
-                    method: "POST",
-                    body: JSON.stringify({ idToken: response.credential })
-                });
-
-                setAuth(data.token, data.user);
-                showToast("Google login successful.");
-                window.setTimeout(handleRedirect, 250);
-            } catch (err) {
-                showToast(err.message || "Google sign-in failed.");
-            }
-        }
+        document.getElementById("loginForm").addEventListener("submit", loginUser);
     </script>
 </body>
 </html>
