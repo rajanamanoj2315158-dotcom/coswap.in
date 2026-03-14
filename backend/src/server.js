@@ -74,6 +74,21 @@ app.use(express.static(staticPath, {
   }
 }));
 
+// ─── Cache Utility ──────────────────────────────────────────────────────────
+const globalCache = new Map();
+function getCached(key) {
+  const item = globalCache.get(key);
+  if (!item) return null;
+  if (Date.now() > item.expiry) {
+    globalCache.delete(key);
+    return null;
+  }
+  return item.value;
+}
+function setCached(key, value, ttlMs = 60000) {
+  globalCache.set(key, { value, expiry: Date.now() + ttlMs });
+}
+
 // ─── Helpers ─────────────────────────────────────────────────────────────────
 
 function createToken(user) {
@@ -182,12 +197,16 @@ async function notifyAdmins(message, action = null) {
 }
 
 async function getSellerStats(sellerId) {
-  const user = await User.findById(sellerId).lean();
+  const cacheKey = `stats_${sellerId}`;
+  const cached = getCached(cacheKey);
+  if (cached) return cached;
+
+  const user = await User.findById(sellerId).select("name rating_sum rating_count").lean();
   if (!user) return { rating: null, fraudPercent: 0, level: 1 };
 
-  const soldCoupons = await Coupon.find({ seller_id: sellerId }).lean();
+  const soldCoupons = await Coupon.find({ seller_id: sellerId }).select("_id").lean();
   const couponIds = soldCoupons.map((c) => c._id);
-  const purchases = await Purchase.find({ coupon_id: { $in: couponIds } }).lean();
+  const purchases = await Purchase.find({ coupon_id: { $in: couponIds } }).select("buyer_id").lean();
   const totalSold = purchases.length;
   const customers = new Set(purchases.map((p) => String(p.buyer_id))).size;
 
@@ -201,7 +220,9 @@ async function getSellerStats(sellerId) {
   if (customers >= 50) level = 4;
   if (customers >= 100) level = 5;
 
-  return { rating, fraudPercent, level };
+  const stats = { rating, fraudPercent, level };
+  setCached(cacheKey, stats, 300000); // Cache for 5 mins
+  return stats;
 }
 
 async function addCouponPresentation(coupon) {
@@ -519,9 +540,18 @@ app.get("/coupons", async (req, res) => {
 
 app.get("/recommendations", authOptional, async (req, res) => {
   try {
+    const isGuest = !req.user;
+    if (isGuest) {
+      const cached = getCached("trending_recommendations_guest");
+      if (cached) return res.json(cached);
+    }
+
     const today = new Date().toISOString().split("T")[0];
     const limit = Math.max(1, Math.min(MAX_RECOMMENDATIONS, Number(req.query.limit) || MAX_RECOMMENDATIONS));
-    const rawCoupons = await Coupon.find({ status: "active", $or: [{ expiry: null }, { expiry: { $gte: today } }] }).sort({ created_at: -1 }).lean();
+    const rawCoupons = await Coupon.find({ status: "active", $or: [{ expiry: null }, { expiry: { $gte: today } }] })
+      .sort({ created_at: -1 })
+      .select("title price category image_url seller_id created_at")
+      .lean();
 
     const sellerIds = [...new Set(rawCoupons.map((c) => String(c.seller_id)))];
     const sellers = await User.find({ _id: { $in: sellerIds } }).lean();
@@ -593,7 +623,9 @@ app.get("/recommendations", authOptional, async (req, res) => {
       .sort((a, b) => b.recommendation_score !== a.recommendation_score ? b.recommendation_score - a.recommendation_score : new Date(b.created_at) - new Date(a.created_at))
       .slice(0, limit);
 
-    res.json({ strategy: personalized ? "personalized" : "trending", recommendations: ranked });
+    const response = { strategy: personalized ? "personalized" : "trending", recommendations: ranked };
+    if (isGuest) setCached("trending_recommendations_guest", response, 180000); // 3 mins cache for guests
+    res.json(response);
   } catch (err) { res.status(500).json({ error: err.message }); }
 });
 

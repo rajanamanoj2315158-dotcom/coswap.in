@@ -5,7 +5,8 @@ const MONGODB_URI = process.env.MONGODB_URI || "mongodb://localhost:27017/coswap
 async function initDb() {
   if (mongoose.connection.readyState === 0) {
     await mongoose.connect(MONGODB_URI, {
-      maxPoolSize: 10,
+      maxPoolSize: 20, // Increased for better concurrency
+      minPoolSize: 5,  // Keep some connections warm
       serverSelectionTimeoutMS: 5000,
       socketTimeoutMS: 45000,
       connectTimeoutMS: 10000,
