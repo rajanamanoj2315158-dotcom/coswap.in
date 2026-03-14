@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Account Settings — CoSwap</title>
+    <title>My Profile – CoSwap</title>
     <link rel="stylesheet" href="theme.css">
     <script src="api.js"></script>
     <script src="ui.js" defer></script>
@@ -19,38 +19,65 @@
         <div class="mist-container"></div>
     </div>
 
-            <p style="color: rgba(255,255,255,0.5); margin-top: 4px;">Manage your profile details and preferences.</p>
-        </header>
-
-        <div class="settings-grid">
-            <div class="settings-card">
-                <div class="card-title">Personal Information</div>
-                <div class="form-group">
-                    <label>Full Name</label>
-                    <input type="text" id="userName" placeholder="Loading..." readonly>
-                </div>
-                <div class="form-group">
-                    <label>Email Address</label>
-                    <input type="email" id="userEmail" placeholder="Loading..." readonly>
-                </div>
-                <button class="btn-save" onclick="alert('Profile updates are coming soon!')">Save Changes</button>
-            </div>
-
-            <div class="settings-card">
-                <div class="card-title">Marketplace Activity</div>
-                <p style="color:rgba(255,255,255,0.6); font-size:14px; margin-bottom:20px;">
-                    Review your status and history as a member of the CoSwap marketplace.
-                </p>
-                <div style="display:flex; gap:12px;">
-                    <a href="sellerprofile.html" style="color:#4fd0ff; text-decoration:none; font-size:14px; font-weight:600;">View Public Profile &rarr;</a>
-                    <a href="mypurchases.html" style="color:#4fd0ff; text-decoration:none; font-size:14px; font-weight:600;">Purchase History &rarr;</a>
+    <main>
+        <!-- Top Nav (Desktop) -->
+        <nav class="nav-wrapper desktop-only" style="background: rgba(15, 19, 36, 0.82); backdrop-filter: blur(20px); height: 72px;">
+            <div class="content-container" style="display:flex; align-items:center; justify-content:space-between; height: 100%;">
+                <a href="index.html" class="brand" style="display: flex; align-items: center; gap: 12px; text-decoration: none; color: white;">
+                    <img src="logo.png" alt="CoSwap" style="width: 32px; height: 32px;" loading="lazy">
+                    <span style="font-size: 20px; font-weight: 800; letter-spacing: -0.02em;">CoSwap</span>
+                </a>
+                <div style="display: flex; gap: 12px; align-items: center;">
+                    <a href="chatlist.html" class="btn-icon" title="Messages"><i data-lucide="message-square"></i></a>
+                    <a href="terms.html" class="btn-icon" title="Terms"><i data-lucide="file-text"></i></a>
+                    <a href="profile.html" class="btn-icon" title="Profile"><i data-lucide="user"></i></a>
+                    <a href="login.html" class="btn-icon" title="Logout" style="margin-left:8px; color: var(--danger);"><i data-lucide="log-out"></i></a>
                 </div>
             </div>
+        </nav>
 
-            <div class="danger-zone">
-                <button class="btn-logout" onclick="handleLogout()">Sign Out</button>
+        <section class="content-container" style="padding: 60px 24px;">
+            <div style="text-align: center; margin-bottom: 48px;">
+                <h1 class="heading-elite">Account Settings</h1>
+                <p class="subtext-elite" style="margin: 0 auto;">Manage your profile details and preferences.</p>
             </div>
-        </div>
+
+            <div class="glass-card" style="max-width: 800px; margin: 0 auto;">
+                <div class="settings-grid" style="display: grid; gap: 32px;">
+                    <div class="settings-card">
+                        <div class="card-title" style="font-size: 18px; font-weight: 700; margin-bottom: 20px; border-bottom: 1px solid rgba(255,255,255,0.05); padding-bottom: 12px;">Personal Information</div>
+                        <div class="form-group" style="margin-bottom: 20px;">
+                            <label style="display: block; font-size: 13px; font-weight: 600; color: rgba(255,255,255,0.5); margin-bottom: 8px; text-transform: uppercase;">Full Name</label>
+                            <input type="text" id="userName" placeholder="Loading..." readonly 
+                                   style="width: 100%; background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1); border-radius: 12px; padding: 12px 16px; color: white;">
+                        </div>
+                        <div class="form-group" style="margin-bottom: 20px;">
+                            <label style="display: block; font-size: 13px; font-weight: 600; color: rgba(255,255,255,0.5); margin-bottom: 8px; text-transform: uppercase;">Email Address</label>
+                            <input type="email" id="userEmail" placeholder="Loading..." readonly 
+                                   style="width: 100%; background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1); border-radius: 12px; padding: 12px 16px; color: white;">
+                        </div>
+                        <button class="btn-save" onclick="alert('Profile updates are coming soon!')" 
+                                style="background: white; color: black; border: none; padding: 12px 24px; border-radius: 12px; font-weight: 700; cursor: pointer;">Save Changes</button>
+                    </div>
+
+                    <div class="settings-card">
+                        <div class="card-title" style="font-size: 18px; font-weight: 700; margin-bottom: 20px; border-bottom: 1px solid rgba(255,255,255,0.05); padding-bottom: 12px;">Marketplace Activity</div>
+                        <p style="color:rgba(255,255,255,0.6); font-size:14px; margin-bottom:20px;">
+                            Review your status and history as a member of the CoSwap marketplace.
+                        </p>
+                        <div style="display:flex; gap:12px;">
+                            <a href="sellerprofile.html" style="color:#4fd0ff; text-decoration:none; font-size:14px; font-weight:600;">View Public Profile &rarr;</a>
+                            <a href="mypurchases.html" style="color:#4fd0ff; text-decoration:none; font-size:14px; font-weight:600;">Purchase History &rarr;</a>
+                        </div>
+                    </div>
+
+                    <div class="danger-zone" style="padding-top: 32px; border-top: 1px solid rgba(255,0,0,0.2);">
+                        <button class="btn-logout" onclick="handleLogout()" 
+                                style="background: rgba(255, 59, 48, 0.1); color: #ff3b30; border: 1px solid rgba(255, 59, 48, 0.2); width: 100%; padding: 14px; border-radius: 12px; font-weight: 700; cursor: pointer;">Sign Out</button>
+                    </div>
+                </div>
+            </div>
+        </section>
     </main>
 
     <script>
