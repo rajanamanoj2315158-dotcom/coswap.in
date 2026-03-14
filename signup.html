@@ -520,23 +520,27 @@
             setSubmitting(true);
 
             try {
+                const signupEmail = document.getElementById("email").value.trim();
                 const payload = {
                     name: document.getElementById("name").value.trim(),
-                    email: document.getElementById("email").value.trim(),
+                    email: signupEmail,
                     password: document.getElementById("password").value,
                     acceptTerms: document.getElementById("acceptTerms").checked
                 };
 
-                const data = await apiRequest("/auth/signup", {
+                await apiRequest("/auth/signup", {
                     method: "POST",
                     body: JSON.stringify(payload)
                 });
 
-                setAuth(data.token, data.user);
-                showToast("Account created successfully.");
-                window.setTimeout(handleRedirect, 250);
+                localStorage.setItem("SIGNUP_EMAIL", signupEmail);
+                showToast("Verification code sent to your email.");
+                
+                setTimeout(() => {
+                    window.location.href = "verify-signup.html";
+                }, 1000);
             } catch (err) {
-                showToast(err.message || "Unable to create your account right now.");
+                showToast(err.message || "Unable to start registration process.");
             } finally {
                 setSubmitting(false);
             }

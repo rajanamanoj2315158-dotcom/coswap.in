@@ -1,0 +1,291 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Verify Your Email – CoSwap</title>
+    <link rel="stylesheet" href="theme.css">
+    <script src="ui.js" defer></script>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Inter', sans-serif;
+        }
+
+        body {
+            height: 100vh;
+            background: 
+                radial-gradient(circle at 18% 18%, rgba(79, 208, 255, 0.1), transparent 25%),
+                radial-gradient(circle at 82% 14%, rgba(111, 108, 255, 0.1), transparent 25%),
+                linear-gradient(180deg, #0a1020, #0a0d18 48%, #060910 100%);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            color: white;
+            overflow: hidden;
+        }
+
+        .card {
+            width: 440px;
+            padding: 48px;
+            border-radius: 24px;
+            background: rgba(255, 255, 255, 0.05);
+            backdrop-filter: blur(24px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            box-shadow: 0 40px 100px rgba(0, 0, 0, 0.5);
+            text-align: center;
+            position: relative;
+            z-index: 10;
+        }
+
+        .logo-img {
+            width: 70px;
+            margin-bottom: 24px;
+        }
+
+        h2 {
+            font-size: 32px;
+            letter-spacing: -0.05em;
+            margin-bottom: 12px;
+        }
+
+        p {
+            color: rgba(255, 255, 255, 0.6);
+            font-size: 15px;
+            line-height: 1.6;
+            margin-bottom: 32px;
+        }
+
+        .otp-boxes {
+            display: flex;
+            justify-content: center;
+            gap: 12px;
+            margin-bottom: 32px;
+        }
+
+        .otp-input {
+            width: 50px;
+            height: 60px;
+            border-radius: 16px;
+            background: rgba(255, 255, 255, 0.08);
+            border: 1px solid rgba(255, 255, 255, 0.12);
+            outline: none;
+            text-align: center;
+            font-size: 24px;
+            font-weight: 700;
+            color: white;
+            transition: all 0.2s ease;
+        }
+
+        .otp-input:focus {
+            background: rgba(255, 255, 255, 0.12);
+            border-color: #4fd0ff;
+            box-shadow: 0 0 0 4px rgba(79, 208, 255, 0.15);
+        }
+
+        .btn-verify {
+            width: 100%;
+            padding: 16px;
+            border-radius: 16px;
+            border: none;
+            background: linear-gradient(135deg, #4fd0ff, #6f6cff);
+            color: white;
+            font-size: 16px;
+            font-weight: 700;
+            cursor: pointer;
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
+            margin-bottom: 24px;
+        }
+
+        .btn-verify:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 24px rgba(79, 208, 255, 0.25);
+        }
+
+        .btn-verify:active {
+            transform: translateY(0);
+        }
+
+        .resend-timer {
+            font-size: 14px;
+            color: rgba(255, 255, 255, 0.4);
+        }
+
+        .resend-link {
+            font-size: 14px;
+            color: #98e8ff;
+            cursor: pointer;
+            background: none;
+            border: none;
+            font-weight: 700;
+            display: none;
+        }
+
+        .resend-link:hover {
+            text-decoration: underline;
+        }
+
+        .shake {
+            animation: shake 0.4s cubic-bezier(.36,.07,.19,.97) both;
+        }
+
+        @keyframes shake {
+            10%, 90% { transform: translate3d(-1px, 0, 0); }
+            20%, 80% { transform: translate3d(2px, 0, 0); }
+            30%, 50%, 70% { transform: translate3d(-4px, 0, 0); }
+            40%, 60% { transform: translate3d(4px, 0, 0); }
+        }
+
+        .otp-input.error {
+            border-color: #ff4d4d !important;
+            box-shadow: 0 0 0 4px rgba(255, 77, 77, 0.1) !important;
+        }
+
+        .otp-input.success {
+            border-color: #00ff99 !important;
+            box-shadow: 0 0 0 4px rgba(0, 255, 153, 0.1) !important;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="card">
+        <img src="logo.png" class="logo-img" alt="CoSwap Logo">
+        <h2>Verify Your Email</h2>
+        <p>Enter the 6-digit verification code sent to <br><strong id="displayEmail">your email</strong></p>
+
+        <div class="otp-boxes">
+            <input class="otp-input" type="text" inputmode="numeric" maxlength="1">
+            <input class="otp-input" type="text" inputmode="numeric" maxlength="1">
+            <input class="otp-input" type="text" inputmode="numeric" maxlength="1">
+            <input class="otp-input" type="text" inputmode="numeric" maxlength="1">
+            <input class="otp-input" type="text" inputmode="numeric" maxlength="1">
+            <input class="otp-input" type="text" inputmode="numeric" maxlength="1">
+        </div>
+
+        <button class="btn-verify" id="verifyBtn" onclick="verifyOTP()">Verify Code</button>
+
+        <div class="resend-container">
+            <span class="resend-timer">Resend code in <span id="countdown">05:00</span></span>
+            <button class="resend-link" id="resendBtn" onclick="resendOTP()">Resend OTP</button>
+        </div>
+    </div>
+
+    <script src="api.js"></script>
+    <script>
+        const inputs = document.querySelectorAll(".otp-input");
+        const signupEmail = localStorage.getItem("SIGNUP_EMAIL");
+
+        if (!signupEmail) {
+            window.location.href = "signup.html";
+        } else {
+            document.getElementById("displayEmail").textContent = signupEmail;
+        }
+
+        // Auto-focus logic
+        inputs.forEach((input, index) => {
+            input.addEventListener("input", (e) => {
+                if (e.inputType === "deleteContentBackward") return;
+                input.value = input.value.replace(/[^0-9]/g, "");
+                if (input.value && index < inputs.length - 1) {
+                    inputs[index + 1].focus();
+                }
+            });
+
+            input.addEventListener("keydown", (e) => {
+                if (e.key === "Backspace" && !input.value && index > 0) {
+                    inputs[index - 1].focus();
+                }
+            });
+        });
+
+        // Countdown Timer
+        let seconds = 300;
+        const countdownEl = document.getElementById("countdown");
+        const timerEl = document.querySelector(".resend-timer");
+        const resendBtn = document.getElementById("resendBtn");
+
+        function startTimer() {
+            const timer = setInterval(() => {
+                const mins = Math.floor(seconds / 60).toString().padStart(2, '0');
+                const secs = (seconds % 60).toString().padStart(2, '0');
+                countdownEl.textContent = `${mins}:${secs}`;
+                
+                if (seconds <= 0) {
+                    clearInterval(timer);
+                    timerEl.style.display = 'none';
+                    resendBtn.style.display = 'inline-block';
+                }
+                seconds--;
+            }, 1000);
+        }
+        startTimer();
+
+        async function verifyOTP() {
+            let otp = "";
+            inputs.forEach(input => otp += input.value);
+
+            if (otp.length !== 6) {
+                showToast("Please enter the 6-digit code.");
+                shakeBoxes();
+                return;
+            }
+
+            const btn = document.getElementById("verifyBtn");
+            btn.disabled = true;
+            btn.textContent = "Verifying...";
+
+            try {
+                const data = await apiRequest("/auth/verify-signup", {
+                    method: "POST",
+                    body: JSON.stringify({ email: signupEmail, otp })
+                });
+
+                showToast("Email verified! Account created.");
+                setAuth(data.token, data.user);
+                localStorage.removeItem("SIGNUP_EMAIL");
+                
+                inputs.forEach(i => i.classList.add("success"));
+                setTimeout(() => {
+                    window.location.href = "dashboard.html";
+                }, 1000);
+            } catch (err) {
+                showToast(err.message || "Invalid code.");
+                shakeBoxes();
+                btn.disabled = false;
+                btn.textContent = "Verify Code";
+            }
+        }
+
+        async function resendOTP() {
+            try {
+                await apiRequest("/auth/resend-signup-otp", {
+                    method: "POST",
+                    body: JSON.stringify({ email: signupEmail })
+                });
+                showToast("A new code has been sent.");
+                resendBtn.style.display = 'none';
+                timerEl.style.display = 'inline-block';
+                seconds = 300;
+                startTimer();
+            } catch (err) {
+                showToast(err.message || "Failed to resend code.");
+            }
+        }
+
+        function shakeBoxes() {
+            const container = document.querySelector(".otp-boxes");
+            container.classList.add("shake");
+            inputs.forEach(i => i.classList.add("error"));
+            setTimeout(() => {
+                container.classList.remove("shake");
+                inputs.forEach(i => i.classList.remove("error"));
+            }, 500);
+        }
+    </script>
+</body>
+
+</html>

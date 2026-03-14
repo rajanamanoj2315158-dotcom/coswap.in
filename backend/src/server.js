@@ -10,6 +10,7 @@ const crypto = require("crypto");
 const path = require("path");
 const compression = require("compression");
 const helmet = require("helmet");
+const nodemailer = require("nodemailer");
 const { OAuth2Client } = require("google-auth-library");
 
 const GOOGLE_CLIENT_ID = process.env.GOOGLE_CLIENT_ID || "633777352427-d46e8ks94tgkkug8sei8n90mhub6q786.apps.googleusercontent.com";
@@ -25,8 +26,33 @@ const {
   Report,
   Notification,
   BuyRequest,
-  PasswordReset
+  PasswordReset,
+  SignupOTP
 } = require("./db");
+
+const transporter = nodemailer.createTransport({
+  service: process.env.EMAIL_SERVICE || "gmail",
+  auth: {
+    user: process.env.EMAIL_USER,
+    pass: process.env.EMAIL_PASS
+  }
+});
+
+async function sendEmail({ to, subject, text, html }) {
+  if (!process.env.EMAIL_USER || !process.env.EMAIL_PASS) {
+    console.log("--- EMAIL MOCK ---");
+    console.log("To:", to);
+    console.log("Subject:", subject);
+    console.log("Body:", text);
+    console.log("------------------");
+    return;
+  }
+  try {
+    await transporter.sendMail({ from: `"CoSwap" <${process.env.EMAIL_USER}>`, to, subject, text, html });
+  } catch (err) {
+    console.error("Email send error:", err);
+  }
+}
 
 const app = express();
 
@@ -398,14 +424,94 @@ app.post("/auth/signup", async (req, res) => {
     if (!name || !email || !password) return res.status(400).json({ error: "Name, email, and password are required." });
     if (!acceptTerms) return res.status(400).json({ error: "You must accept the Terms & Conditions." });
 
-    const existing = await User.findOne({ email: email.trim().toLowerCase() });
+    const cleanEmail = email.trim().toLowerCase();
+    const existing = await User.findOne({ email: cleanEmail });
     if (existing) return res.status(409).json({ error: "Email already registered." });
 
+    const otp = String(Math.floor(100000 + Math.random() * 900000));
+    const expires_at = new Date(Date.now() + 5 * 60 * 1000).toISOString();
     const password_hash = bcrypt.hashSync(password, 10);
+
+    await SignupOTP.deleteMany({ email: cleanEmail });
+    await SignupOTP.create({
+      name: name.trim(),
+      email: cleanEmail,
+      password_hash,
+      otp,
+      expires_at
+    });
+
+    await sendEmail({
+      to: cleanEmail,
+      subject: "CoSwap Email Verification Code",
+      text: `Your verification code for CoSwap is: ${otp}\n\nThis code will expire in 5 minutes.`,
+      html: `<h3>CoSwap Email Verification</h3><p>Your verification code is: <strong>${otp}</strong></p><p>This code will expire in 5 minutes.</p>`
+    });
+
+    res.json({ message: "Verification code sent to email." });
+  } catch (err) { res.status(500).json({ error: err.message }); }
+});
+
+app.post("/auth/verify-signup", async (req, res) => {
+  try {
+    const { email, otp } = req.body || {};
+    if (!email || !otp) return res.status(400).json({ error: "Email and OTP are required." });
+
+    const cleanEmail = email.trim().toLowerCase();
+    const record = await SignupOTP.findOne({ email: cleanEmail });
+
+    if (!record) return res.status(400).json({ error: "No signup request found. Please sign up again." });
+    if (new Date(record.expires_at) < new Date()) {
+      return res.status(400).json({ error: "Verification code expired. Please resend." });
+    }
+    if (record.attempts >= 5) {
+      return res.status(400).json({ error: "Too many failed attempts. Please sign up again." });
+    }
+
+    if (record.otp !== String(otp).trim()) {
+      await SignupOTP.updateOne({ email: cleanEmail }, { $inc: { attempts: 1 } });
+      return res.status(400).json({ error: "Invalid verification code." });
+    }
+
+    // Success: Create User
     const now = new Date().toISOString();
-    const user = await User.create({ name: name.trim(), email: email.trim().toLowerCase(), password_hash, created_at: now, terms_accepted_at: now });
+    const user = await User.create({
+      name: record.name,
+      email: record.email,
+      password_hash: record.password_hash,
+      created_at: now,
+      terms_accepted_at: now
+    });
+
+    await SignupOTP.deleteOne({ email: cleanEmail });
+
     const token = createToken(user);
     res.json({ token, user: sanitizeUser(user) });
+  } catch (err) { res.status(500).json({ error: err.message }); }
+});
+
+app.post("/auth/resend-signup-otp", async (req, res) => {
+  try {
+    const { email } = req.body || {};
+    if (!email) return res.status(400).json({ error: "Email is required." });
+
+    const cleanEmail = email.trim().toLowerCase();
+    const record = await SignupOTP.findOne({ email: cleanEmail });
+    if (!record) return res.status(400).json({ error: "No signup request found." });
+
+    const otp = String(Math.floor(100000 + Math.random() * 900000));
+    const expires_at = new Date(Date.now() + 5 * 60 * 1000).toISOString();
+
+    await SignupOTP.updateOne({ email: cleanEmail }, { otp, expires_at, $set: { attempts: 0 } });
+
+    await sendEmail({
+      to: cleanEmail,
+      subject: "CoSwap Email Verification Code",
+      text: `Your new verification code for CoSwap is: ${otp}\n\nThis code will expire in 5 minutes.`,
+      html: `<h3>CoSwap Email Verification</h3><p>Your new verification code is: <strong>${otp}</strong></p><p>This code will expire in 5 minutes.</p>`
+    });
+
+    res.json({ message: "Verification code resent." });
   } catch (err) { res.status(500).json({ error: err.message }); }
 });
 

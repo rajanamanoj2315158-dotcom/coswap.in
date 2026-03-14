@@ -54,6 +54,10 @@ async function ensureIndexes() {
     await PasswordReset.collection.createIndex({ email: 1, used_at: 1 });
     await PasswordReset.collection.createIndex({ reset_token: 1, used_at: 1 });
     await PasswordReset.collection.createIndex({ expires_at: 1 }, { expireAfterSeconds: 0 });
+    
+    // SignupOTP indexes
+    await SignupOTP.collection.createIndex({ email: 1 });
+    await SignupOTP.collection.createIndex({ expires_at: 1 }, { expireAfterSeconds: 0 });
 
     console.log("Database indexes ensured.");
   } catch (err) {
@@ -162,6 +166,15 @@ const passwordResetSchema = new mongoose.Schema({
   used_at: String
 });
 
+const signupOTPSchema = new mongoose.Schema({
+  name: { type: String, required: true },
+  email: { type: String, required: true, unique: true, lowercase: true },
+  password_hash: { type: String, required: true },
+  otp: { type: String, required: true },
+  expires_at: { type: String, required: true },
+  attempts: { type: Number, default: 0 }
+});
+
 // ─── Models ─────────────────────────────────────────────────────────────────
 
 const User = mongoose.model("User", userSchema);
@@ -174,6 +187,7 @@ const Notification = mongoose.model("Notification", notificationSchema);
 const BuyRequest = mongoose.model("BuyRequest", buyRequestSchema);
 const Payment = mongoose.model("Payment", paymentSchema);
 const PasswordReset = mongoose.model("PasswordReset", passwordResetSchema);
+const SignupOTP = mongoose.model("SignupOTP", signupOTPSchema);
 
 module.exports = {
   initDb,
@@ -186,5 +200,6 @@ module.exports = {
   Notification,
   BuyRequest,
   Payment,
-  PasswordReset
+  PasswordReset,
+  SignupOTP
 };
