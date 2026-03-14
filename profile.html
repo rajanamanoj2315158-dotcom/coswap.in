@@ -12,15 +12,20 @@
     <script src="https://unpkg.com/lucide@latest"></script>
 </head>
 <body class="soft-bg">
-    <!-- Premium Background Effects -->
-    <div class="premium-bg" aria-hidden="true">
-        <div class="blob blob-1"></div>
-        <div class="blob blob-2"></div>
-        <div class="blob blob-3"></div>
-        <div class="mist-container"></div>
+    <!-- Premium Background System -->
+    <div class="premium-bg-system parallax-bg" aria-hidden="true">
+        <div class="aurora-layer"></div>
+        <div class="droplet-container parallax-particles">
+            <div class="bg-droplet" style="width:10px; height:10px; left:5%; --duration:18s; --sway:40px;"></div>
+            <div class="bg-droplet" style="width:6px; height:6px; left:15%; --duration:24s; --sway:-30px; animation-delay:-5s;"></div>
+            <div class="bg-droplet" style="width:8px; height:8px; left:40%; --duration:20s; --sway:20px; animation-delay:-2s;"></div>
+            <div class="bg-droplet" style="width:12px; height:12px; left:60%; --duration:28s; --sway:-40px; animation-delay:-8s;"></div>
+            <div class="bg-droplet" style="width:5px; height:5px; left:85%; --duration:22s; --sway:35px; animation-delay:-3s;"></div>
+        </div>
+        <div class="ripple-layer">
+            <div class="liquid-ripple" style="top:40%; left:80%;"></div>
+        </div>
     </div>
-
-    <main>
     <nav class="navbar">
         <a href="index.html" class="logo" style="display: flex; align-items: center; gap: 12px; text-decoration: none; color: white;">
             <img src="logo.png" alt="CoSwap" style="width: 32px; height: 32px;">

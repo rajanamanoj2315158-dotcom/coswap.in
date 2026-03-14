@@ -57,7 +57,68 @@
       }
     })();
 
-    // Page Arrival Motion
+    // ─── Top-Tier Startup UI Motion Engine ───
+    
+    // 1. Liquid Cursor Glow Tracker
+    const cursor = document.createElement('div');
+    cursor.className = 'cursor-glow';
+    document.body.appendChild(cursor);
+
+    let cursorActive = false;
+    let cursorTimeout;
+
+    document.addEventListener('mousemove', (e) => {
+      if (window.innerWidth < 768) return;
+      
+      cursorActive = true;
+      cursor.style.opacity = '1';
+      cursor.style.transform = `translate3d(${e.clientX - 75}px, ${e.clientY - 75}px, 0)`;
+      
+      clearTimeout(cursorTimeout);
+      cursorTimeout = setTimeout(() => {
+        cursor.style.opacity = '0';
+      }, 1500);
+    });
+
+    // 2. Parallax Scroll Engine (Performance Optimized)
+    let lastScrollY = window.scrollY;
+    let ticking = false;
+
+    function updateParallax() {
+      if (window.innerWidth < 768) return;
+      document.documentElement.style.setProperty('--scroll-y', `${window.scrollY}`);
+      ticking = false;
+    }
+
+    window.addEventListener('scroll', () => {
+      if (!ticking) {
+        window.requestAnimationFrame(updateParallax);
+        ticking = true;
+      }
+    });
+
+    // 3. Smooth Page Flow Transitions
+    document.body.classList.add('page-ready');
+    const mainWrapper = document.querySelector('main') || document.body;
+    mainWrapper.classList.add('page-transition-wrapper');
+
+    document.addEventListener('click', (e) => {
+      const link = e.target.closest('a');
+      if (link && link.href && link.target !== '_blank' && 
+          link.href.includes(window.location.hostname) && 
+          !link.href.includes('#') && !e.metaKey && !e.ctrlKey) {
+        
+        e.preventDefault();
+        const destination = link.href;
+        
+        mainWrapper.classList.add('page-exit');
+        setTimeout(() => {
+          window.location.href = destination;
+        }, 300);
+      }
+    });
+
+    // Page Arrival Motion (Existing)
     document.body.classList.add("fade-in");
 
     // Global Mobile Overlay

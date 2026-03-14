@@ -398,6 +398,90 @@ button,
   .bg-droplet { --duration: 45s; opacity: 0.04; }
 }
 
+/* ─── Top-Tier Startup UI Motion Engine ────────────────────────────────────── */
+
+/* 1. Liquid Cursor Glow */
+.cursor-glow {
+  position: fixed;
+  width: 150px;
+  height: 150px;
+  background: radial-gradient(circle, rgba(79, 140, 255, 0.15), transparent 70%);
+  border-radius: 50%;
+  pointer-events: none;
+  z-index: 9999;
+  mix-blend-mode: screen;
+  transition: opacity 0.6s ease, transform 0.1s ease-out;
+  opacity: 0;
+  will-change: transform, opacity;
+}
+
+body:hover .cursor-glow {
+  opacity: 1;
+}
+
+/* 2. Smooth Page Transitions */
+body {
+  opacity: 0;
+  transition: opacity 0.4s ease;
+}
+
+body.page-ready {
+  opacity: 1;
+}
+
+.page-transition-wrapper {
+  animation: pageEnter 0.45s cubic-bezier(0.2, 0.8, 0.2, 1) forwards;
+  will-change: transform, opacity, filter;
+}
+
+@keyframes pageEnter {
+  0% {
+    opacity: 0;
+    transform: translateY(12px);
+    filter: blur(10px);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0);
+    filter: blur(0);
+  }
+}
+
+.page-exit {
+  animation: pageExit 0.35s cubic-bezier(0.4, 0, 1, 1) forwards;
+}
+
+@keyframes pageExit {
+  0% {
+    opacity: 1;
+    transform: translateY(0);
+    filter: blur(0);
+  }
+  100% {
+    opacity: 0;
+    transform: translateY(-8px);
+    filter: blur(4px);
+  }
+}
+
+/* 3. Parallax Depth System */
+.parallax-bg {
+  transform: translateY(calc(var(--scroll-y, 0) * 0.2px));
+  will-change: transform;
+}
+
+.parallax-particles {
+  transform: translateY(calc(var(--scroll-y, 0) * 0.5px));
+  will-change: transform;
+}
+
+/* Mobile Motion Safety */
+@media (max-width: 768px) {
+  .cursor-glow { display: none !important; }
+  .parallax-bg, .parallax-particles { transform: none !important; }
+  .page-transition-wrapper { animation-duration: 0.3s; }
+}
+
 /* ─── Micro-Interactions ────────────────────────────────────────────────── */
 .fade-in {
   animation: fadeIn 0.8s ease-out forwards;
@@ -505,52 +589,6 @@ button,
   display: block;
 }
 
-/* ─── Ambient Droplets ────────────────────────────────────────────────────── */
-.droplet-ambient {
-  pointer-events: none;
-  position: fixed;
-  inset: 0;
-  overflow: hidden;
-  z-index: 0;
-}
-
-.droplet-ambient .drop {
-  position: absolute;
-  border-radius: 60% 40% 58% 42% / 44% 58% 42% 56%;
-  background:
-    radial-gradient(circle at 28% 24%, rgba(255,255,255,0.45), transparent 22%),
-    linear-gradient(180deg, rgba(255,255,255,0.12), rgba(79,208,255,0.06));
-  border: 1px solid rgba(255,255,255,0.1);
-  opacity: 0.4;
-  animation: floatDrop 20s ease-in-out infinite;
-}
-
-.droplet-ambient .drop:nth-child(1) {
-  width: 90px; height: 110px;
-  top: 8%; left: 4%;
-  animation-duration: 18s;
-}
-
-.droplet-ambient .drop:nth-child(2) {
-  width: 60px; height: 74px;
-  bottom: 12%; right: 6%;
-  animation-duration: 24s;
-  animation-delay: -6s;
-}
-
-.droplet-ambient .drop:nth-child(3) {
-  width: 44px; height: 54px;
-  top: 55%; left: 88%;
-  animation-duration: 16s;
-  animation-delay: -10s;
-  opacity: 0.25;
-}
-
-@keyframes floatDrop {
-  0%, 100% { transform: translate3d(0,0,0) rotate(0deg); }
-  33% { transform: translate3d(12px,-16px,0) rotate(4deg); }
-  66% { transform: translate3d(-8px,10px,0) rotate(-3deg); }
-}
 
 /* ─── Reduced Motion ──────────────────────────────────────────────────────── */
 @media (prefers-reduced-motion: reduce) {
