@@ -93,6 +93,72 @@
 
         /* Form UI handled globally in theme.css */
 
+        /* Custom Glass Dropdown */
+        .custom-select {
+            position: relative;
+            width: 100%;
+        }
+        .select-selected {
+            background: #0B1535;
+            color: #7F8CC0;
+            border: 1px solid rgba(120, 140, 255, 0.35);
+            border-radius: 12px;
+            height: 52px;
+            padding: 14px 16px;
+            font-size: 16px;
+            cursor: pointer;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        .select-selected.has-value {
+            color: #FFFFFF;
+        }
+        .select-selected::after {
+            content: '';
+            width: 20px;
+            height: 20px;
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24' fill='none' stroke='%234F8CFF' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='m6 9 6 6 6-6'/%3E%3C/svg%3E");
+            background-size: contain;
+            background-repeat: no-repeat;
+            transition: transform 0.3s;
+        }
+        .select-selected.select-active::after {
+            transform: rotate(180deg);
+        }
+        .select-selected.select-active {
+            border-color: #4F8CFF;
+            box-shadow: 0 0 0 2px rgba(79, 140, 255, 0.15);
+        }
+        .select-items {
+            position: absolute;
+            background: rgba(11, 21, 53, 0.95);
+            backdrop-filter: blur(24px);
+            border: 1px solid rgba(120, 140, 255, 0.35);
+            border-radius: 12px;
+            top: 100%;
+            left: 0;
+            right: 0;
+            z-index: 99;
+            margin-top: 8px;
+            overflow: hidden;
+            box-shadow: 0 16px 40px rgba(0, 0, 0, 0.4);
+            animation: riseIn 0.2s ease-out;
+        }
+        .select-hide {
+            display: none;
+        }
+        .select-items div {
+            color: #ffffff;
+            padding: 14px 16px;
+            cursor: pointer;
+            transition: background 0.2s;
+        }
+        .select-items div:hover {
+            background: rgba(79, 140, 255, 0.18);
+        }
+
         .divider-glow {
             border-bottom: 1px solid rgba(120, 150, 255, 0.18);
             margin-bottom: 24px;
@@ -209,20 +275,21 @@
                     <input type="text" id="titleInput" placeholder="e.g. Amazon Elite Voucher ₹2,000" maxlength="120" required>
                 </div>
 
-                <div class="form-group">
-                    <label for="categoryInput">Asset Category</label>
-                    <select id="categoryInput" required>
-                        <option value="" disabled selected>Select Category</option>
-                        <option value="OTT">OTT</option>
-                        <option value="Food">Food</option>
-                        <option value="Travel">Travel</option>
-                        <option value="Shopping">Shopping</option>
-                        <option value="Beauty">Beauty</option>
-                        <option value="Electronics">Electronics</option>
-                        <option value="Gift Cards">Gift Cards</option>
-                        <option value="Gaming">Gaming</option>
-                    </select>
-                </div>
+                    <div class="form-group" style="display: flex; flex-direction: column; gap: 8px;">
+                        <label for="categoryInput" style="font-size: 13px; font-weight: 700; color: rgba(255,255,255,0.4); text-transform: uppercase;">Category</label>
+                        <div class="custom-select" id="customCategoryDropdown">
+                            <div class="select-selected" id="categoryDisplay">Select Category</div>
+                            <div class="select-items select-hide" id="categoryOptions">
+                                <div data-value="OTT">OTT & Entertainment</div>
+                                <div data-value="Food">Food & Dining</div>
+                                <div data-value="Shopping">Shopping</div>
+                                <div data-value="Travel">Travel</div>
+                                <div data-value="Gaming">Gaming</div>
+                                <div data-value="Other">Other Category</div>
+                            </div>
+                        </div>
+                        <input type="hidden" id="categoryInput" required>
+                    </div>
 
                 <div class="form-group">
                     <label for="priceInput">Listing Price (INR)</label>
@@ -283,6 +350,33 @@
                 }
             });
 
+            // Custom Glass Dropdown Logic
+            const display = document.getElementById("categoryDisplay");
+            const optionsBox = document.getElementById("categoryOptions");
+            const hiddenInput = document.getElementById("categoryInput");
+
+            display.addEventListener("click", function(e) {
+                e.stopPropagation();
+                optionsBox.classList.toggle("select-hide");
+                this.classList.toggle("select-active");
+            });
+
+            optionsBox.querySelectorAll("div").forEach(option => {
+                option.addEventListener("click", function(e) {
+                    e.stopPropagation();
+                    display.innerText = this.innerText;
+                    display.classList.add("has-value");
+                    hiddenInput.value = this.getAttribute("data-value");
+                    optionsBox.classList.add("select-hide");
+                    display.classList.remove("select-active");
+                });
+            });
+
+            document.addEventListener("click", function() {
+                optionsBox.classList.add("select-hide");
+                display.classList.remove("select-active");
+            });
+
             try {
                 const data = await apiRequest("/me/profile");
                 const profile = data.profile || {};
@@ -341,6 +435,12 @@
             e.preventDefault();
             const btn = document.getElementById("submitBtn");
             const price = parseInt(document.getElementById("priceInput").value);
+            const categoryValue = document.getElementById("categoryInput").value;
+
+            if (!categoryValue) {
+                showToast("Please select a category.", "error");
+                return;
+            }
 
             if (price > userMaxPrice) {
                 showToast(`Maximum allowed price is ₹${userMaxPrice}`, "error");
@@ -349,7 +449,7 @@
 
             const payload = {
                 title: document.getElementById("titleInput").value.trim(),
-                category: document.getElementById("categoryInput").value,
+                category: categoryValue,
                 price: price,
                 expiry: document.getElementById("expiryInput").value,
                 details: document.getElementById("detailsInput").value.trim()

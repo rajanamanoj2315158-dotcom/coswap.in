@@ -628,11 +628,17 @@ app.get("/me/profile", authMiddleware, async (req, res) => {
     const fraudPercent = totalSold > 0 ? Math.round((fraudReports / totalSold) * 100) : 0;
     const rating = user.rating_count > 0 ? (user.rating_sum / user.rating_count).toFixed(1) : null;
 
-    let level = 1, maxPrice = 10;
-    if (customers >= 10) { level = 2; maxPrice = 20; }
-    if (customers >= 25) { level = 3; maxPrice = 40; }
-    if (customers >= 50) { level = 4; maxPrice = 70; }
-    if (customers >= 100) { level = 5; maxPrice = 100; }
+    let level = 1, maxPrice = 500;
+    if (customers >= 10) { level = 2; maxPrice = 1000; }
+    if (customers >= 25) { level = 3; maxPrice = 2500; }
+    if (customers >= 50) { level = 4; maxPrice = 5000; }
+    if (customers >= 100) { level = 5; maxPrice = 10000; }
+
+    if (fraudPercent > 5) {
+        maxPrice = Math.min(maxPrice, 200);
+    } else if (fraudPercent > 2) {
+        maxPrice = Math.min(maxPrice, 1000);
+    }
 
     res.json({ profile: { id: String(user._id), name: user.name, customers, totalSold, fraudReports, fraudPercent, rating, ratingCount: user.rating_count, level, maxPrice, status: user.status, pending_fee: 0 } });
   } catch (err) { res.status(500).json({ error: err.message }); }
