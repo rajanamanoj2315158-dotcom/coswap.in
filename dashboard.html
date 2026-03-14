@@ -4,6 +4,7 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width,initial-scale=1" />
     <title>Dashboard — CoSwap</title>
+    <link rel="canonical" href="https://coswap.in/dashboard.html">
     <link rel="stylesheet" href="theme.css">
     <script src="api.js"></script>
     <script src="ui.js" defer></script>
@@ -346,7 +347,7 @@
                 if (recos.length > 0) {
                     recoEl.innerHTML = recos.map(item => `
                         <div class="reco-item" onclick="window.location.href='coupon-details.html?id=${item.id}'" style="cursor:pointer;">
-                            <img src="${item.image_url || 'bg.png'}" onerror="this.src='bg.png'" class="reco-img">
+                            <img src="${item.image_url || 'bg.png'}" onerror="this.src='bg.png'" class="reco-img" loading="lazy">
                             <div class="reco-body">
                                 <div class="reco-title">${item.title}</div>
                                 <div class="reco-price">₹${item.price}</div>

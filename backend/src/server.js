@@ -64,6 +64,32 @@ app.get("/__debug_files", (req, res) => {
     res.status(500).json({ error: err.message, staticPath });
   }
 });
+app.get("/robots.txt", (req, res) => {
+  res.type("text/plain");
+  res.send(`User-agent: *\nAllow: /\n\nSitemap: https://coswap.in/sitemap.xml`);
+});
+
+app.get("/sitemap.xml", async (req, res) => {
+  try {
+    const baseUrl = "https://coswap.in";
+    const staticPages = ["", "browse", "sell", "profile", "dashboard", "terms"];
+    let xml = `<?xml version="1.0" encoding="UTF-8"?>\n`;
+    xml += `<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n`;
+    staticPages.forEach(page => {
+      xml += `  <url>\n`;
+      xml += `    <loc>${baseUrl}/${page}${page ? ".html" : ""}</loc>\n`;
+      xml += `    <changefreq>daily</changefreq>\n`;
+      xml += `    <priority>${page === "" ? "1.0" : "0.8"}</priority>\n`;
+      xml += `  </url>\n`;
+    });
+    xml += `</urlset>`;
+    res.type("application/xml");
+    res.send(xml);
+  } catch (err) {
+    res.status(500).send("Error generating sitemap");
+  }
+});
+
 app.use(express.static(staticPath, {
   maxAge: process.env.NODE_ENV === "production" ? "1d" : 0,
   etag: true,
