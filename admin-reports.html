@@ -158,14 +158,14 @@
                     list.innerHTML += `
                         <div class="report-card">
                             <div class="top">
-                                <p class="seller">Seller: ${r.seller_name}</p>
+                                <p class="seller">Seller: ${escapeHtml(r.seller_name)}</p>
                                 <p class="rating">Reporter: ${r.reporter_name}</p>
                             </div>
 
                             <p class="issue">
                                 <b>Reason:</b> ${r.reason}<br>
                                 ${r.description || "No additional details."}
-                                ${r.coupon_title ? `<br><b>Coupon:</b> ${r.coupon_title}` : ""}
+                                ${r.coupon_title ? `<br><b>Coupon:</b> ${escapeHtml(r.coupon_title)}` : ""}
                             </p>
 
                             <span class="status ${statusClass}">${r.status.toUpperCase()}</span>

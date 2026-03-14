@@ -114,7 +114,7 @@
                     box.innerHTML += `
                         <div class="notif-card">
                             <div>
-                                <p class="msg">${n.message}</p>
+                                <p class="msg">${escapeHtml(n.message)}</p>
                                 <p class="time">${formatTime(n.created_at)}</p>
                             </div>
                             <button class="btn" onclick="openNotif(${n.id}, '${n.action || "dashboard.html"}')">Open</button>

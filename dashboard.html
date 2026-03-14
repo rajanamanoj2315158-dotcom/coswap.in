@@ -343,7 +343,7 @@
                         <div class="reco-item" onclick="window.location.href='coupon-details.html?id=${item.id}'" style="cursor:pointer;">
                             <img src="${item.image_url || 'bg.png'}" onerror="this.src='bg.png'" class="reco-img" loading="lazy">
                             <div class="reco-body">
-                                <div class="reco-title">${item.title}</div>
+                                <div class="reco-title">${escapeHtml(item.title)}</div>
                                 <div class="reco-price">₹${item.price}</div>
                             </div>
                         </div>

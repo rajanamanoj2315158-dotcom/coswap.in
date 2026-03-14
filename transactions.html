@@ -168,7 +168,7 @@
                                 <p class="coupon-title">${t.title}</p>
                                 <p class="price">₹${t.price}</p>
                                 <p class="small-info">
-                                    Date: ${new Date(t.purchased_at).toLocaleDateString()} • Seller: ${t.seller_name || "COSWAP Seller"}
+                                    Date: ${new Date(t.purchased_at).toLocaleDateString()} • Seller: ${escapeHtml(t.seller_name || "COSWAP Seller")}
                                 </p>
                                 <span class="status ${statusClass}">${t.status === "success" ? "Successful" : "Under Review"}</span>
                             </div>

@@ -336,9 +336,9 @@
                 document.getElementById("couponImg").src = c.image_url || "bg.png";
 
                 document.getElementById("purchaseDetails").innerHTML = `
-                    <p><b>Coupon:</b> ${c.title}</p>
-                    <p><b>Price:</b> ₹${c.price}</p>
-                    <p><b>Seller:</b> ${c.seller_name || "Unknown"}</p>
+                    <p><b>Coupon:</b> ${escapeHtml(c.title)}</p>
+                    <p><b>Price:</b> ₹${escapeHtml(c.price)}</p>
+                    <p><b>Seller:</b> ${escapeHtml(c.seller_name || "Unknown")}</p>
                     <p><b>Rating:</b> ${ratingText}</p>
                     <p><b>Fraud:</b> ${fraudText}</p>
                     <p><b>Date:</b> ${new Date().toLocaleDateString()}</p>

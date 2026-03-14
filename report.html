@@ -118,7 +118,7 @@
                 const c = data.coupon;
                 sellerId = c.seller_id;
                 document.getElementById("reportContext").innerText =
-                    `Reporting coupon: ${c.title} (Seller: ${c.seller_name})`;
+                    `Reporting coupon: ${escapeHtml(c.title)} (Seller: ${escapeHtml(c.seller_name)})`;
             } catch {
                 // ignore
             }

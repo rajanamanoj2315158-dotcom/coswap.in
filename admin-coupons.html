@@ -173,9 +173,9 @@
 
                     body.innerHTML += `
                         <tr>
-                            <td>${c.title}</td>
-                            <td>${c.seller_name}</td>
-                            <td>₹${c.price}</td>
+                            <td>${escapeHtml(c.title)}</td>
+                            <td>${escapeHtml(c.seller_name)}</td>
+                            <td>₹${escapeHtml(c.price)}</td>
                             <td>${expiry}</td>
                             <td><span class="status ${statusClass}">${statusLabel}</span></td>
                             <td>${actionButtons}</td>

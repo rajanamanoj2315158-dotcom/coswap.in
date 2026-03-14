@@ -888,12 +888,12 @@
             const expiry = c.expiry_date ? new Date(c.expiry_date).toLocaleDateString('en-IN', { day: 'numeric', month: 'short', year: 'numeric' }) : '30 Apr 2026';
 
             div.innerHTML = `
-                <h3>${c.title}</h3>
+                <h3>${escapeHtml(c.title)}</h3>
                 <div class="card-meta">
                     <i data-lucide="tag" style="width:14px"></i>
-                    Category: ${c.category || 'Voucher'}
+                    Category: ${escapeHtml(c.category || 'Voucher')}
                 </div>
-                <div class="card-price">₹${c.price} <span>Fixed Price</span></div>
+                <div class="card-price">₹${escapeHtml(c.price)} <span>Fixed Price</span></div>
                 <div class="card-meta">
                     <i data-lucide="calendar" style="width:14px"></i>
                     Expires: ${expiry}

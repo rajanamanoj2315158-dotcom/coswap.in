@@ -178,7 +178,7 @@
                         <div class="purchase-card">
                             <div class="c-info">
                                 <span class="status-badge ${statusClass}">${statusText}</span>
-                                <h3 style="margin-top: 12px;">${p.title}</h3>
+                                <h3 style="margin-top: 12px;">${escapeHtml(p.title)}</h3>
                                 <div class="c-price">₹${p.price}</div>
                                 <div class="c-meta">
                                     <span>Purchased: ${new Date(p.purchased_at).toLocaleDateString()}</span>

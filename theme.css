@@ -984,6 +984,13 @@ option {
     grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
 }
 
+@media (max-width: 480px) {
+    .glass-card-grid {
+        grid-template-columns: 1fr;
+        gap: 16px;
+    }
+}
+
 .glass-card {
     border-radius: var(--radius-card);
     padding: var(--padding-card);
