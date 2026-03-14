@@ -183,6 +183,25 @@
             .glass-card { padding: 24px; }
             .header-section h1 { font-size: 28px; }
         }
+
+        @media (max-width: 900px) {
+            .mobile-header { display: flex !important; }
+            .desktop-only { display: none !important; }
+            .sell-container { margin-top: 30px; padding: 0 16px; }
+        }
+
+        .dropdown-panel {
+            background: #1e2a3a;
+            color: white;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 12px;
+        }
+
+        /* Prevent system white background for selects in dark mode */
+        select option {
+            background-color: #1e2a3a;
+            color: white;
+        }
     </style>
 </head>
 
@@ -228,27 +247,23 @@
     </nav>
 
     <main class="sell-container">
-        <header class="header-section">
-            <h1 class="gradient-text">Sell a Coupon</h1>
-            <p>Fill in the details below to list your unused voucher.</p>
+        <header class="header-section" style="margin-top: 40px; text-align: center; margin-bottom: 48px;">
+            <h1 class="gradient-text" style="font-size: 42px; font-weight: 800; letter-spacing: -0.04em; margin-bottom: 12px;">Sell a Coupon</h1>
+            <p style="color: rgba(255,255,255,0.6); font-size: 17px;">Turn your unused vouchers into instant cash securely.</p>
         </header>
 
-        <div class="info-row">
-            <div class="info-item">
-                <span>Trust Score</span>
-                <span id="percent">100%</span>
+        <form onsubmit="listCoupon(event)" class="glass-card" style="box-shadow: 0 20px 50px rgba(0,0,0,0.3);">
+            <div class="info-row" style="background: rgba(79, 208, 255, 0.05); border: 1px solid rgba(79, 208, 255, 0.1); padding: 20px; border-radius: 16px; display: flex; justify-content: space-around; margin-bottom: 24px;">
+                <div class="info-item" style="text-align: center;">
+                    <span style="font-size: 11px; text-transform: uppercase; color: rgba(255,255,255,0.4); letter-spacing: 0.1em; display: block; margin-bottom: 4px;">Trust Score</span>
+                    <span id="trustPercent" style="font-size: 20px; font-weight: 800; color: #4fd0ff;">100%</span>
+                </div>
+                <div class="info-item" style="text-align: center;">
+                    <span style="font-size: 11px; text-transform: uppercase; color: rgba(255,255,255,0.4); letter-spacing: 0.1em; display: block; margin-bottom: 4px;">Selling Limit</span>
+                    <span id="maxAllowedPrice" style="font-size: 20px; font-weight: 800; color: #4fd0ff;">₹500</span>
+                </div>
             </div>
-            <div class="info-item">
-                <span>Limit</span>
-                <span id="maxPrice">₹500</span>
-            </div>
-            <div class="info-item">
-                <span>Account Status</span>
-                <span id="statusText" style="color: #067d62;">Normal</span>
-            </div>
-        </div>
 
-        <form onsubmit="listCoupon(event)" class="glass-card">
             <div class="form-group">
                 <label for="titleInput">Coupon Title*</label>
                 <input type="text" id="titleInput" placeholder="e.g. Netflix Premium 1 Month" maxlength="120" required>
@@ -268,8 +283,10 @@
             </div>
 
             <div class="form-group">
-                <label for="priceInput">Price (₹)*</label>
-                <input type="number" id="priceInput" placeholder="Minimum ₹1" min="1" step="1" required>
+                <label>Price (₹)*</label>
+                <input type="number" id="priceInput" placeholder="Min ₹1" min="1" step="1" required class="dark-input">
+                <div id="priceLimitInfo" style="font-size: 12px; color: rgba(255,255,255,0.4); margin-top: 4px;">Min ₹1. Max ₹500 based on your trust.</div>
+                <div id="priceError" class="error-text" style="color: #ff6b6b; font-size: 12px; margin-top: 6px; display: none;">Price cannot exceed your account limit.</div>
             </div>
 
             <div class="form-group">
@@ -285,7 +302,9 @@
                 </div>
             </div>
 
-            <button type="submit" class="btn-post" id="sellButton">List Coupon Now</button>
+            <div class="form-group" style="margin-top: 10px;">
+                <button type="submit" class="btn-post" id="sellButton" style="width: 100%; border-radius: 14px;">Publish Listing</button>
+            </div>
         </form>
     </main>
 
@@ -302,19 +321,18 @@
         async function initPage() {
             try {
                 const data = await apiRequest("/me/profile");
-                const profile = data.user || {}; 
-                const fraud = profile.fraud_percent || 0;
-                sellerMaxPrice = profile.max_price || 500;
+                const profile = data.user || data.profile || {}; 
+                const fraud = profile.fraud_percent || profile.fraudPercent || 0;
+                sellerMaxPrice = profile.max_price || profile.maxPrice || 500;
                 
-                document.getElementById("percent").innerText = `${(100 - fraud).toFixed(0)}%`;
-                document.getElementById("maxPrice").innerText = `₹${sellerMaxPrice}`;
-                document.getElementById("statusText").innerText = profile.status === "frozen" ? "Frozen" : "Normal";
-                document.getElementById("statusText").style.color = profile.status === "frozen" ? "#ff6b6b" : "#067d62";
-
+                document.getElementById("trustPercent").innerText = `${(100 - fraud).toFixed(0)}%`;
+                document.getElementById("maxAllowedPrice").innerText = `₹${sellerMaxPrice}`;
+                document.getElementById("priceLimitInfo").innerText = `Min ₹1. Max ₹${sellerMaxPrice} based on your trust.`;
+                
+                // Set min date for expiry
                 const today = new Date().toISOString().split('T')[0];
                 document.getElementById('expiryInput').min = today;
 
-                // Load Categories Dynamic
                 loadCategories();
                 
             } catch (err) {

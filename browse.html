@@ -58,55 +58,66 @@
         /* Hero / Search Section */
         .search-hero {
             text-align: center;
-            margin: 60px 0 40px;
+            margin: 80px 0 60px;
         }
         .search-hero h1 {
-            font-size: clamp(32px, 5vw, 48px);
+            font-size: clamp(36px, 6vw, 56px);
             font-weight: 800;
-            letter-spacing: -0.03em;
-            margin-bottom: 32px;
+            letter-spacing: -0.04em;
+            margin-bottom: 24px;
+            background: linear-gradient(135deg, #fff 0%, rgba(255,255,255,0.7) 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
         }
         .search-wrapper {
-            max-width: 700px;
+            max-width: 800px;
             margin: 0 auto;
             position: relative;
         }
         .search-inner {
             display: flex;
             gap: 12px;
-            background: rgba(255, 255, 255, 0.05);
+            background: rgba(255, 255, 255, 0.03);
             border: 1px solid rgba(255, 255, 255, 0.1);
-            border-radius: 20px;
-            padding: 8px;
-            backdrop-filter: blur(10px);
-            transition: 0.3s;
+            border-radius: 24px;
+            padding: 10px;
+            backdrop-filter: blur(20px);
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
         }
         .search-inner:focus-within {
             border-color: #4fd0ff;
-            box-shadow: 0 0 0 4px rgba(79, 208, 255, 0.1);
+            background: rgba(255, 255, 255, 0.05);
+            box-shadow: 0 0 0 5px rgba(79, 208, 255, 0.15), 0 20px 40px rgba(0,0,0,0.3);
+            transform: translateY(-2px);
         }
         .search-box {
             flex: 1;
             background: transparent;
             border: none;
             color: white;
-            font-size: 18px;
-            padding: 12px 20px;
+            font-size: 20px;
+            padding: 14px 24px;
             outline: none;
+            font-weight: 500;
         }
         .search-btn {
-            background: white;
-            color: black;
+            background: #4fd0ff;
+            color: #000;
             border: none;
-            padding: 12px 24px;
-            border-radius: 14px;
-            font-weight: 700;
+            padding: 14px 32px;
+            border-radius: 16px;
+            font-weight: 800;
             cursor: pointer;
-            transition: 0.2s;
+            transition: all 0.2s ease;
+            display: flex;
+            align-items: center;
+            gap: 8px;
         }
         .search-btn:hover {
-            background: #f0f0f0;
-            transform: translateY(-1px);
+            background: #79e0ff;
+            transform: scale(1.02);
+            box-shadow: 0 0 20px rgba(79, 208, 255, 0.4);
         }
 
         /* Category Chips */
@@ -144,87 +155,125 @@
             align-items: center;
             justify-content: space-between;
             margin-bottom: 24px;
-            margin-top: 60px;
+            margin-top: 64px;
         }
         .section-header h2 {
-            font-size: 24px;
+            font-size: 28px;
             font-weight: 800;
-            letter-spacing: -0.02em;
+            letter-spacing: -0.03em;
+            color: white;
         }
 
         .results-grid {
             display: grid;
-            gap: 24px;
-            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: 28px;
+            grid-template-columns: repeat(3, 1fr);
+        }
+
+        @media (max-width: 1100px) {
+            .results-grid { grid-template-columns: repeat(2, 1fr); }
+        }
+
+        @media (max-width: 768px) {
+            .results-grid { grid-template-columns: 1fr; }
+            .section-header h2 { font-size: 22px; }
         }
 
         .coupon-card {
-            background: rgba(255, 255, 255, 0.03);
-            border: 1px solid rgba(255, 255, 255, 0.08);
-            border-radius: 20px;
+            background: rgba(255, 255, 255, 0.02);
+            border: 1px solid rgba(255, 255, 255, 0.07);
+            border-radius: 24px;
             overflow: hidden;
-            transition: 0.3s;
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
             display: flex;
             flex-direction: column;
+            position: relative;
         }
         .coupon-card:hover {
-            transform: translateY(-4px);
-            border-color: rgba(255, 255, 255, 0.2);
-            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.4);
+            transform: translateY(-8px);
+            background: rgba(255, 255, 255, 0.04);
+            border-color: rgba(79, 208, 255, 0.3);
+            box-shadow: 0 24px 48px -12px rgba(0, 0, 0, 0.5);
         }
         .card-img {
             height: 180px;
             width: 100%;
             object-fit: cover;
             background: #111;
+            border-bottom: 1px solid rgba(255,255,255,0.05);
         }
         .card-content {
-            padding: 20px;
+            padding: 24px;
             flex: 1;
             display: flex;
             flex-direction: column;
         }
         .card-tag {
             font-size: 11px;
-            font-weight: 700;
+            font-weight: 800;
             text-transform: uppercase;
-            letter-spacing: 0.05em;
+            letter-spacing: 0.08em;
             color: #4fd0ff;
-            margin-bottom: 8px;
+            margin-bottom: 10px;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+        .card-tag::before {
+            content: '';
+            width: 6px; height: 6px;
+            background: #4fd0ff;
+            border-radius: 50%;
         }
         .card-title {
-            font-size: 18px;
+            font-size: 19px;
             font-weight: 700;
-            margin-bottom: 12px;
+            margin-bottom: 16px;
             line-height: 1.4;
+            color: #fff;
+        }
+        .card-meta {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 24px;
         }
         .card-price {
-            font-size: 20px;
+            font-size: 24px;
             font-weight: 800;
             color: white;
-            margin-bottom: 20px;
+        }
+        .seller-badge {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            font-size: 12px;
+            color: rgba(255,255,255,0.5);
+            background: rgba(255,255,255,0.05);
+            padding: 4px 10px;
+            border-radius: 20px;
         }
         .card-footer {
             margin-top: auto;
-            display: grid;
-            gap: 10px;
+            display: flex;
+            gap: 12px;
         }
         .btn-card {
-            padding: 12px;
-            border-radius: 12px;
+            padding: 14px;
+            border-radius: 14px;
             font-size: 14px;
-            font-weight: 700;
+            font-weight: 800;
             text-align: center;
             cursor: pointer;
-            transition: 0.2s;
+            transition: all 0.2s ease;
             border: none;
-            width: 100%;
+            flex: 1;
         }
         .btn-primary {
-            background: linear-gradient(90deg, #4fd0ff, #7b5bff);
-            color: white;
+            background: #4fd0ff;
+            color: #000;
         }
-        .btn-primary:hover { opacity: 0.9; transform: translateY(-1px); }
+        .btn-primary:hover { transform: translateY(-2px); box-shadow: 0 8px 20px rgba(79, 208, 255, 0.3); }
         .btn-secondary {
             background: rgba(255, 255, 255, 0.05);
             color: white;
@@ -234,19 +283,33 @@
 
         .empty-state {
             text-align: center;
-            padding: 60px 20px;
-            color: rgba(255, 255, 255, 0.4);
-            font-size: 16px;
+            padding: 80px 40px;
+            background: rgba(255, 255, 255, 0.02);
+            border: 1px dashed rgba(255, 255, 255, 0.1);
+            border-radius: 32px;
+            grid-column: 1 / -1;
+        }
+        .empty-state h3 { font-size: 24px; margin-bottom: 12px; color: white; }
+        .empty-state p { color: rgba(255,255,255,0.5); margin-bottom: 24px; }
+        .empty-state .btn-sell {
+            display: inline-block;
+            background: #4fd0ff;
+            color: #000;
+            padding: 12px 32px;
+            border-radius: 12px;
+            font-weight: 800;
+            text-decoration: none;
+            transition: 0.2s;
         }
 
         /* Mobile specific adjustments */
         @media (max-width: 768px) {
             .nav-center { display: none; }
-            .search-inner { flex-direction: column; padding: 12px; }
-            .search-btn { width: 100%; }
+            .search-inner { flex-direction: row; padding: 10px; gap: 8px; }
+            .search-box { font-size: 16px; padding: 10px 12px; }
+            .search-btn { padding: 10px 16px; span { display: none; } }
             .page-container { padding-top: 20px; }
-            .search-hero { margin-top: 30px; }
-            .results-grid { grid-template-columns: 1fr; }
+            .search-hero { margin: 40px 0; }
         }
     </style>
     <!-- Load Lucide Icons -->
@@ -296,21 +359,60 @@
         </div>
     </header>
 
-    <main class="content-container" style="padding: 40px 24px 80px;">
-        <header style="margin-bottom: 40px;">
-            <h1 style="font-size: 36px; font-weight: 800; letter-spacing: -0.02em;">Marketplace</h1>
-            <p style="color: rgba(255,255,255,0.5); margin-top: 4px;">Find premium discounted vouchers from trusted sellers.</p>
+    <main class="page-container">
+        <header class="search-hero">
+            <h1>Find your next deal.</h1>
+            <div class="search-wrapper">
+                <div class="search-inner">
+                    <input type="text" id="searchInput" class="search-box" placeholder="Search for Netflix, Amazon, Pizza...">
+                    <button class="search-btn" onclick="applySearch()">
+                        <i data-lucide="search" style="width: 20px;"></i>
+                        <span>Search</span>
+                    </button>
+                </div>
+                <div class="category-container">
+                    <div class="chip active" onclick="setQuery('')">All</div>
+                    <div class="chip" onclick="setQuery('Netflix')">Netflix</div>
+                    <div class="chip" onclick="setQuery('Amazon')">Amazon</div>
+                    <div class="chip" onclick="setQuery('Zomato')">Zomato</div>
+                    <div class="chip" onclick="setQuery('Shopping')">Shopping</div>
+                </div>
+            </div>
         </header>
+
+        <!-- Trending -->
+        <section>
+            <div class="section-header">
+                <h2>Trending Coupons</h2>
+            </div>
+            <div id="trendingGrid" class="results-grid">
+                <!-- Skeleton loader or empty state handled by JS -->
+            </div>
+        </section>
+
+        <!-- Recently Added -->
+        <section style="margin-top: 80px;">
+            <div class="section-header">
+                <h2>Recently Added</h2>
+            </div>
+            <div id="recentlyGrid" class="results-grid">
             </div>
         </section>
 
         <!-- Recommendations -->
-        <section>
+        <section style="margin-top: 80px;">
             <div class="section-header">
-                <h2>Recommended for you</h2>
+                <h2>Recommended for You</h2>
             </div>
             <div id="recommendationGrid" class="results-grid">
-                <div class="empty-state">Finding best deals...</div>
+            </div>
+        </section>
+
+        <section id="searchResultsSection" style="display: none; margin-top: 80px;">
+            <div class="section-header">
+                <h2>Search Results</h2>
+            </div>
+            <div id="searchGrid" class="results-grid">
             </div>
         </section>
     </main>
@@ -332,20 +434,17 @@
     <script src="api.js"></script>
     <script>
         const searchInput = document.getElementById("searchInput");
-        const grid = document.getElementById("grid");
+        const trendingGrid = document.getElementById("trendingGrid");
+        const recentlyGrid = document.getElementById("recentlyGrid");
         const recommendationGrid = document.getElementById("recommendationGrid");
+        const searchGrid = document.getElementById("searchGrid");
+        const searchResultsSection = document.getElementById("searchResultsSection");
 
-        let coupons = [];
         let searchTimer = null;
 
         function escapeHtml(str) {
             if (!str) return "";
-            return String(str)
-                .replace(/&/g, "&amp;")
-                .replace(/</g, "&lt;")
-                .replace(/>/g, "&gt;")
-                .replace(/"/g, "&quot;")
-                .replace(/'/g, "&#39;");
+            return String(str).replace(/[&<>"']/g, m => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":"&#39;"}[m]));
         }
 
         function setQuery(query) {
@@ -354,73 +453,85 @@
         }
 
         function applySearch() {
-            const value = searchInput.value.trim();
-            loadCoupons(value);
+            const val = searchInput.value.trim();
+            if (!val) {
+                searchResultsSection.style.display = "none";
+                return;
+            }
+            searchResultsSection.style.display = "block";
+            loadCoupons(val, "searchGrid");
         }
 
-        async function loadCoupons(searchTerm = "") {
-            grid.innerHTML = '<div class="empty-state">Searching marketplace...</div>';
+        async function loadCoupons(searchTerm = "", targetGridId) {
+            const target = document.getElementById(targetGridId);
+            target.innerHTML = '<div class="empty-state"><h3>Searching...</h3></div>';
+            
             try {
                 const query = searchTerm ? `?search=${encodeURIComponent(searchTerm)}` : "";
                 const data = await apiRequest(`/coupons${query}`);
-                coupons = data.coupons || [];
-                renderCoupons(coupons);
+                let list = data.coupons || [];
+                
+                // For demo/simulated feel, we can slice if needed
+                if (targetGridId === "trendingGrid") list = list.slice(0, 3);
+                if (targetGridId === "recentlyGrid") list = list.slice(-3).reverse();
+
+                renderCoupons(list, targetGridId);
             } catch (err) {
-                grid.innerHTML = `<div class="empty-state">Unable to load listings. ${escapeHtml(err.message)}</div>`;
+                target.innerHTML = `<div class="empty-state"><h3>Error</h3><p>${escapeHtml(err.message)}</p></div>`;
             }
         }
 
-        function renderCoupons(items) {
+        function renderCoupons(items, targetGridId) {
+            const target = document.getElementById(targetGridId);
             if (!items.length) {
-                grid.innerHTML = '<div class="empty-state">No listings found.</div>';
+                target.innerHTML = `
+                    <div class="empty-state">
+                        <h3>No coupons available yet</h3>
+                        <p>Be the first to list one and help others save money.</p>
+                        <a href="sell.html" class="btn-sell">Sell a Coupon</a>
+                    </div>
+                `;
                 return;
             }
-            grid.innerHTML = items.map((c, idx) => `
+
+            target.innerHTML = items.map(c => `
                 <article class="coupon-card">
                     <img src="${escapeHtml(c.image_url || 'bg.png')}" class="card-img" onerror="this.src='bg.png'" loading="lazy">
                     <div class="card-content">
-                        <div class="card-tag">${escapeHtml(c.category || 'Deal')}</div>
+                        <div class="card-tag">${escapeHtml(c.category || 'Voucher')}</div>
                         <div class="card-title">${escapeHtml(c.title)}</div>
-                        <div class="card-price">₹${escapeHtml(String(c.price))}</div>
+                        <div class="card-meta">
+                            <div class="card-price">₹${escapeHtml(String(c.price))}</div>
+                            <div class="seller-badge">
+                                <i data-lucide="shield-check" style="width:12px"></i>
+                                <span>Trusted</span>
+                            </div>
+                        </div>
                         <div class="card-footer">
-                            <button class="btn-card btn-primary" onclick="window.location.href='buy.html?id=${c.id}'">Buy Now</button>
+                            <button class="btn-card btn-primary" onclick="window.location.href='buy.html?id=${c.id}'">Buy Coupon</button>
                             <button class="btn-card btn-secondary" onclick="window.location.href='coupon-details.html?id=${c.id}'">Details</button>
                         </div>
                     </div>
                 </article>
             `).join("");
+            lucide.createIcons();
         }
 
         async function loadRecommendations() {
-            recommendationGrid.innerHTML = '<div class="empty-state">Finding best deals...</div>';
+            recommendationGrid.innerHTML = '<div class="empty-state"><h3>Finding best deals...</h3></div>';
             try {
-                const data = await apiRequest("/recommendations?limit=4");
-                const recs = data.recommendations || [];
-                if (!recs.length) {
-                    recommendationGrid.innerHTML = '<div class="empty-state">No recommendations available yet.</div>';
-                    return;
-                }
-                recommendationGrid.innerHTML = recs.map(item => `
-                    <article class="coupon-card">
-                        <img src="${escapeHtml(item.image_url || 'bg.png')}" class="card-img" onerror="this.src='bg.png'" loading="lazy">
-                        <div class="card-content">
-                            <div class="card-tag">Recommended</div>
-                            <div class="card-title">${escapeHtml(item.title)}</div>
-                            <div class="card-price">₹${escapeHtml(String(item.price))}</div>
-                            <div class="card-footer">
-                                <button class="btn-card btn-primary" onclick="window.location.href='buy.html?id=${item.id}'">Buy Now</button>
-                            </div>
-                        </div>
-                    </article>
-                `).join("");
+                const data = await apiRequest("/recommendations?limit=3");
+                renderCoupons(data.recommendations || [], "recommendationGrid");
             } catch (err) {
-                recommendationGrid.innerHTML = '<div class="empty-state">No recommendations available yet.</div>';
+                recommendationGrid.innerHTML = '<div class="empty-state"><h3>No recommendations available yet</h3></div>';
             }
         }
 
         // Initialize
         document.addEventListener("DOMContentLoaded", () => {
-            loadCoupons();
+            lucide.createIcons();
+            loadCoupons("", "trendingGrid");
+            loadCoupons("", "recentlyGrid");
             loadRecommendations();
         });
 
