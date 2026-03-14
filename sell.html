@@ -92,22 +92,20 @@
         }
 
         #titleInput, #categoryInput, #expiryInput, #priceInput, #detailsInput {
-            background: var(--ultra-input-bg) !important;
+            background: #0B1535 !important;
             color: #FFFFFF !important;
-            border: 1px solid rgba(120, 140, 255, 0.30) !important;
+            border: 1px solid rgba(120, 140, 255, 0.35) !important;
             border-radius: 12px;
             height: 52px;
             padding: 14px;
             font-size: 16px;
-            transition: all 0.25s ease;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
         }
 
         #titleInput:focus, #categoryInput:focus, #expiryInput:focus, #priceInput:focus, #detailsInput:focus {
             outline: none;
-            border-color: var(--ultra-blue) !important;
-            box-shadow: 
-                0 0 0 2px rgba(79, 140, 255, 0.18),
-                0 0 14px rgba(79, 140, 255, 0.35);
+            border-color: #4F8CFF !important;
+            box-shadow: 0 0 0 2px rgba(79, 140, 255, 0.15);
         }
 
         #titleInput::placeholder, #priceInput::placeholder, #detailsInput::placeholder {
@@ -124,10 +122,15 @@
         #categoryInput {
             cursor: pointer;
             appearance: none;
-            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24' fill='none' stroke='%23B8C6FF' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='m6 9 6 6 6-6'/%3E%3C/svg%3E");
-            background-repeat: no-repeat;
-            background-position: right 14px center;
-            background-size: 18px;
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24' fill='none' stroke='%234F8CFF' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='m6 9 6 6 6-6'/%3E%3C/svg%3E") !important;
+            background-repeat: no-repeat !important;
+            background-position: right 14px center !important;
+            background-size: 18px !important;
+        }
+
+        #categoryInput option {
+            background: #0B1535;
+            color: white;
         }
 
         /* LIQUID GLASS BUTTON */
@@ -138,27 +141,71 @@
             height: 54px;
             width: 100%;
             border: none;
-            font-weight: 600;
+            font-weight: 700;
             font-size: 16px;
             margin-top: 24px;
             cursor: pointer;
-            transition: all 0.25s ease;
+            transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
             box-shadow: 0 16px 45px rgba(79, 140, 255, 0.45);
             display: flex;
             align-items: center;
             justify-content: center;
             gap: 10px;
+            position: relative;
+            overflow: hidden;
         }
 
         .ultra-publish-btn:hover {
             transform: translateY(-2px);
             box-shadow: 0 22px 60px rgba(79, 140, 255, 0.55);
+            filter: brightness(1.1);
+        }
+
+        .ultra-publish-btn:active {
+            transform: translateY(1px) scale(0.98);
         }
 
         .ultra-publish-btn:disabled {
             opacity: 0.7;
             cursor: not-allowed;
-            transform: none;
+            transform: none !important;
+        }
+
+        /* Success Animation Classes */
+        .listing-success-glow {
+            animation: successGlow 0.5s forwards;
+        }
+
+        @keyframes successGlow {
+            0% { box-shadow: 0 0 0 rgba(79, 140, 255, 0); }
+            100% { box-shadow: 0 0 40px rgba(79, 140, 255, 0.8); }
+        }
+
+        .success-ripple {
+            position: absolute;
+            border: 2px solid rgba(79, 140, 255, 0.5);
+            border-radius: 50%;
+            animation: rippleOut 0.6s ease-out forwards;
+            pointer-events: none;
+        }
+
+        @keyframes rippleOut {
+            0% { transform: scale(0.5); opacity: 1; }
+            100% { transform: scale(3); opacity: 0; }
+        }
+
+        .success-droplet {
+            position: absolute;
+            width: 8px;
+            height: 8px;
+            background: #4F8CFF;
+            border-radius: 50%;
+            animation: popUp 0.8s ease-out forwards;
+        }
+
+        @keyframes popUp {
+            0% { transform: translateY(0) scale(1); opacity: 1; }
+            100% { transform: translateY(-100px) scale(0); opacity: 0; }
         }
 
         .divider-glow {
@@ -340,10 +387,14 @@
             const expiry = document.getElementById("expiryInput");
             expiry.setAttribute("min", today);
             
+            // Prevent all keyboard input
             expiry.addEventListener("keydown", (e) => e.preventDefault());
-            expiry.addEventListener("mousedown", (e) => {
-                if (typeof expiry.showPicker === 'function') {
-                    expiry.showPicker();
+            expiry.addEventListener("paste", (e) => e.preventDefault());
+            
+            // Handle visual-only click
+            expiry.addEventListener("click", function() {
+                if (typeof this.showPicker === 'function') {
+                    this.showPicker();
                 }
             });
 
@@ -355,11 +406,50 @@
                 
                 document.getElementById("trustPercent").innerText = `${100 - fraud}%`;
                 document.getElementById("maxAllowedPrice").innerText = `₹${userMaxPrice.toLocaleString()}`;
-                document.getElementById("priceHint").innerText = `Available Limit: ₹${userMaxPrice.toLocaleString()} (Verified)`;
+                
+                // Set the specific "Maximum allowed price" hint requested
+                document.getElementById("priceHint").innerText = `Maximum allowed price: ₹${userMaxPrice.toLocaleString()} from code`;
+                document.getElementById("priceHint").style.color = "#A3AED0";
+                document.getElementById("priceHint").style.fontSize = "13px";
+                
+                document.getElementById("priceInput").setAttribute("max", userMaxPrice);
             } catch (err) {
                 console.error("Profile load failed", err);
-                document.getElementById("priceHint").innerText = "Failed to sync limits.";
+                document.getElementById("priceHint").innerText = "Failed to sync marketplace limits.";
             }
+        }
+
+        function triggerSuccessAnimation() {
+            const btn = document.getElementById("submitBtn");
+            const card = document.querySelector(".sell-card");
+            
+            // 1. Button Glow
+            btn.classList.add("listing-success-glow");
+            
+            // 2. Ripple Spread
+            const ripple = document.createElement("div");
+            ripple.className = "success-ripple";
+            const rect = btn.getBoundingClientRect();
+            const cardRect = card.getBoundingClientRect();
+            
+            ripple.style.width = ripple.style.height = "100px";
+            ripple.style.left = (rect.left - cardRect.left + rect.width / 2 - 50) + "px";
+            ripple.style.top = (rect.top - cardRect.top + rect.height / 2 - 50) + "px";
+            card.appendChild(ripple);
+            
+            // 3. Small Droplets Float Up
+            for (let i = 0; i < 6; i++) {
+                setTimeout(() => {
+                    const drop = document.createElement("div");
+                    drop.className = "success-droplet";
+                    drop.style.left = (rect.left - cardRect.left + (Math.random() * rect.width)) + "px";
+                    drop.style.top = (rect.top - cardRect.top) + "px";
+                    card.appendChild(drop);
+                    setTimeout(() => drop.remove(), 800);
+                }, i * 80);
+            }
+            
+            setTimeout(() => ripple.remove(), 600);
         }
 
         async function handleListCoupon(e) {
@@ -368,7 +458,7 @@
             const price = parseInt(document.getElementById("priceInput").value);
 
             if (price > userMaxPrice) {
-                showToast(`Price exceeds verify limit of ₹${userMaxPrice}`, "error");
+                showToast(`Maximum allowed price is ₹${userMaxPrice}`, "error");
                 return;
             }
 
@@ -382,7 +472,7 @@
 
             try {
                 btn.disabled = true;
-                btn.innerHTML = `Syncing to Chain... <i data-lucide="loader-2" class="animate-spin" style="width: 18px; height: 18px;"></i>`;
+                btn.innerHTML = `Publishing... <i data-lucide="loader-2" class="animate-spin" style="width: 18px; height: 18px;"></i>`;
                 lucide.createIcons();
                 
                 await apiRequest("/coupons", {
@@ -390,10 +480,15 @@
                     body: JSON.stringify(payload)
                 });
 
-                showToast("Listing published successfully.", "success");
-                setTimeout(() => window.location.href = "mylistings.html", 1500);
+                // EXECUTE PREMIUM SUCCESS SEQUENCE
+                triggerSuccessAnimation();
+                showToast("Coupon Listed Successfully.", "success");
+                
+                setTimeout(() => {
+                    window.location.href = "mylistings.html";
+                }, 1800);
             } catch (err) {
-                showToast(err.message || "Network synchronization error", "error");
+                showToast(err.message || "Failed to list item.", "error");
                 btn.disabled = false;
                 btn.innerHTML = `Publish to Marketplace <i data-lucide="zap" style="width: 18px; height: 18px;"></i>`;
                 lucide.createIcons();
