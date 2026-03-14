@@ -84,39 +84,46 @@ body::before {
 }
 
 input, select, textarea {
-  height: 50px;
-  border-radius: 14px;
-  background: #020617;
-  border: 1px solid rgba(255, 255, 255, 0.1);
-  color: #e5e7eb;
-  padding: 0 14px;
-  font-size: 15px;
-  transition: border-color 0.2s, box-shadow 0.2s;
+  height: 52px;
+  border-radius: 12px;
+  background: #0B1535 !important;
+  border: 1px solid rgba(120, 140, 255, 0.35) !important;
+  color: #FFFFFF !important;
+  padding: 0 16px;
+  font-size: 16px;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
 input:focus, select:focus, textarea:focus {
   outline: none;
-  border-color: #38bdf8;
-  box-shadow: 0 0 0 3px rgba(56, 189, 248, 0.1);
+  border-color: #4F8CFF !important;
+  box-shadow: 0 0 0 2px rgba(79, 140, 255, 0.15);
+  background: #0B1535 !important; /* Keep consistent */
+}
+
+select {
+  cursor: pointer;
+  appearance: none;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24' fill='none' stroke='%234F8CFF' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='m6 9 6 6 6-6'/%3E%3C/svg%3E") !important;
+  background-repeat: no-repeat !important;
+  background-position: right 14px center !important;
+  background-size: 18px !important;
+}
+
+select option {
+  background: #0B1535;
+  color: white;
 }
 
 textarea {
-  height: 120px;
-  padding-top: 14px;
+  height: auto;
+  min-height: 120px;
+  padding-top: 16px;
 }
 
 input::placeholder,
 textarea::placeholder {
-  color: rgba(255, 255, 255, 0.42);
-}
-
-input:focus,
-select:focus,
-textarea:focus {
-  outline: none;
-  border-color: rgba(79, 208, 255, 0.5);
-  background: rgba(255, 255, 255, 0.13);
-  box-shadow: 0 0 0 3px rgba(79, 208, 255, 0.14);
+  color: #7F8CC0;
 }
 
 button,
@@ -297,6 +304,43 @@ button,
     opacity: 1;
     transform: translateY(0);
   }
+}
+
+/* ─── Global Premium Success Animations ────────────────────────────────────── */
+.listing-success-glow {
+  animation: successGlow 0.5s forwards;
+}
+
+@keyframes successGlow {
+  0% { box-shadow: 0 0 0 rgba(79, 140, 255, 0); }
+  100% { box-shadow: 0 0 40px rgba(79, 140, 255, 0.8); }
+}
+
+.success-ripple {
+  position: absolute;
+  border: 2px solid rgba(79, 140, 255, 0.5);
+  border-radius: 50%;
+  animation: rippleOut 0.6s ease-out forwards;
+  pointer-events: none;
+}
+
+@keyframes rippleOut {
+  0% { transform: scale(0.5); opacity: 1; }
+  100% { transform: scale(3); opacity: 0; }
+}
+
+.success-droplet {
+  position: absolute;
+  width: 8px;
+  height: 8px;
+  background: #4F8CFF;
+  border-radius: 50%;
+  animation: popUp 0.8s ease-out forwards;
+}
+
+@keyframes popUp {
+  0% { transform: translateY(0) scale(1); opacity: 1; }
+  100% { transform: translateY(-100px) scale(0); opacity: 0; }
 }
 
 /* ─── Premium Living Interface (Responsive Animation Tiers) ─────────────────── */
