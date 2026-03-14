@@ -66,7 +66,9 @@ async function ensureIndexes() {
 const userSchema = new mongoose.Schema({
   name: { type: String, required: true },
   email: { type: String, required: true, unique: true, lowercase: true },
-  password_hash: { type: String, required: true },
+  password_hash: { type: String }, // Made optional for Google Sign-in
+  google_id: { type: String },
+  profile_picture: { type: String },
   created_at: { type: String, default: () => new Date().toISOString() },
   terms_accepted_at: String,
   status: { type: String, default: "active" },

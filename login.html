@@ -15,6 +15,7 @@
     <script>window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments)}gtag('js',new Date());gtag('config','G-XXXXXXXXXX');</script> -->
     <link rel="stylesheet" href="theme.css">
     <script src="ui.js" defer></script>
+    <script src="https://accounts.google.com/gsi/client" async defer></script>
     <style>
         * {
             box-sizing: border-box;
@@ -288,6 +289,31 @@
                 <button class="submit-btn" id="loginButton" type="submit">Sign in</button>
             </form>
 
+            <div class="separator" style="display: flex; align-items: center; text-align: center; margin: 24px 0; color: rgba(255,255,255,0.3); font-size: 13px; font-weight: 600;">
+                <div style="flex: 1; height: 1px; background: rgba(255,255,255,0.08);"></div>
+                <span style="padding: 0 16px;">OR</span>
+                <div style="flex: 1; height: 1px; background: rgba(255,255,255,0.08);"></div>
+            </div>
+
+            <div style="width: 100%; display: flex; justify-content: center;">
+                <div id="g_id_onload"
+                     data-client_id="633777352427-d46e8ks94tgkkug8sei8n90mhub6q786.apps.googleusercontent.com"
+                     data-context="signin"
+                     data-ux_mode="popup"
+                     data-callback="handleGoogleSignIn"
+                     data-auto_prompt="false">
+                </div>
+                <div class="g_id_signin"
+                     data-type="standard"
+                     data-shape="rectangular"
+                     data-theme="filled_black"
+                     data-text="continue_with"
+                     data-size="large"
+                     data-logo_alignment="left"
+                     data-width="100%">
+                </div>
+            </div>
+
             <p class="signup-text">
                 New user? <a href="signup.html">Create an account</a>
             </p>
@@ -378,6 +404,21 @@
             event.preventDefault();
             loginUser();
         });
+
+        async function handleGoogleSignIn(response) {
+            try {
+                const data = await apiRequest("/auth/google", {
+                    method: "POST",
+                    body: JSON.stringify({ idToken: response.credential })
+                });
+
+                setAuth(data.token, data.user);
+                showToast("Google login successful.");
+                window.setTimeout(handleRedirect, 250);
+            } catch (err) {
+                showToast(err.message || "Google sign-in failed.");
+            }
+        }
     </script>
 </body>
 </html>

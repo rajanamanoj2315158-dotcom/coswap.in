@@ -10,6 +10,10 @@ const crypto = require("crypto");
 const path = require("path");
 const compression = require("compression");
 const helmet = require("helmet");
+const { OAuth2Client } = require("google-auth-library");
+
+const GOOGLE_CLIENT_ID = process.env.GOOGLE_CLIENT_ID || "633777352427-d46e8ks94tgkkug8sei8n90mhub6q786.apps.googleusercontent.com";
+const googleClient = new OAuth2Client(GOOGLE_CLIENT_ID);
 
 const {
   initDb,
@@ -204,6 +208,7 @@ function sanitizeUser(row) {
     id: String(row._id || row.id),
     name: row.name,
     email: row.email,
+    profile_picture: row.profile_picture,
     status: row.status,
     is_admin: !!row.is_admin,
     pending_fee: 0,
@@ -325,11 +330,10 @@ app.get("/sitemap.xml", async (req, res) => {
   const staticPages = [
     { url: "/", priority: "1.0", freq: "daily" },
     { url: "/browse.html", priority: "0.9", freq: "hourly" },
-    { url: "/about.html", priority: "0.7", freq: "monthly" },
-    { url: "/how-it-works.html", priority: "0.8", freq: "monthly" },
-    { url: "/terms.html", priority: "0.5", freq: "yearly" },
-    { url: "/login.html", priority: "0.6", freq: "monthly" },
-    { url: "/signup.html", priority: "0.6", freq: "monthly" }
+    { url: "/sell.html", priority: "0.8", freq: "monthly" },
+    { url: "/profile.html", priority: "0.7", freq: "monthly" },
+    { url: "/dashboard.html", priority: "0.8", freq: "daily" },
+    { url: "/terms.html", priority: "0.5", freq: "yearly" }
   ];
   const today = new Date().toISOString().split("T")[0];
   const urls = staticPages.map(p =>
@@ -341,6 +345,53 @@ app.get("/sitemap.xml", async (req, res) => {
 });
 
 // Auth
+app.post("/auth/google", async (req, res) => {
+  try {
+    const { idToken } = req.body || {};
+    if (!idToken) return res.status(400).json({ error: "No ID token provided." });
+
+    const ticket = await googleClient.verifyIdToken({
+      idToken,
+      audience: GOOGLE_CLIENT_ID,
+    });
+    const payload = ticket.getPayload();
+    const { sub: google_id, email, name, picture: profile_picture } = payload;
+
+    let user = await User.findOne({ email: email.toLowerCase() });
+
+    if (!user) {
+      // Create new user
+      user = await User.create({
+        name,
+        email: email.toLowerCase(),
+        google_id,
+        profile_picture,
+        status: "active",
+        created_at: new Date().toISOString()
+      });
+    } else {
+      // Link google account if not already linked
+      if (!user.google_id || !user.profile_picture) {
+        await User.updateOne(
+          { _id: user._id },
+          { $set: { google_id, profile_picture: user.profile_picture || profile_picture } }
+        );
+        user.google_id = google_id;
+        user.profile_picture = user.profile_picture || profile_picture;
+      }
+    }
+
+    if (user.status === "frozen") return res.status(403).json({ error: "Account frozen. Please contact support." });
+    if (user.status === "deleted") return res.status(403).json({ error: "Account disabled. Please contact support." });
+
+    const token = createToken(user);
+    res.json({ token, user: sanitizeUser(user) });
+  } catch (err) {
+    console.error("Google Auth Error:", err);
+    res.status(401).json({ error: "Google authentication failed." });
+  }
+});
+
 app.post("/auth/signup", async (req, res) => {
   try {
     const { name, email, password, acceptTerms } = req.body || {};
