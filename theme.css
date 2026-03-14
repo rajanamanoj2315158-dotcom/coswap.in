@@ -277,11 +277,57 @@ button:focus-visible,
 .purchase-card,
 .transaction-card,
 .panel-card,
-.settings-card {
-  background: rgba(255, 255, 255, 0.03) !important;
-  backdrop-filter: blur(12px);
-  -webkit-backdrop-filter: blur(12px);
+.settings-card,
+.glass-card {
+  background: rgba(255, 255, 255, 0.035) !important;
+  backdrop-filter: blur(20px) saturate(180%);
+  -webkit-backdrop-filter: blur(20px) saturate(180%);
   border: 1px solid rgba(255, 255, 255, 0.08) !important;
+  box-shadow: 
+    0 4px 24px -1px rgba(0, 0, 0, 0.2),
+    inset 0 0 20px 0 rgba(255, 255, 255, 0.02);
+}
+
+/* ─── Elite Mist Particles (Floating Droplets) ────────────────────────────── */
+.mist-container {
+  pointer-events: none;
+  position: fixed;
+  inset: 0;
+  z-index: -1;
+  overflow: hidden;
+}
+
+.mist-droplet {
+  position: absolute;
+  background: radial-gradient(circle at 30% 30%, rgba(255, 255, 255, 0.4), transparent 70%);
+  background-color: rgba(255, 255, 255, 0.05);
+  border-radius: 50%;
+  filter: blur(2px);
+  will-change: transform, opacity;
+  animation: driftUp var(--duration, 15s) ease-in-out infinite;
+  opacity: 0;
+}
+
+@keyframes driftUp {
+  0% { transform: translate(0, 100vh) scale(0.5); opacity: 0; }
+  15% { opacity: var(--max-opacity, 0.2); }
+  85% { opacity: var(--max-opacity, 0.2); }
+  100% { transform: translate(var(--sway, 40px), -100px) scale(1.2); opacity: 0; }
+}
+
+/* ─── Micro-Interactions ────────────────────────────────────────────────── */
+.fade-in {
+  animation: fadeIn 0.8s ease-out forwards;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(10px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.btn-hover-glow:hover {
+  box-shadow: 0 0 20px rgba(79, 208, 255, 0.3);
+  filter: brightness(1.1);
 }
 
 /* ─── Mobile Bottom Navigation ────────────────────────────────────────────── */
