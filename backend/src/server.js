@@ -11,6 +11,8 @@ const path = require("path");
 const compression = require("compression");
 const helmet = require("helmet");
 const nodemailer = require("nodemailer");
+const mongoSanitize = require("express-mongo-sanitize");
+const rateLimit = require("express-rate-limit");
 const { OAuth2Client } = require("google-auth-library");
 
 const GOOGLE_CLIENT_ID = process.env.GOOGLE_CLIENT_ID || "633777352427-d46e8ks94tgkkug8sei8n90mhub6q786.apps.googleusercontent.com";
@@ -81,6 +83,15 @@ app.use(helmet({
   crossOriginEmbedderPolicy: false
 }));
 app.use(express.json({ limit: "5mb" }));
+app.use(mongoSanitize()); // Prevent NoSQL Injection
+
+// Rate Limiting (DoS and Brute-force Prevention)
+const globalLimiter = rateLimit({ windowMs: 15 * 60 * 1000, max: 800, message: { error: "Too many requests. Please try again later." } });
+const authLimiter = rateLimit({ windowMs: 15 * 60 * 1000, max: 50, message: { error: "Too many authentication attempts. Please try again later." } });
+
+app.use(globalLimiter);
+app.use("/auth", authLimiter);
+
 app.use(morgan(process.env.NODE_ENV === "production" ? "combined" : "dev"));
 
 // Serve frontend static files with caching

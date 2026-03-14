@@ -1,6 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+    <link rel="preconnect" href="https://unpkg.com">
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Coupon Details — CoSwap</title>
@@ -563,7 +564,7 @@
 
                 container.innerHTML = items.map((item) => `
                     <article class="recommendation-card">
-                        <img src="${escapeHtml(item.image_url || "bg.png")}" onerror="this.src='bg.png'" alt="${escapeHtml(item.title)}">
+                        <img src="${escapeHtml(item.image_url || "bg.png")}" onerror="this.src='bg.png'" alt="${escapeHtml(item.title)}" loading="lazy">
                         <div class="recommendation-body">
                             <div class="eyebrow">${escapeHtml(item.category || "Recommended")}</div>
                             <div class="recommendation-title">${escapeHtml(item.title)}</div>

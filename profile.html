@@ -1,6 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+    <link rel="preconnect" href="https://unpkg.com">
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>My Profile – CoSwap</title>
@@ -28,7 +29,7 @@
     </div>
     <nav class="navbar">
         <a href="index.html" class="logo" style="display: flex; align-items: center; gap: 12px; text-decoration: none; color: white;">
-            <img src="logo.png" alt="CoSwap" style="width: 32px; height: 32px;">
+            <img src="logo.png" alt="CoSwap" style="width: 32px; height: 32px;" loading="lazy">
             <span style="font-size: 20px; font-weight: 800; letter-spacing: -0.04em;">CoSwap</span>
         </a>
         
@@ -41,7 +42,7 @@
         </div>
 
         <div class="nav-right">
-            <img src="https://api.dicebear.com/7.x/avataaars/svg?seed=coswap" alt="Avatar" class="user-avatar" onclick="window.location.href='profile.html'">
+            <img src="https://api.dicebear.com/7.x/avataaars/svg?seed=coswap" alt="Avatar" class="user-avatar" onclick="window.location.href='profile.html'" loading="lazy">
             <i data-lucide="log-out" class="logout-icon" onclick="handleLogout()" style="width: 20px;"></i>
         </div>
     </nav>
@@ -56,7 +57,7 @@
             <!-- Personal Info -->
             <div class="card" style="padding: 32px;">
                 <div style="display: flex; align-items: center; gap: 20px; margin-bottom: 32px; padding-bottom: 24px; border-bottom: 1px solid rgba(255,255,255,0.05);">
-                    <img src="https://api.dicebear.com/7.x/avataaars/svg?seed=coswap" alt="Avatar" style="width: 80px; height: 80px; border-radius: 50%; border: 4px solid rgba(255,255,255,0.1);">
+                    <img src="https://api.dicebear.com/7.x/avataaars/svg?seed=coswap" alt="Avatar" style="width: 80px; height: 80px; border-radius: 50%; border: 4px solid rgba(255,255,255,0.1);" loading="lazy">
                     <div>
                         <h3 id="displayUserName" style="font-size: 24px; font-weight: 800; margin-bottom: 4px;">User Name</h3>
                         <p id="displayUserEmail" style="color: rgba(255,255,255,0.5); font-size: 14px;">user@example.com</p>

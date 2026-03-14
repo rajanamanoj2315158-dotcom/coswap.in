@@ -1,6 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+    <link rel="preconnect" href="https://unpkg.com">
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Sell Coupons — CoSwap</title>
@@ -231,7 +232,7 @@
     <nav class="navbar">
         <div class="container" style="display: flex; justify-content: space-between; align-items: center; height: 100%;">
             <a href="index.html" class="logo" style="display: flex; align-items: center; gap: 12px; text-decoration: none; color: white;">
-                <img src="logo.png" alt="CoSwap" style="width: 32px; height: 32px;">
+                <img src="logo.png" alt="CoSwap" style="width: 32px; height: 32px;" loading="lazy">
                 <span style="font-size: 20px; font-weight: 800; letter-spacing: -0.04em;">CoSwap</span>
             </a>
             
@@ -244,7 +245,7 @@
             </div>
 
             <div class="nav-right">
-                <img src="https://api.dicebear.com/7.x/avataaars/svg?seed=coswap" alt="Avatar" class="user-avatar" onclick="window.location.href='profile.html'">
+                <img src="https://api.dicebear.com/7.x/avataaars/svg?seed=coswap" alt="Avatar" class="user-avatar" onclick="window.location.href='profile.html'" loading="lazy">
             </div>
         </div>
     </nav>
@@ -277,7 +278,7 @@
 
                     <div class="form-group" style="display: flex; flex-direction: column; gap: 8px;">
                         <label for="categoryInput" style="font-size: 13px; font-weight: 700; color: rgba(255,255,255,0.4); text-transform: uppercase;">Category</label>
-                        <div class="custom-select" id="customCategoryDropdown">
+                        <div class="custom-select" tabindex="0" id="customCategoryDropdown">
                             <div class="select-selected" id="categoryDisplay">Select Category</div>
                             <div class="select-items select-hide" id="categoryOptions">
                                 <div data-value="OTT">OTT & Entertainment</div>

@@ -1,6 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+    <link rel="preconnect" href="https://unpkg.com">
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width,initial-scale=1" />
     <title>Dashboard — CoSwap</title>
@@ -196,7 +197,7 @@
 
     <nav class="navbar">
         <a href="index.html" class="logo" style="display: flex; align-items: center; gap: 12px; text-decoration: none; color: white;">
-            <img src="logo.png" alt="CoSwap" style="width: 32px; height: 32px;">
+            <img src="logo.png" alt="CoSwap" style="width: 32px; height: 32px;" loading="lazy">
             <span style="font-size: 20px; font-weight: 800; letter-spacing: -0.04em;">CoSwap</span>
         </a>
         
@@ -209,7 +210,7 @@
         </div>
 
         <div class="nav-right">
-            <img src="https://api.dicebear.com/7.x/avataaars/svg?seed=coswap" alt="Avatar" class="user-avatar" onclick="window.location.href='profile.html'">
+            <img src="https://api.dicebear.com/7.x/avataaars/svg?seed=coswap" alt="Avatar" class="user-avatar" onclick="window.location.href='profile.html'" loading="lazy">
             <i data-lucide="log-out" class="logout-icon" onclick="handleLogout()" style="width: 20px;"></i>
         </div>
     </nav>
@@ -300,7 +301,7 @@
                 Messages
             </a>
             <div class="nav-right">
-                <img src="https://api.dicebear.com/7.x/avataaars/svg?seed=coswap" alt="Profile" class="nav-profile-img" onclick="window.location.href='profile.html'">
+                <img src="https://api.dicebear.com/7.x/avataaars/svg?seed=coswap" alt="Profile" class="nav-profile-img" onclick="window.location.href='profile.html'" loading="lazy">
             </div>
             <a class="mobile-nav-item" href="profile.html">
                 <svg viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
@@ -341,7 +342,7 @@
                 if (recos.length > 0) {
                     recoEl.innerHTML = recos.map(item => `
                         <div class="reco-item" onclick="window.location.href='coupon-details.html?id=${item.id}'" style="cursor:pointer;">
-                            <img src="${item.image_url || 'bg.png'}" onerror="this.src='bg.png'" class="reco-img" loading="lazy">
+                            <img src="${item.image_url || 'bg.png'}" onerror="this.src='bg.png'" class="reco-img" loading="lazy" alt="Image">
                             <div class="reco-body">
                                 <div class="reco-title">${escapeHtml(item.title)}</div>
                                 <div class="reco-price">₹${item.price}</div>

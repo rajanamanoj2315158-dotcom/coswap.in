@@ -1,6 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+    <link rel="preconnect" href="https://unpkg.com">
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>My Listings — CoSwap</title>
@@ -11,7 +12,7 @@
 <body class="soft-bg">
     <nav class="navbar">
         <a href="index.html" class="logo" style="display: flex; align-items: center; gap: 12px; text-decoration: none; color: white;">
-            <img src="logo.png" alt="CoSwap" style="width: 32px; height: 32px;">
+            <img src="logo.png" alt="CoSwap" style="width: 32px; height: 32px;" loading="lazy">
             <span style="font-size: 20px; font-weight: 800; letter-spacing: -0.04em;">CoSwap</span>
         </a>
         
@@ -24,7 +25,7 @@
         </div>
 
         <div class="nav-right">
-            <img src="https://api.dicebear.com/7.x/avataaars/svg?seed=coswap" alt="Avatar" class="user-avatar" onclick="window.location.href='profile.html'">
+            <img src="https://api.dicebear.com/7.x/avataaars/svg?seed=coswap" alt="Avatar" class="user-avatar" onclick="window.location.href='profile.html'" loading="lazy">
             <i data-lucide="log-out" class="logout-icon" onclick="handleLogout()" style="width: 20px;"></i>
         </div>
     </nav>
