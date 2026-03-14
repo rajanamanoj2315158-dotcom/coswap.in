@@ -4,427 +4,457 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Sell Coupons – CoSwap</title>
+    <title>Sell Coupons — CoSwap</title>
     <meta name="description" content="List your unused coupons or vouchers for sale on CoSwap India's marketplace.">
-    <meta name="robots" content="noindex, nofollow">
-    <link rel="canonical" href="https://coswap.in/sell.html">
-    <meta property="og:title" content="Sell a Coupon — CoSwap">
-    <meta property="og:description" content="List your unused coupons or vouchers for sale on CoSwap India's marketplace.">
-    <meta property="og:image" content="https://coswap.in/logo.png">
-    <meta property="og:url" content="https://coswap.in/sell.html">
-    <!-- Google Analytics 4 -->
-    <!-- <script async src="https://www.googletagmanager.com/gtag/js?id=G-XXXXXXXXXX"></script>
-    <script>window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments)}gtag('js',new Date());gtag('config','G-XXXXXXXXXX');</script> -->
-
+    <link rel="stylesheet" href="theme.css">
+    <script src="https://unpkg.com/lucide@latest"></script>
     <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-            font-family: "Poppins", sans-serif;
+        :root {
+            --ai-accent: #a78bff;
         }
 
         body {
-            background: linear-gradient(135deg, #151b2f, #10162a, #0c101f);
             color: white;
-            padding: 40px 28px;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
             min-height: 100vh;
         }
 
-        /* Page Heading */
-        h1 {
-            font-size: 28px;
-            font-weight: 700;
-            text-shadow: 0 0 15px rgba(110, 130, 255, 0.7);
-            margin-bottom: 24px;
-            align-self: flex-start;
-            max-width: 540px;
-            width: 100%;
+        .sell-container {
+            max-width: 600px;
+            margin: 60px auto 100px;
+            animation: riseIn 0.6s var(--transition-slow) both;
         }
 
-        .wrapper {
-            width: 100%;
-            max-width: 540px;
-            background: rgba(255, 255, 255, 0.07);
-            border-radius: 22px;
-            padding: 32px;
-            border: 1px solid rgba(255, 255, 255, 0.14);
-            box-shadow: 0 0 28px rgba(140, 160, 255, 0.2);
-            backdrop-filter: blur(12px);
-            animation: fadeIn 0.5s ease;
+        .header-section {
+            margin-bottom: 40px;
+            text-align: center;
         }
 
-        @keyframes fadeIn {
-            from {
-                opacity: 0;
-                transform: translateY(10px);
-            }
-
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
+        .header-section h1 {
+            font-size: 36px;
+            font-weight: 800;
+            letter-spacing: -0.03em;
+            margin-bottom: 8px;
         }
 
-        /* Info Box */
-        .info-box {
-            background: linear-gradient(135deg, rgba(79, 208, 255, 0.12), rgba(123, 91, 255, 0.12));
-            border: 1px solid rgba(255, 255, 255, 0.12);
-            padding: 18px 22px;
-            border-radius: 16px;
-            margin-bottom: 25px;
-            box-shadow: 0 0 22px rgba(80, 110, 255, 0.18);
-        }
-
-        .info-box span {
-            font-weight: 700;
-        }
-
-        .info-box b {
-            font-size: 17px;
-        }
-
-        label {
-            display: block;
-            margin-top: 18px;
-            margin-bottom: 7px;
+        .header-section p {
+            color: var(--text-soft);
             font-size: 16px;
-            opacity: 0.9;
-            font-weight: 500;
         }
 
-        input,
-        textarea,
-        select {
+        .glass-card {
+            padding: 40px;
+            border-radius: 24px;
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+
+        .form-group {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+            position: relative;
+        }
+
+        .form-group label {
+            font-size: 14px;
+            font-weight: 600;
+            color: rgba(255, 255, 255, 0.7);
+            margin-left: 4px;
+        }
+
+        .form-group input, 
+        .form-group select, 
+        .form-group textarea {
             width: 100%;
-            padding: 15px;
+            padding: 14px 18px;
+            font-size: 16px;
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.1);
             border-radius: 14px;
-            border: none;
-            outline: none;
-            font-size: 16px;
             color: white;
-            background: rgba(255, 255, 255, 0.12);
-            backdrop-filter: blur(6px);
-            transition: 0.25s;
+            transition: all 0.2s ease;
         }
 
-        input:focus,
-        textarea:focus,
-        select:focus {
-            background: rgba(255, 255, 255, 0.18);
-            box-shadow: 0 0 18px rgba(120, 150, 255, 0.35);
+        .form-group select {
+            appearance: none;
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24' fill='none' stroke='white' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='m6 9 6 6 6-6'/%3E%3C/svg%3E");
+            background-repeat: no-repeat;
+            background-position: right 16px center;
+            background-size: 18px;
         }
 
-        textarea {
+        /* Fixed Height for Select */
+        #categoryInput {
+            max-height: 54px;
+        }
+
+        .form-group textarea {
             height: 120px;
             resize: none;
         }
 
-        input[type="file"] {
-            padding: 10px;
-            background: rgba(255, 255, 255, 0.10);
+        .form-group input:focus {
+            border-color: #4fd0ff;
+            box-shadow: 0 0 0 4px rgba(79, 208, 255, 0.1);
         }
 
-        .error-text {
+        /* AI Suggestion Box */
+        .ai-suggestion {
             display: none;
+            background: linear-gradient(135deg, rgba(167, 139, 255, 0.1), rgba(79, 208, 255, 0.1));
+            border: 1px solid rgba(167, 139, 255, 0.3);
+            border-radius: 12px;
+            padding: 12px 16px;
+            margin-top: 8px;
             font-size: 13px;
-            margin-top: 5px;
-            color: #ff6b6b;
-        }
-
-        /* Button */
-        button {
-            width: 100%;
-            margin-top: 30px;
-            padding: 16px;
-            font-size: 18px;
-            font-weight: 700;
-            color: white;
-            border: none;
-            border-radius: 16px;
+            color: #d1c4ff;
             cursor: pointer;
-            background: linear-gradient(135deg, #ff6bff, #7b5bff, #4fd0ff);
-            box-shadow: 0 0 25px rgba(120, 120, 255, 0.35);
-            transition: 0.25s;
+            transition: all 0.2s ease;
+            animation: fadeIn 0.3s ease;
         }
 
-        button:hover {
+        .ai-suggestion:hover {
+            border-color: rgba(167, 139, 255, 0.6);
+            background: rgba(167, 139, 255, 0.15);
+        }
+
+        .ai-suggestion i {
+            margin-right: 8px;
+            vertical-align: middle;
+        }
+
+        .suspicious-warn {
+            color: #ff6b6b;
+            border-color: rgba(255, 107, 107, 0.3);
+            background: rgba(255, 107, 107, 0.05);
+            cursor: default;
+        }
+
+        .info-row {
+            display: flex;
+            justify-content: space-between;
+            padding: 16px;
+            background: rgba(255, 255, 255, 0.03);
+            border-radius: 16px;
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            margin-bottom: 10px;
+        }
+
+        .info-item {
+            display: flex;
+            flex-direction: column;
+            gap: 4px;
+        }
+
+        .info-item span:first-child {
+            font-size: 11px;
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+            color: rgba(255, 255, 255, 0.4);
+        }
+
+        .info-item span:last-child {
+            font-size: 18px;
+            font-weight: 800;
+            color: #4fd0ff;
+        }
+
+        .btn-post {
+            background: linear-gradient(135deg, #4fd0ff, #6f6cff);
+            color: white;
+            padding: 18px;
+            border-radius: 16px;
+            font-size: 18px;
+            font-weight: 800;
+            border: none;
+            cursor: pointer;
+            margin-top: 10px;
+            transition: all 0.2s ease;
+        }
+
+        .btn-post:hover {
             transform: translateY(-2px);
-            box-shadow: 0 0 30px rgba(140, 140, 255, 0.45);
+            box-shadow: 0 12px 32px rgba(79, 208, 255, 0.3);
         }
 
-        @media (min-width: 1280px) {
-            body {
-                padding: 56px 28px;
-            }
-
-            h1 {
-                font-size: 30px;
-                max-width: 560px;
-            }
-
-            .wrapper {
-                max-width: 560px;
-                padding: 36px;
-            }
-        }
-
-        @media (min-width: 1440px) {
-            body {
-                padding: 64px 28px;
-            }
+        @media (max-width: 640px) {
+            .sell-container { margin-top: 30px; padding: 0 16px; }
+            .glass-card { padding: 24px; }
+            .header-section h1 { font-size: 28px; }
         }
     </style>
-    <link rel="stylesheet" href="theme.css">
-    <script src="ui.js" defer></script></head>
-
-<body class="soft-bg">
-    <!-- Load Lucide Icons -->
-    <script src="https://unpkg.com/lucide@latest"></script>
 </head>
+
 <body class="soft-bg has-mobile-nav">
-    <div class="premium-bg" aria-hidden="true">
+    <div class="premium-bg">
         <div class="blob blob-1"></div>
-        <div class="blob blob-2 ="></div>
+        <div class="blob blob-2"></div>
         <div class="blob blob-3"></div>
         <div class="mist-container"></div>
     </div>
 
-    <!-- Desktop Nav (Icon Based) -->
-    <nav class="nav-wrapper desktop-only" style="background: rgba(15, 19, 36, 0.8); backdrop-filter: blur(20px); border-bottom: 1px solid rgba(255, 255, 255, 0.08); height: 72px; position: sticky; top: 0; z-index: 1000;">
-        <div class="content-container" style="display:flex; align-items:center; justify-content:space-between; height: 100%;">
-            <a href="dashboard.html" class="brand" style="display: flex; align-items: center; gap: 12px; text-decoration: none; color: white;">
+    <!-- Navigation Area -->
+    <header class="nav-bar" style="position: sticky; top: 0; z-index: 1000; background: rgba(10, 13, 24, 0.82); backdrop-filter: blur(20px); border-bottom: 1px solid rgba(255, 255, 255, 0.08);">
+        <div class="content-container" style="height: 72px; display: flex; align-items: center; justify-content: space-between;">
+            <a href="index.html" style="display: flex; align-items: center; gap: 10px; text-decoration: none; color: white;">
                 <img src="logo.png" alt="CoSwap" style="width: 32px; height: 32px;">
-                <span style="font-size: 20px; font-weight: 800; letter-spacing: -0.02em;">CoSwap</span>
+                <span style="font-size: 20px; font-weight: 800; letter-spacing: -0.04em;">CoSwap</span>
             </a>
             
-            <div style="display: flex; gap: 32px; align-items: center;">
-                <a href="dashboard.html" style="color: rgba(255,255,255,0.7); font-weight: 600; text-decoration: none;">Dashboard</a>
-                <a href="browse.html" style="color: rgba(255,255,255,0.7); font-weight: 600; text-decoration: none;">Browse</a>
-                <a href="sell.html" style="color: #4fd0ff; font-weight: 600; text-decoration: none;">Sell</a>
-                <a href="mylistings.html" style="color: rgba(255,255,255,0.7); font-weight: 600; text-decoration: none;">My Listings</a>
-            </div>
+            <nav style="display: flex; gap: 28px; align-items: center;" class="desktop-only">
+                <a href="browse.html" style="color: rgba(255,255,255,0.6); font-weight: 600; font-size: 15px;">Browse</a>
+                <a href="sell.html" style="color: white; font-weight: 600; font-size: 15px;">Sell</a>
+                <a href="dashboard.html" style="color: rgba(255,255,255,0.6); font-weight: 600; font-size: 15px;">Listings</a>
+                <a href="chatlist.html" style="color: rgba(255,255,255,0.6); font-weight: 600; font-size: 15px;">Messages</a>
+                <img src="https://api.dicebear.com/7.x/avataaars/svg?seed=coswap" alt="P" style="width: 34px; height: 34px; border-radius: 50%; border: 2px solid rgba(255,255,255,0.1); cursor: pointer;" onclick="window.location.href='profile.html'">
+            </nav>
 
-            <div style="display: flex; gap: 12px; align-items: center;">
-                <a href="chatlist.html" class="btn-icon" title="Messages"><i data-lucide="message-square"></i></a>
-                <a href="profile.html" class="btn-icon" title="Profile"><i data-lucide="user"></i></a>
-                <a href="login.html" class="btn-icon" title="Logout" style="color: var(--danger);"><i data-lucide="log-out"></i></a>
-            </div>
+            <!-- Mobile Menu Toggle -->
+             <button id="menuToggle" style="display: none; background: none; border: none; color: white;" class="mobile-only">
+                <i data-lucide="menu"></i>
+             </button>
         </div>
-    </nav>
+    </header>
 
-    <!-- Bottom Nav for Mobile -->
+    <!-- Mobile Navigation -->
     <nav class="mobile-nav">
         <div class="mobile-nav-inner">
-            <a href="dashboard.html" class="mobile-nav-item"><i data-lucide="layout-dashboard"></i><span>Home</span></a>
+            <a href="index.html" class="mobile-nav-item"><i data-lucide="home"></i><span>Home</span></a>
             <a href="browse.html" class="mobile-nav-item"><i data-lucide="search"></i><span>Browse</span></a>
             <a href="sell.html" class="mobile-nav-item active"><i data-lucide="plus-circle"></i><span>Sell</span></a>
             <a href="chatlist.html" class="mobile-nav-item"><i data-lucide="message-square"></i><span>Chat</span></a>
         </div>
     </nav>
 
-    <script>lucide.createIcons();</script>
-
-    <!-- Mobile Header -->
-    <header class="mobile-header" style="display: none; padding: 16px 20px; align-items: center; justify-content: space-between; position: sticky; top: 0; z-index: 1000; background: rgba(15, 19, 36, 0.9); backdrop-filter: blur(20px);">
-        <a href="dashboard.html" style="display: flex; align-items: center; gap: 8px; text-decoration: none; color: white;">
-            <img src="logo.png" alt="CoSwap" style="width: 28px; height: 28px;">
-            <span style="font-weight: 800; font-size: 18px;">CoSwap</span>
-        </a>
-        <div style="display: flex; gap: 16px; align-items: center;">
-            <a href="chatlist.html" style="color: white;"><i data-lucide="message-square"></i></a>
-            <a href="profile.html" style="color: white;"><i data-lucide="user"></i></a>
-            <button id="menuToggle" style="background: none; border: none; color: white;"><i data-lucide="menu"></i></button>
-        </div>
-    </header>
-
-            <h1 style="font-size: 36px; font-weight: 800; letter-spacing: -0.02em;">Sell a Coupon</h1>
-            <p style="color: rgba(255,255,255,0.5); margin-top: 4px;">Convert your unused digital vouchers into instant cash.</p>
+    <main class="sell-container">
+        <header class="header-section">
+            <h1 class="gradient-text">Sell a Coupon</h1>
+            <p>Fill in the details below to list your unused voucher.</p>
         </header>
 
-        <form onsubmit="listCoupon(event)" class="glass-card" style="padding: 40px; border-radius: 24px; display: grid; gap: 24px;">
-
-    <div class="wrapper">
-
-        <!-- INFO BOX -->
-        <div class="info-box">
-            <b>Fraud %:</b> <span id="percent">0%</span><br>
-            <b>Max Price:</b> ₹<span id="maxPrice">0</span><br>
-            <b>Status:</b> <span id="statusText">Active</span>
+        <div class="info-row">
+            <div class="info-item">
+                <span>Trust Score</span>
+                <span id="percent">100%</span>
+            </div>
+            <div class="info-item">
+                <span>Limit</span>
+                <span id="maxPrice">₹500</span>
+            </div>
+            <div class="info-item">
+                <span>Account Status</span>
+                <span id="statusText" style="color: #067d62;">Normal</span>
+            </div>
         </div>
 
-        <!-- TITLE -->
-        <label>Coupon Title*</label>
-        <input id="titleInput" placeholder="Enter coupon title">
-        <div id="titleError" class="error-text">Title is required.</div>
+        <form onsubmit="listCoupon(event)" class="glass-card">
+            <div class="form-group">
+                <label for="titleInput">Coupon Title*</label>
+                <input type="text" id="titleInput" placeholder="e.g. Netflix Premium 1 Month" maxlength="120" required>
+                <div id="aiTitle" class="ai-suggestion" onclick="applySuggestion('titleInput', this.dataset.value)">
+                    <i data-lucide="sparkles" style="width: 14px;"></i> <span>Suggestion: </span> <b id="titleSugText"></b>
+                </div>
+            </div>
 
-        <!-- DETAILS -->
-        <label>Offer Details*</label>
-        <textarea id="detailsInput" placeholder="Describe the offer"></textarea>
-        <div id="detailsError" class="error-text">Offer details are required.</div>
+            <div class="form-group">
+                <label for="categoryInput">Category*</label>
+                <select id="categoryInput" required>
+                    <option value="">Select Category</option>
+                    <option value="OTT">OTT</option>
+                    <option value="Food">Food</option>
+                    <option value="Travel">Travel</option>
+                    <option value="Shopping">Shopping</option>
+                    <option value="Beauty">Beauty</option>
+                    <option value="Electronics">Electronics</option>
+                    <option value="Gift Cards">Gift Cards</option>
+                    <option value="Gaming">Gaming</option>
+                </select>
+                <div id="aiCategory" class="ai-suggestion" onclick="applySuggestion('categoryInput', this.dataset.value)">
+                    <i data-lucide="tag" style="width: 14px;"></i> <span>Match: </span> <b id="catSugText"></b>
+                </div>
+            </div>
 
-        <!-- DATE -->
-        <label>Expiry Date*</label>
-        <input id="expiryInput" type="date">
-        <div id="dateError" class="error-text">Select a valid expiry date.</div>
+            <div class="form-group">
+                <label for="priceInput">Price (₹)*</label>
+                <input type="number" id="priceInput" placeholder="Minimum ₹1" min="1" step="1" required>
+            </div>
 
-        <!-- PRICE -->
-        <label>Price (₹)*</label>
-        <input id="priceInput" placeholder="Enter selling price">
-        <div id="priceError" class="error-text"></div>
+            <div class="form-group">
+                <label for="expiryInput">Expiry Date*</label>
+                <input type="date" id="expiryInput" required>
+            </div>
 
-        <!-- CATEGORY -->
-        <label>Category*</label>
-        <select id="categoryInput">
-            <option value="">Select Category</option>
-            <option>Shopping</option>
-            <option>OTT</option>
-            <option>Music</option>
-            <option>Food Delivery</option>
-            <option>Gaming</option>
-            <option>Recharge</option>
-            <option>Travel</option>
-            <option>Groceries</option>
-            <option>Education</option>
-            <option>Electronics</option>
-            <option>Beauty</option>
-            <option>Fashion</option>
-            <option>Health</option>
-            <option>Bills & Utilities</option>
-        </select>
-        <div id="categoryError" class="error-text">Please select a category.</div>
+            <div class="form-group">
+                <label for="detailsInput">Offer Details*</label>
+                <textarea id="detailsInput" placeholder="Describe what the buyer gets. Include terms and conditions if any." required></textarea>
+                <div id="aiDetails" class="ai-suggestion" onclick="applySuggestion('detailsInput', this.dataset.value)">
+                    <i data-lucide="file-text" style="width: 14px;"></i> <span>Helper: </span> <b id="detSugText">Format description</b>
+                </div>
+            </div>
 
-        <!-- IMAGE -->
-        <label>Upload Image (Optional)</label>
-        <input id="imageInput" type="file" accept="image/*">
-
-        <button id="sellButton">Post Coupon</button>
-    </div>
+            <button type="submit" class="btn-post" id="sellButton">List Coupon Now</button>
+        </form>
+    </main>
 
     <script src="api.js"></script>
+    <script src="ui.js"></script>
     <script>
-        if (!requireAuth("sell.html")) {
-            // redirected
-        }
+        lucide.createIcons();
 
-        /* LOAD PROFILE METRICS */
-        let sellerMaxPrice = 20;
+        // 1. Auth & Initial Load
+        if (!requireAuth("sell.html")) { /* Handled by helper */ }
 
-        async function loadProfileStats() {
+        let sellerMaxPrice = 500;
+
+        async function initPage() {
             try {
                 const data = await apiRequest("/me/profile");
-                const profile = data.profile || {};
+                const profile = data.user || {}; // API returns user object usually
+                
+                // If the above failed or returned different structure, check local fallback
+                const fraud = profile.fraud_percent || 0;
+                sellerMaxPrice = profile.max_price || 500;
+                
+                document.getElementById("percent").innerText = `${(100 - fraud).toFixed(0)}%`;
+                document.getElementById("maxPrice").innerText = `₹${sellerMaxPrice}`;
+                document.getElementById("statusText").innerText = profile.status === "frozen" ? "Frozen" : "Normal";
+                document.getElementById("statusText").style.color = profile.status === "frozen" ? "#ff6b6b" : "#067d62";
 
-                const fraudPercent = Number(profile.fraudPercent || 0).toFixed(1);
-                sellerMaxPrice = profile.maxPrice || 20;
-                const status = profile.status === "frozen" ? "Frozen" : "Active";
-
-                document.getElementById("percent").innerText = `${fraudPercent}%`;
-                document.getElementById("maxPrice").innerText = sellerMaxPrice;
-                document.getElementById("statusText").innerText = status;
-            } catch {
-                const storedProfile = JSON.parse(localStorage.getItem("profileData"));
-                sellerMaxPrice = storedProfile ? storedProfile.maxPrice : 20;
+                // Set min date for expiry
+                const today = new Date().toISOString().split('T')[0];
+                document.getElementById('expiryInput').min = today;
+                
+            } catch (err) {
+                console.error("Profile load failed", err);
             }
-            document.getElementById("maxPrice").innerText = sellerMaxPrice;
         }
+        initPage();
 
-        loadProfileStats();
+        // 2. AI Assistance Logic
+        const brands = {
+            "netflix": "OTT", "spotify": "OTT", "hotstar": "OTT", "prim": "OTT", "ott": "OTT", "disney": "OTT",
+            "swiggy": "Food", "zomato": "Food", "pizza": "Food", "domino": "Food", "kfc": "Food",
+            "amazon": "Shopping", "flipkart": "Shopping", "myntra": "Shopping", "ajio": "Shopping", "fashion": "Shopping",
+            "indigo": "Travel", "makemytrip": "Travel", "mmt": "Travel", "uber": "Travel", "ola": "Travel", "hotel": "Travel",
+            "nykaa": "Beauty", "salon": "Beauty", "makeup": "Beauty",
+            "steam": "Gaming", "pubg": "Gaming", "roblox": "Gaming", "xbox": "Gaming", "playstation": "Gaming"
+        };
 
-        /* MIN DATE = TODAY */
-        (function () {
-            const d = new Date();
-            expiryInput.min =
-                `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, "0")}-${String(d.getDate()).padStart(2, "0")}`;
-        })();
+        const titleInput = document.getElementById('titleInput');
+        const aiTitle = document.getElementById('aiTitle');
+        const aiCategory = document.getElementById('aiCategory');
+        const detailsInput = document.getElementById('detailsInput');
+        const aiDetails = document.getElementById('aiDetails');
 
-        /* PRICE VALIDATION */
-        priceInput.addEventListener("input", () => {
-            let value = priceInput.value.trim();
-            let error = document.getElementById("priceError");
-
-            if (!/^[0-9]*$/.test(value)) {
-                error.innerText = "Enter a valid number.";
-                error.style.display = "block";
+        titleInput.addEventListener('input', (e) => {
+            const val = e.target.value.trim();
+            if (val.length < 3) {
+                aiTitle.style.display = 'none';
+                aiCategory.style.display = 'none';
                 return;
             }
 
-            if (!value) {
-                error.style.display = "none";
-                return;
-            }
-
-            if (parseInt(value) > sellerMaxPrice) {
-                error.innerText = `Price cannot exceed ₹${sellerMaxPrice}.`;
-                error.style.display = "block";
+            // A. Title Formatting Suggestion
+            const words = val.split(' ');
+            const formatted = words.map(w => w.charAt(0).toUpperCase() + w.slice(1).toLowerCase()).join(' ');
+            const finalSug = formatted.includes('Deal') || formatted.includes('Coupon') ? formatted : formatted + ' Voucher';
+            
+            if (finalSug !== val) {
+                document.getElementById('titleSugText').innerText = finalSug;
+                aiTitle.dataset.value = finalSug;
+                aiTitle.style.display = 'block';
             } else {
-                error.style.display = "none";
-            }
-        });
-
-        /* SUBMIT */
-        sellButton.onclick = () => {
-            let title = titleInput.value.trim();
-            let details = detailsInput.value.trim();
-            let expiry = expiryInput.value;
-            let price = priceInput.value.trim();
-            let category = categoryInput.value;
-            let uploadedImage = imageInput.files[0];
-
-            let valid = true;
-
-            if (!title) { titleError.style.display = "block"; valid = false; }
-            if (!details) { detailsError.style.display = "block"; valid = false; }
-            if (!expiry) { dateError.style.display = "block"; valid = false; }
-
-            if (!/^[0-9]+$/.test(price)) {
-                priceError.innerText = "Enter a valid price.";
-                priceError.style.display = "block";
-                valid = false;
-            } else if (parseInt(price) > sellerMaxPrice) {
-                priceError.innerText = `Max allowed price: ₹${sellerMaxPrice}`;
-                priceError.style.display = "block";
-                valid = false;
+                aiTitle.style.display = 'none';
             }
 
-            if (!category) { categoryError.style.display = "block"; valid = false; }
-
-            if (!valid) return;
-
-            async function saveCoupon(imageURL) {
-                try {
-                    await apiRequest("/coupons", {
-                        method: "POST",
-                        body: JSON.stringify({
-                            title,
-                            details,
-                            expiry,
-                            price,
-                            category,
-                            image: imageURL
-                        })
-                    });
-
-                    alert("✔ Coupon Posted Successfully!");
-                    window.location.href = "mylistings.html";
-                } catch (err) {
-                    alert(err.message || "Failed to post coupon.");
+            // B. Brand Detection
+            const lower = val.toLowerCase();
+            let matchedCat = "";
+            for (let brand in brands) {
+                if (lower.includes(brand)) {
+                    matchedCat = brands[brand];
+                    break;
                 }
             }
 
-            if (uploadedImage) {
-                const reader = new FileReader();
-                reader.onload = e => saveCoupon(e.target.result);
-                reader.readAsDataURL(uploadedImage);
+            if (matchedCat && document.getElementById('categoryInput').value !== matchedCat) {
+                document.getElementById('catSugText').innerText = `Suggest ${matchedCat}`;
+                aiCategory.dataset.value = matchedCat;
+                aiCategory.style.display = 'block';
             } else {
-                saveCoupon("bg.png");
+                aiCategory.style.display = 'none';
             }
-        };
-    </script>
 
+            // C. Suspicious check
+            const redFlags = ['hack', 'infinite', 'glitch', 'free money', 'scam', 'unlimited'];
+            const foundFlag = redFlags.find(rf => lower.includes(rf));
+            if (foundFlag) {
+                aiTitle.innerHTML = `<i data-lucide="alert-triangle" style="width:14px; color:#ff6b6b"></i> Suspicious text detected: "${foundFlag}"`;
+                aiTitle.className = "ai-suggestion suspicious-warn";
+                aiTitle.style.display = 'block';
+                lucide.createIcons();
+            } else {
+                aiTitle.className = "ai-suggestion";
+            }
+        });
+
+        detailsInput.addEventListener('focus', () => {
+            const title = titleInput.value.trim();
+            if (title.length > 5) {
+                const sug = `This is a verified ${title}. Valid across India. No minimum purchase required unless stated.`;
+                document.getElementById('detSugText').innerText = "Use standard template";
+                aiDetails.dataset.value = sug;
+                aiDetails.style.display = 'block';
+            }
+        });
+
+        function applySuggestion(id, val) {
+            const el = document.getElementById(id);
+            el.value = val;
+            // Hide the box
+            event.currentTarget.style.display = 'none';
+            // Trigger events if needed
+            el.dispatchEvent(new Event('input'));
+        }
+
+        // 3. Form Submission
+        async function listCoupon(e) {
+            e.preventDefault();
+            const btn = document.getElementById('sellButton');
+            const originalText = btn.innerText;
+
+            const title = document.getElementById('titleInput').value.trim();
+            const category = document.getElementById('categoryInput').value;
+            const price = document.getElementById('priceInput').value;
+            const expiry = document.getElementById('expiryInput').value;
+            const details = document.getElementById('detailsInput').value.trim();
+
+            if (parseInt(price) > sellerMaxPrice) {
+                showToast(`Price cannot exceed your trust limit of ₹${sellerMaxPrice}`, "error");
+                return;
+            }
+
+            try {
+                btn.disabled = true;
+                btn.innerText = "Processing...";
+
+                await apiRequest("/coupons", {
+                    method: "POST",
+                    body: JSON.stringify({
+                        title, category, price, expiry, details
+                    })
+                });
+
+                showToast("Coupon listed successfully!", "success");
+                setTimeout(() => window.location.href = "mylistings.html", 1500);
+            } catch (err) {
+                showToast(err.message || "Failed to list coupon", "error");
+                btn.disabled = false;
+                btn.innerText = originalText;
+            }
+        }
+    </script>
 </body>
 
 </html>
