@@ -3,363 +3,409 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>CoSwap – Find and Share Coupons Instantly</title>
+    <title>CoSwap – The Premium Marketplace for Coupons</title>
     <meta name="description" content="Search and share coupons for OTT, travel, food, fashion and more using semantic search.">
     <meta name="keywords" content="coupon marketplace, discount coupons, OTT coupons, travel coupons">
     <meta name="robots" content="index, follow">
     <link rel="canonical" href="https://coswap.in/">
     
     <!-- Open Graph -->
-    <meta property="og:title" content="CoSwap – Find and Share Coupons Instantly">
-    <meta property="og:description" content="Search and share coupons for OTT, travel, food, fashion and more.">
+    <meta property="og:title" content="CoSwap – Buy and Sell Coupons Instantly">
+    <meta property="og:description" content="Discover unused coupons from other users or sell your own in seconds.">
     <meta property="og:type" content="website">
     <meta property="og:url" content="https://coswap.in">
     
-    <!-- Google Search Console Verification -->
-    <meta name="google-site-verification" content="GOOGLE_VERIFICATION_CODE">
-
     <link rel="stylesheet" href="theme.css">
-    <script src="ui.js" defer></script>
+    <script src="https://unpkg.com/lucide@latest"></script>
     <style>
-        * {
-            box-sizing: border-box;
-            margin: 0;
-            padding: 0;
+        :root {
+            --container-w: 1200px;
         }
 
         body {
-            background: #000; /* Original background preserved */
             color: white;
+            font-family: 'Inter', -apple-system, sans-serif;
             overflow-x: hidden;
-            font-family: "Inter", system-ui, -apple-system, sans-serif;
-            -webkit-font-smoothing: antialiased;
+            margin: 0;
+            line-height: 1.5;
         }
 
-        .bg-layer {
+        /* Ambient Background Animations */
+        .ambient-bg {
             position: fixed;
             inset: 0;
-            background: linear-gradient(180deg, #151b2f 0%, #0b0f1d 100%);
-            z-index: -2;
-            pointer-events: none;
-        }
-
-        /* Ambient Glowing Backgrounds */
-        .ambient-orbs {
-            position: fixed;
-            inset: 0;
-            z-index: -1;
-            pointer-events: none;
+            z-index: -10;
             overflow: hidden;
+            pointer-events: none;
         }
 
-        .orb {
+        .blob {
             position: absolute;
             border-radius: 50%;
-            filter: blur(80px);
-            opacity: 0.6;
+            filter: blur(120px);
+            opacity: 0.15;
+            animation: float 25s infinite alternate ease-in-out;
         }
 
-        .orb-1 {
+        .blob-1 {
             width: 600px;
             height: 600px;
-            background: radial-gradient(circle, rgba(79, 208, 255, 0.15), transparent 70%);
-            top: -150px;
+            background: #4fd0ff;
+            top: -200px;
             left: -100px;
-            animation: orbFloat 24s ease-in-out infinite;
         }
 
-        .orb-2 {
+        .blob-2 {
             width: 500px;
             height: 500px;
-            background: radial-gradient(circle, rgba(111, 108, 255, 0.12), transparent 70%);
+            background: #7b5bff;
             bottom: -100px;
             right: -100px;
-            animation: orbFloat 30s ease-in-out infinite reverse;
             animation-delay: -5s;
         }
 
-        @keyframes orbFloat {
-            0%, 100% { transform: translate(0, 0) scale(1); }
-            33% { transform: translate(30px, -40px) scale(1.05); }
-            66% { transform: translate(-20px, 20px) scale(0.95); }
+        .blob-3 {
+            width: 400px;
+            height: 400px;
+            background: #ff9900;
+            top: 40%;
+            right: 15%;
+            animation-delay: -12s;
         }
 
-        /* Navigation */
-        .nav-wrapper {
+        @keyframes float {
+            0% { transform: translate(0, 0) scale(1); }
+            50% { transform: translate(40px, 60px) scale(1.1); }
+            100% { transform: translate(-20px, -30px) scale(0.9); }
+        }
+
+        /* Particles */
+        .particles {
+            position: fixed;
+            inset: 0;
+            z-index: -5;
+            pointer-events: none;
+        }
+
+        .particle {
+            position: absolute;
+            background: rgba(255,255,255,0.2);
+            border-radius: 50%;
+            animation: moveUp var(--d) linear infinite;
+        }
+
+        @keyframes moveUp {
+            from { transform: translateY(100vh) scale(0); opacity: 0; }
+            50% { opacity: 1; }
+            to { transform: translateY(-10vh) scale(1); opacity: 0; }
+        }
+
+        /* Layout Container */
+        .container {
+            max-width: var(--container-w);
+            margin: 0 auto;
+            padding: 0 24px;
+        }
+
+        /* Header Navigation */
+        header.nav-bar {
             position: sticky;
             top: 0;
-            z-index: 100;
-            background: rgba(11, 15, 29, 0.75);
+            z-index: 1000;
+            background: rgba(10, 13, 24, 0.82);
             backdrop-filter: blur(20px);
             border-bottom: 1px solid rgba(255, 255, 255, 0.08);
             transition: all 0.3s ease;
         }
 
-        .nav-container {
-            max-width: 1360px;
-            margin: 0 auto;
-            padding: 16px 32px;
+        .nav-inner {
+            height: 80px;
             display: flex;
             align-items: center;
             justify-content: space-between;
         }
 
-        .nav-left {
+        .logo {
             display: flex;
             align-items: center;
             gap: 12px;
             text-decoration: none;
+            color: white;
+            font-size: 22px;
+            font-weight: 800;
+            letter-spacing: -0.04em;
         }
 
-        .nav-left img {
+        .logo img {
             width: 36px;
             height: 36px;
         }
 
-        .nav-left span {
-            color: #fff;
-            font-size: 22px;
-            font-weight: 800;
-            letter-spacing: -0.02em;
-        }
-
-        .nav-center {
+        .nav-links {
             display: flex;
             align-items: center;
-            gap: 32px;
+            gap: 28px;
         }
 
-        .nav-center a {
+        .nav-links a {
             color: rgba(255, 255, 255, 0.65);
             font-size: 15px;
-            font-weight: 500;
-            text-decoration: none;
+            font-weight: 600;
             transition: color 0.2s;
         }
 
-        .nav-center a:hover {
-            color: #fff;
+        .nav-links a:hover {
+            color: white;
         }
 
-        .nav-right {
-            display: flex;
-            align-items: center;
-            gap: 16px;
+        .btn-sell-nav {
+            background: white;
+            color: #0a0d18;
+            padding: 10px 20px;
+            border-radius: 12px;
+            font-size: 14px;
+            font-weight: 700;
+            margin-left: 8px;
         }
 
-        .profile-btn {
-            background: rgba(255, 255, 255, 0.08);
-            border: 1px solid rgba(255, 255, 255, 0.12);
-            width: 40px;
-            height: 40px;
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
+        /* Hamburger */
+        .menu-toggle {
+            display: none;
+            background: none;
+            border: none;
+            color: white;
             cursor: pointer;
-            transition: background 0.2s, transform 0.2s;
-        }
-
-        .profile-btn:hover {
-            background: rgba(255, 255, 255, 0.15);
-            transform: scale(1.05);
-        }
-
-        .profile-btn svg {
-            width: 20px;
-            height: 20px;
-            fill: rgba(255, 255, 255, 0.8);
         }
 
         /* Hero Section */
         .hero {
-            padding: 120px 24px 80px;
+            padding: 120px 0 80px;
             text-align: center;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
         }
 
         .hero h1 {
-            font-size: clamp(48px, 6vw, 76px);
-            font-weight: 800;
-            letter-spacing: -0.04em;
-            line-height: 1.1;
+            font-size: clamp(42px, 7vw, 76px);
+            font-weight: 900;
+            letter-spacing: -0.05em;
+            line-height: 1;
             margin-bottom: 24px;
-            max-width: 800px;
-            background: linear-gradient(180deg, #ffffff 0%, rgba(255, 255, 255, 0.7) 100%);
+            background: linear-gradient(180deg, #fff 0%, rgba(255,255,255,0.6) 100%);
             -webkit-background-clip: text;
             background-clip: text;
             -webkit-text-fill-color: transparent;
         }
 
         .hero p {
-            color: rgba(255, 255, 255, 0.6);
             font-size: 20px;
-            font-weight: 400;
+            color: rgba(255, 255, 255, 0.5);
             max-width: 600px;
-            margin-bottom: 48px;
+            margin: 0 auto 48px;
             line-height: 1.6;
         }
 
-        /* Search Bar */
-        .search-container {
-            width: 100%;
-            max-width: 700px;
+        .hero-btns {
+            display: flex;
+            gap: 16px;
+            justify-content: center;
+        }
+
+        .btn-mega {
+            padding: 18px 36px;
+            border-radius: 16px;
+            font-size: 16px;
+            font-weight: 800;
+            transition: all 0.2s;
+            cursor: pointer;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, #4fd0ff, #6f6cff);
+            color: white;
+            border: none;
+            box-shadow: 0 8px 24px rgba(79, 208, 255, 0.25);
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 12px 32px rgba(79, 208, 255, 0.35);
+        }
+
+        .btn-secondary {
+            background: rgba(255, 255, 255, 0.05);
+            color: white;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+        }
+
+        .btn-secondary:hover {
+            background: rgba(255, 255, 255, 0.08);
+            border-color: rgba(255, 255, 255, 0.2);
+        }
+
+        /* Search Section */
+        .search-section {
+            margin-top: -40px;
+            margin-bottom: 80px;
+        }
+
+        .search-bar-wrap {
+            max-width: 800px;
+            margin: 0 auto;
             position: relative;
         }
 
         .search-input {
             width: 100%;
-            background: rgba(255, 255, 255, 0.04);
+            background: rgba(255, 255, 255, 0.06);
             border: 1px solid rgba(255, 255, 255, 0.12);
-            border-radius: 20px;
+            border-radius: 24px;
             padding: 24px 32px 24px 64px;
-            font-size: 20px;
+            font-size: 18px;
             color: white;
-            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
-            transition: all 0.3s ease;
             backdrop-filter: blur(12px);
+            box-shadow: 0 20px 48px rgba(0,0,0,0.3);
+            transition: all 0.3s ease;
         }
 
         .search-input:focus {
             outline: none;
+            border-color: #4fd0ff;
             background: rgba(255, 255, 255, 0.08);
-            border-color: rgba(79, 208, 255, 0.4);
-            box-shadow: 0 24px 48px rgba(0, 0, 0, 0.4), 0 0 0 4px rgba(79, 208, 255, 0.1);
+            box-shadow: 0 24px 64px rgba(0,0,0,0.4);
         }
 
-        .search-input::placeholder {
-            color: rgba(255, 255, 255, 0.3);
-        }
-
-        .search-icon {
+        .search-inner-icon {
             position: absolute;
             left: 24px;
             top: 50%;
             transform: translateY(-50%);
-            width: 24px;
-            height: 24px;
-            opacity: 0.5;
-            pointer-events: none;
+            color: rgba(255, 255, 255, 0.3);
         }
 
-        .search-button {
-            position: absolute;
-            right: 12px;
-            top: 50%;
-            transform: translateY(-50%);
-            background: white;
-            color: #111;
-            border: none;
-            padding: 12px 24px;
-            border-radius: 12px;
+        .category-chips {
+            display: flex;
+            justify-content: center;
+            gap: 12px;
+            margin-top: 24px;
+            flex-wrap: wrap;
+        }
+
+        .chip {
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            padding: 10px 20px;
+            border-radius: 100px;
+            font-size: 14px;
             font-weight: 600;
-            font-size: 16px;
+            color: rgba(255, 255, 255, 0.7);
             cursor: pointer;
-            transition: transform 0.2s, box-shadow 0.2s;
+            transition: all 0.2s;
         }
 
-        .search-button:hover {
-            transform: translateY(-50%) scale(1.02);
-            box-shadow: 0 8px 20px rgba(255, 255, 255, 0.2);
+        .chip:hover {
+            background: rgba(255, 255, 255, 0.1);
+            color: white;
+            border-color: rgba(255, 255, 255, 0.2);
         }
 
-        /* Product Area (Below Hero) */
-        .products-section {
-            max-width: 1280px;
-            margin: 0 auto;
-            padding: 60px 32px 100px;
-        }
-
-        .section-header {
+        /* Coupon Grids */
+        .section-title-wrap {
             display: flex;
             align-items: center;
             justify-content: space-between;
             margin-bottom: 32px;
-            padding-bottom: 16px;
-            border-bottom: 1px solid rgba(255, 255, 255, 0.08);
         }
 
-        .section-header h2 {
-            font-size: 24px;
-            font-weight: 600;
-            letter-spacing: -0.02em;
+        .section-title {
+            font-size: 28px;
+            font-weight: 800;
+            letter-spacing: -0.03em;
         }
 
-        .section-header a {
+        .view-all-link {
             color: #4fd0ff;
+            font-weight: 700;
             font-size: 15px;
-            font-weight: 500;
             text-decoration: none;
         }
 
-        .grid-layout {
+        .coupon-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            grid-template-columns: repeat(4, 1fr);
             gap: 24px;
-            margin-bottom: 64px;
+            margin-bottom: 80px;
         }
 
-        /* Card Styles */
-        .product-card {
+        .coupon-card {
             background: rgba(255, 255, 255, 0.03);
-            border: 1px solid rgba(255, 255, 255, 0.08);
+            border: 1px solid rgba(255, 255, 255, 0.06);
             border-radius: 20px;
             padding: 24px;
             display: flex;
             flex-direction: column;
-            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-            backdrop-filter: blur(10px);
+            transition: all 0.3s ease;
+            cursor: pointer;
             position: relative;
             overflow: hidden;
         }
 
-        .product-card::before {
+        .coupon-card::before {
             content: '';
             position: absolute;
             top: 0; left: 0; right: 0;
-            height: 1px;
-            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent);
+            height: 2px;
+            background: linear-gradient(90deg, transparent, rgba(79, 208, 255, 0.4), transparent);
             opacity: 0;
             transition: opacity 0.3s;
         }
 
-        .product-card:hover {
-            transform: translateY(-4px);
-            background: rgba(255, 255, 255, 0.05);
-            border-color: rgba(255, 255, 255, 0.15);
-            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.4);
+        .coupon-card:hover {
+            transform: translateY(-6px);
+            background: rgba(255, 255, 255, 0.06);
+            border-color: rgba(255, 255, 255, 0.12);
+            box-shadow: 0 12px 32px rgba(0, 0, 0, 0.3);
         }
 
-        .product-card:hover::before {
+        .coupon-card:hover::before {
             opacity: 1;
+        }
+
+        .card-top {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 16px;
         }
 
         .card-category {
             font-size: 12px;
-            font-weight: 600;
+            font-weight: 800;
             text-transform: uppercase;
             letter-spacing: 0.1em;
-            color: #8fe5ff;
-            margin-bottom: 12px;
+            color: #4fd0ff;
+        }
+
+        .card-rating {
+            display: flex;
+            align-items: center;
+            gap: 4px;
+            font-size: 13px;
+            font-weight: 700;
+            color: #ffcc00;
         }
 
         .card-title {
-            font-size: 20px;
-            font-weight: 600;
+            font-size: 19px;
+            font-weight: 700;
             margin-bottom: 8px;
             line-height: 1.3;
         }
 
-        .card-desc {
-            color: rgba(255, 255, 255, 0.5);
+        .card-info {
             font-size: 14px;
-            line-height: 1.6;
+            color: rgba(255,255,255,0.4);
             margin-bottom: 24px;
             display: -webkit-box;
             -webkit-line-clamp: 2;
-            line-clamp: 2;
             -webkit-box-orient: vertical;
             overflow: hidden;
         }
@@ -372,308 +418,572 @@
         }
 
         .card-price {
-            font-size: 24px;
-            font-weight: 700;
-            color: white;
+            font-size: 22px;
+            font-weight: 800;
+        }
+
+        .card-price span {
+            font-size: 14px;
+            font-weight: 500;
+            opacity: 0.5;
         }
 
         .card-btn {
-            background: rgba(255, 255, 255, 0.1);
+            background: rgba(255,255,255,0.1);
             color: white;
             border: none;
-            padding: 10px 16px;
-            border-radius: 10px;
-            font-size: 14px;
-            font-weight: 600;
-            cursor: pointer;
-            transition: background 0.2s;
+            padding: 10px 18px;
+            border-radius: 12px;
+            font-weight: 700;
+            font-size: 13px;
+            transition: all 0.2s;
         }
 
-        .product-card:hover .card-btn {
+        .coupon-card:hover .card-btn {
             background: white;
-            color: black;
+            color: #0a0d18;
         }
 
-        /* Footer */
-        .site-footer {
-            border-top: 1px solid rgba(255, 255, 255, 0.08);
-            padding: 40px 32px;
+        /* How it Works */
+        .how-section {
+            padding: 80px 0;
+            text-align: center;
+        }
+
+        .how-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 32px;
+            margin-top: 48px;
+        }
+
+        .how-card {
+            padding: 40px;
+            background: rgba(255,255,255,0.02);
+            border: 1px solid rgba(255,255,255,0.05);
+            border-radius: 24px;
+            transition: transform 0.3s;
+        }
+
+        .how-card:hover {
+            transform: translateY(-8px);
+        }
+
+        .how-icon {
+            width: 64px;
+            height: 64px;
+            margin: 0 auto 24px;
+            background: rgba(79, 208, 255, 0.1);
+            border-radius: 18px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #4fd0ff;
+        }
+
+        .how-card h3 {
+            font-size: 20px;
+            font-weight: 800;
+            margin-bottom: 12px;
+        }
+
+        .how-card p {
+            color: rgba(255,255,255,0.5);
+            font-size: 15px;
+            line-height: 1.6;
+        }
+
+        /* Trust Indicators */
+        .trust-line {
+            display: flex;
+            justify-content: space-between;
+            padding: 60px 0;
+            border-top: 1px solid rgba(255,255,255,0.08);
+            border-bottom: 1px solid rgba(255,255,255,0.08);
+            margin-bottom: 80px;
+        }
+
+        .trust-item {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+        }
+
+        .trust-item i {
+            color: #4fd0ff;
+            opacity: 0.8;
+        }
+
+        .trust-item span {
+            font-weight: 700;
+            font-size: 16px;
+            letter-spacing: -0.01em;
+        }
+
+        /* CTA Section */
+        .cta-section {
+            margin-bottom: 100px;
+        }
+
+        .cta-card {
+            background: linear-gradient(135deg, #4fd0ff 0%, #7b5bff 100%);
+            padding: 64px;
+            border-radius: 32px;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+            box-shadow: 0 32px 64px rgba(79, 208, 255, 0.2);
+        }
+
+        .cta-card::after {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: radial-gradient(circle at top right, rgba(255,255,255,0.2), transparent 40%);
+        }
+
+        .cta-card h2 {
+            font-size: 42px;
+            font-weight: 900;
+            margin-bottom: 16px;
+            letter-spacing: -0.04em;
+        }
+
+        .cta-card p {
+            font-size: 18px;
+            opacity: 0.9;
+            max-width: 500px;
+            margin: 0 auto 32px;
+        }
+
+        .btn-white {
+            background: white;
+            color: #111;
+            padding: 16px 40px;
+            border-radius: 16px;
+            font-weight: 800;
+            font-size: 16px;
+            transition: transform 0.2s;
+            cursor: pointer;
+            border: none;
+        }
+
+        .btn-white:hover {
+            transform: scale(1.05);
+        }
+
+        /* Sidebar */
+        .sidebar {
+            position: fixed;
+            top: 0;
+            right: -300px;
+            width: 300px;
+            height: 100vh;
+            background: #0a0d18;
+            z-index: 2000;
+            transition: right 0.3s ease;
+            box-shadow: -10px 0 40px rgba(0,0,0,0.5);
+            padding: 40px 24px;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .sidebar.active {
+            right: 0;
+        }
+
+        .sidebar-header {
             display: flex;
             justify-content: space-between;
             align-items: center;
-            max-width: 1360px;
-            margin: 0 auto;
+            margin-bottom: 48px;
         }
 
-        .site-footer p {
-            color: rgba(255, 255, 255, 0.4);
-            font-size: 14px;
-        }
-
-        .footer-links {
+        .sidebar-links {
             display: flex;
+            flex-direction: column;
             gap: 24px;
         }
 
-        .footer-links a {
-            color: rgba(255, 255, 255, 0.5);
+        .sidebar-links a {
+            color: rgba(255,255,255,0.7);
+            font-size: 18px;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            gap: 16px;
+        }
+
+        .sidebar-links i { width: 20px; color: #4fd0ff; }
+        footer {
+            padding: 80px 0 40px;
+            border-top: 1px solid rgba(255,255,255,0.08);
+        }
+
+        .footer-top {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 48px;
+        }
+
+        .footer-brand p {
+            margin-top: 16px;
+            color: rgba(255,255,255,0.4);
             font-size: 14px;
-            text-decoration: none;
+            max-width: 240px;
+        }
+
+        .footer-nav {
+            display: flex;
+            gap: 64px;
+        }
+
+        .footer-col h4 {
+            font-size: 14px;
+            font-weight: 800;
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+            margin-bottom: 24px;
+            color: rgba(255,255,255,0.9);
+        }
+
+        .footer-col ul {
+            list-style: none;
+            padding: 0;
+        }
+
+        .footer-col li {
+            margin-bottom: 12px;
+        }
+
+        .footer-col a {
+            color: rgba(255,255,255,0.4);
+            font-size: 15px;
             transition: color 0.2s;
         }
 
-        .footer-links a:hover {
+        .footer-col a:hover {
             color: white;
         }
 
-        /* Mobile specific adjustments */
-        .mobile-menu-btn {
-            display: none;
-            background: transparent;
-            border: none;
-            color: white;
-            cursor: pointer;
+        .footer-bottom {
+            padding-top: 32px;
+            border-top: 1px solid rgba(255,255,255,0.05);
+            display: flex;
+            justify-content: space-between;
+            color: rgba(255,255,255,0.3);
+            font-size: 13px;
         }
 
-        .mobile-menu-btn svg {
-            width: 24px;
-            height: 24px;
-            fill: none;
-            stroke: currentColor;
-            stroke-width: 2;
+        /* Mobile */
+        @media (max-width: 900px) {
+            .nav-links { display: none; }
+            .menu-toggle { display: block; }
+
+            .hero h1 { font-size: 48px; }
+            .hero p { font-size: 17px; }
+
+            .how-grid { grid-template-columns: 1fr; }
+            .coupon-grid { grid-template-columns: repeat(2, 1fr); }
+            .trust-line { flex-wrap: wrap; gap: 24px; }
+            .trust-item { width: 45%; }
+            .footer-top { flex-direction: column; gap: 48px; }
         }
 
-        @media (max-width: 1024px) {
-            .hero h1 {
-                font-size: 48px;
-            }
-        }
-
-        @media (max-width: 768px) {
-            .nav-center {
-                display: none; /* Hide on mobile, use hamburger or bottom nav */
-            }
-
-            .mobile-menu-btn {
-                display: block;
-            }
-
-            .hero {
-                padding: 80px 20px 60px;
-            }
-
-            .hero h1 {
-                font-size: 36px;
-            }
-
-            .hero p {
-                font-size: 16px;
-                margin-bottom: 32px;
-            }
-
-            .search-input {
-                padding: 18px 20px 18px 48px;
-                font-size: 16px;
-            }
-            
-            .search-icon {
-                left: 16px;
-                width: 20px;
-                height: 20px;
-            }
-
-            .search-button {
-                display: none; /* Hide button on mobile, let enter key work */
-            }
-
-            .grid-layout {
-                grid-template-columns: 1fr;
-            }
-
-            .site-footer {
-                flex-direction: column;
-                gap: 16px;
-                text-align: center;
-            }
+        @media (max-width: 600px) {
+            .hero h1 { font-size: 38px; }
+            .coupon-grid { grid-template-columns: 1fr; }
+            .trust-item { width: 100%; }
+            .cta-card { padding: 40px 24px; }
+            .cta-card h2 { font-size: 32px; }
         }
     </style>
 </head>
-<!-- Load Lucide Icons -->
-<script src="https://unpkg.com/lucide@latest"></script>
-<body class="soft-bg has-hero">
-    <div class="premium-bg" aria-hidden="true">
+<body class="soft-bg">
+    <div class="ambient-bg">
         <div class="blob blob-1"></div>
         <div class="blob blob-2"></div>
         <div class="blob blob-3"></div>
         <div class="mist-container"></div>
     </div>
+    <div class="particles" id="particles"></div>
 
-    <nav class="nav-wrapper">
-        <div class="content-container" style="display:flex; align-items:center; justify-content:space-between; height: 100%;">
-            <a href="index.html" class="brand">
-                <img src="logo.png" alt="CoSwap" class="logo" loading="lazy">
-                <span class="brand-name">CoSwap</span>
+    <header class="nav-bar">
+        <div class="container nav-inner">
+            <a href="index.html" class="logo">
+                <img src="logo.png" alt="CoSwap Logo">
+                <span>CoSwap</span>
             </a>
+            
+            <nav class="nav-links">
+                <a href="browse.html">Browse Coupons</a>
+                <a href="sell.html">Sell Coupon</a>
+                <a href="dashboard.html">My Listings</a>
+                <a href="chatlist.html">Messages</a>
+                <a href="profile.html">Profile</a>
+                <a href="sell.html" class="btn-sell-nav">Sell Now</a>
+            </nav>
+
+            <button class="menu-toggle" id="menuToggle">
+                <i data-lucide="menu"></i>
+            </button>
         </div>
-    </nav>
+    </header>
+
+    <div class="sidebar" id="sidebar">
+        <div class="sidebar-header">
+            <div class="logo">
+                <img src="logo.png" alt="CoSwap Logo">
+                <span>CoSwap</span>
+            </div>
+            <button class="menu-toggle" onclick="document.getElementById('sidebar').classList.remove('active')">
+                <i data-lucide="x"></i>
+            </button>
+        </div>
+        <div class="sidebar-links">
+            <a href="browse.html"><i data-lucide="search"></i> Browse Coupons</a>
+            <a href="sell.html"><i data-lucide="plus-circle"></i> Sell Coupon</a>
+            <a href="dashboard.html"><i data-lucide="layout"></i> My Listings</a>
+            <a href="chatlist.html"><i data-lucide="message-circle"></i> Messages</a>
+            <a href="profile.html"><i data-lucide="user"></i> Profile</a>
+            <div style="margin-top: auto; padding: 20px 0;">
+                <a href="sell.html" class="btn-mega btn-primary" style="width: 100%; text-align: center; display: block;">Sell Now</a>
+            </div>
+        </div>
+    </div>
 
     <main>
-        <header class="hero">
-            <h1>Unlock the Value of Your Unused Deals</h1>
-            <p>The premium marketplace for buying and selling verifiable discount coupons, gift cards, and vouchers.</p>
-            
-            <form class="search-container" action="browse.html" method="get">
-                <svg class="search-icon" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg>
-                <input type="text" name="search" class="search-input" placeholder="Search brands, e.g. Zomato, Myntra, Amazon..." required>
-                <button type="submit" class="search-button">Search</button>
-            </form>
-        </header>
-
-        <section class="products-section">
-            <div class="section-header">
-                <h2>Trending Deals</h2>
-                <a href="browse.html">View all &rarr;</a>
-            </div>
-            
-            <div class="grid-layout">
-                <!-- Card 1 -->
-                <div class="product-card" onclick="window.location.href='browse.html';">
-                    <div class="card-category">Food & Dining</div>
-                    <h3 class="card-title">Zomato Pro 3 Months</h3>
-                    <p class="card-desc">Valid across all restaurants. Unused voucher code from credit card rewards.</p>
-                    <div class="card-footer">
-                        <span class="card-price">₹149</span>
-                        <button class="card-btn">Buy Now</button>
-                    </div>
-                </div>
-
-                <!-- Card 2 -->
-                <div class="product-card" onclick="window.location.href='browse.html';">
-                    <div class="card-category">Shopping</div>
-                    <h3 class="card-title">Myntra 20% Off Code</h3>
-                    <p class="card-desc">Valid on total cart value above ₹1999. No max discount limit.</p>
-                    <div class="card-footer">
-                        <span class="card-price">₹49</span>
-                        <button class="card-btn">Buy Now</button>
-                    </div>
-                </div>
-
-                <!-- Card 3 -->
-                <div class="product-card" onclick="window.location.href='browse.html';">
-                    <div class="card-category">Entertainment</div>
-                    <h3 class="card-title">BookMyShow ₹500 Gift Card</h3>
-                    <p class="card-desc">Valid for all movie and event bookings. Expires in 6 months.</p>
-                    <div class="card-footer">
-                        <span class="card-price">₹350</span>
-                        <button class="card-btn">Buy Now</button>
-                    </div>
-                </div>
-            </div>
-
-            <div class="section-header">
-                <h2>Latest Listings</h2>
-                <a href="browse.html">Explore directory &rarr;</a>
-            </div>
-
-            <div class="grid-layout">
-                <!-- Card 4 -->
-                <div class="product-card" onclick="window.location.href='browse.html';">
-                    <div class="card-category">Travel</div>
-                    <h3 class="card-title">MakeMyTrip ₹1000 Off</h3>
-                    <p class="card-desc">Flat ₹1000 off on domestic flight bookings. Valid till this weekend.</p>
-                    <div class="card-footer">
-                        <span class="card-price">₹300</span>
-                        <button class="card-btn">Buy Now</button>
-                    </div>
-                </div>
-
-                <!-- Card 5 -->
-                <div class="product-card" onclick="window.location.href='browse.html';">
-                    <div class="card-category">Tech</div>
-                    <h3 class="card-title">Amazon Prime 1 Year</h3>
-                    <p class="card-desc">Activation code for 1 year of Amazon Prime membership.</p>
-                    <div class="card-footer">
-                        <span class="card-price">₹899</span>
-        <!-- Top Nav (Desktop) -->
-        <nav class="nav-wrapper desktop-only" style="background: rgba(15, 19, 36, 0.82); backdrop-filter: blur(20px); height: 72px;">
-            <div class="content-container" style="display:flex; align-items:center; justify-content:space-between; height: 100%;">
-                <a href="index.html" class="brand" style="display: flex; align-items: center; gap: 12px; text-decoration: none; color: white;">
-                    <img src="logo.png" alt="CoSwap" style="width: 32px; height: 32px;" loading="lazy">
-                    <span style="font-size: 20px; font-weight: 800; letter-spacing: -0.02em;">CoSwap</span>
-                </a>
-                <div style="display: flex; gap: 12px; align-items: center;">
-                    <a href="chatlist.html" class="btn-icon" title="Messages"><i data-lucide="message-square"></i></a>
-                    <a href="terms.html" class="btn-icon" title="Terms"><i data-lucide="file-text"></i></a>
-                    <a href="profile.html" class="btn-icon" title="Profile"><i data-lucide="user"></i></a>
-                    <a href="login.html" class="btn-icon" title="Logout" style="margin-left:8px;"><i data-lucide="log-out"></i></a>
-                </div>
-            </div>
-        </nav>
-
         <!-- Hero Section -->
-        <section class="hero content-container">
-            <div class="hero-text-limit">
-                <h1 class="heading-elite">Search the marketplace by meaning</h1>
-                <p class="subtext-elite" style="margin-bottom: 48px;">Find coupons for OTT, travel, food and shopping with the power of semantic search.</p>
-            </div>
-
-            <!-- Elite Search -->
-            <div class="search-container-elite">
-                <i data-lucide="search" style="width:20px; color:rgba(255,255,255,0.4); margin-right: 12px;"></i>
-                <input type="text" id="searchInput" placeholder="Search coupons like: cheap Netflix, pizza deals, travel discount">
-                <button class="btn-primary" id="searchBtn" style="height: 40px; border-radius: 10px; padding: 0 20px;">Search</button>
-            </div>
-
-            <!-- Suggestion Chips -->
-            <div style="display: flex; gap: 12px; justify-content: center; flex-wrap: wrap; margin-top: 32px;">
-                <button class="pill-chip" onclick="quickSearch('OTT')">OTT subscriptions</button>
-                <button class="pill-chip" onclick="quickSearch('Food')">Food discounts</button>
-                <button class="pill-chip" onclick="quickSearch('Travel')">Travel stays</button>
-                <button class="pill-chip" onclick="quickSearch('Fashion')">Fashion shopping</button>
-                <button class="pill-chip" onclick="quickSearch('Beauty')">Beauty deals</button>
+        <section class="hero container">
+            <h1>Buy and Sell Coupons <br>Instantly</h1>
+            <p>Discover unused coupons from other users or sell your own in seconds. Safe, fast, and transparent.</p>
+            <div class="hero-btns">
+                <button class="btn-mega btn-primary" onclick="window.location.href='browse.html'">Browse Coupons</button>
+                <button class="btn-mega btn-secondary" onclick="window.location.href='sell.html'">Sell Coupon</button>
             </div>
         </section>
 
-        <!-- Featured / Trending Section -->
-        <section class="content-container" style="padding: 80px 24px;">
-            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 32px;">
-                <h2 style="font-size: 24px; font-weight: 800; letter-spacing: -0.02em;">Trending Coupons</h2>
-                <a href="browse.html" style="color: var(--accent); text-decoration: none; font-weight: 700; font-size: 14px;">View All →</a>
+        <!-- Search Section -->
+        <section class="search-section container">
+            <div class="search-bar-wrap">
+                <i data-lucide="search" class="search-inner-icon"></i>
+                <input type="text" id="searchInput" class="search-input" placeholder="Search coupons (OTT, food, travel, shopping)">
             </div>
-            <div id="featuredGrid" class="glass-card-grid">
+            <div class="category-chips">
+                <div class="chip" onclick="quickSearch('OTT')">OTT Subscriptions</div>
+                <div class="chip" onclick="quickSearch('Food')">Food Discounts</div>
+                <div class="chip" onclick="quickSearch('Travel')">Travel Deals</div>
+                <div class="chip" onclick="quickSearch('Fashion')">Fashion Shopping</div>
+                <div class="chip" onclick="quickSearch('Beauty')">Beauty & Salon</div>
+            </div>
+        </section>
+
+        <!-- Trending Coupons -->
+        <section class="container" style="margin-bottom: 80px;">
+            <div class="section-title-wrap">
+                <h2 class="section-title">Trending Coupons</h2>
+                <a href="browse.html" class="view-all-link">View all &rarr;</a>
+            </div>
+            <div class="coupon-grid" id="trendingGrid">
+                <!-- Fallback Static Cards (will be replaced by JS) -->
+                <div class="coupon-card">
+                    <div class="card-top">
+                        <span class="card-category">OTT</span>
+                        <div class="card-rating"><i data-lucide="star" style="width:14px; fill:#ffcc00"></i> 4.9</div>
+                    </div>
+                    <h3 class="card-title">Netflix Premium 1 Month</h3>
+                    <p class="card-info">Unused activation code for 1 month Netflix Premium (4K UHD).</p>
+                    <div class="card-footer">
+                        <div class="card-price">₹199 <span>/ deal</span></div>
+                        <button class="card-btn">Buy Now</button>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- How it Works -->
+        <section class="how-section container">
+            <h2 class="section-title">How CoSwap Works</h2>
+            <div class="how-grid">
+                <div class="how-card">
+                    <div class="how-icon"><i data-lucide="plus-circle"></i></div>
+                    <h3>List Your Coupon</h3>
+                    <p>Enter the coupon details, set your price, and list it in seconds.</p>
+                </div>
+                <div class="how-card">
+                    <div class="how-icon"><i data-lucide="search"></i></div>
+                    <h3>Buyers Discover It</h3>
+                    <p>Interested buyers find your coupon using our semantic search engine.</p>
+                </div>
+                <div class="how-card">
+                    <div class="how-icon"><i data-lucide="message-circle"></i></div>
+                    <h3>Chat & Complete</h3>
+                    <p>Message each other, agree on terms, and complete the exchange safely.</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- Trust Indicators -->
+        <section class="container">
+            <div class="trust-line">
+                <div class="trust-item"><i data-lucide="shield-check"></i> <span>Secure Marketplace</span></div>
+                <div class="trust-item"><i data-lucide="users"></i> <span>Verified Users</span></div>
+                <div class="trust-item"><i data-lucide="lock"></i> <span>Private Messaging</span></div>
+                <div class="trust-item"><i data-lucide="badge-percent"></i> <span>Transparent Pricing</span></div>
+            </div>
+        </section>
+
+        <!-- Latest Listings -->
+        <section class="container" style="margin-bottom: 80px;">
+            <div class="section-title-wrap">
+                <h2 class="section-title">Latest Coupons</h2>
+                <a href="browse.html" class="view-all-link">Explore directory &rarr;</a>
+            </div>
+            <div class="coupon-grid" id="latestGrid">
                 <!-- Dynamically filled -->
+            </div>
+        </section>
+
+        <!-- CTA Section -->
+        <section class="cta-section container">
+            <div class="cta-card">
+                <h2>Have unused coupons?</h2>
+                <p>Sell them on CoSwap and earn instantly. Thousands of buyers are waiting.</p>
+                <button class="btn-white" onclick="window.location.href='sell.html'">Sell Coupon Now</button>
             </div>
         </section>
     </main>
 
-    <footer class="site-footer">
-        <p>&copy; 2026 CoSwap Marketplace.</p>
-        <div class="footer-links">
-            <a href="terms.html">Terms</a>
-            <a href="about.html">About</a>
-            <a href="#" onclick="logout(); return false;">Logout</a>
+    <footer>
+        <div class="container">
+            <div class="footer-top">
+                <div class="footer-brand">
+                    <a href="index.html" class="logo">
+                        <img src="logo.png" alt="CoSwap Logo">
+                        <span>CoSwap</span>
+                    </a>
+                    <p>The smartest way to trade unused vouchers and discount codes in India.</p>
+                </div>
+                <div class="footer-nav">
+                    <div class="footer-col">
+                        <h4>Platform</h4>
+                        <ul>
+                            <li><a href="browse.html">Browse</a></li>
+                            <li><a href="sell.html">Sell</a></li>
+                            <li><a href="how-it-works.html">How it works</a></li>
+                        </ul>
+                    </div>
+                    <div class="footer-col">
+                        <h4>Company</h4>
+                        <ul>
+                            <li><a href="about.html">About Us</a></li>
+                            <li><a href="contact.html">Contact</a></li>
+                            <li><a href="terms.html">Terms & Conditions</a></li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <span>&copy; 2026 CoSwap Marketplace. All rights reserved.</span>
+                <div style="display:flex; gap:16px;">
+                    <a href="#">Twitter</a>
+                    <a href="#">GitHub</a>
+                    <a href="#">Discord</a>
+                </div>
+            </div>
         </div>
     </footer>
 
     <script src="api.js"></script>
+    <script src="ui.js"></script>
     <script>
-        function goToProfile() {
-            if (typeof getAuthToken === "function" && getAuthToken()) {
-                window.location.href = "dashboard.html";
-            } else {
-                window.location.href = "login.html";
+        // Init Lucide
+        lucide.createIcons();
+
+        // Particles
+        const partCount = 15;
+        const partWrap = document.getElementById('particles');
+        for(let i=0; i<partCount; i++) {
+            const p = document.createElement('div');
+            p.className = 'particle';
+            const size = Math.random() * 4 + 2;
+            p.style.width = size + 'px';
+            p.style.height = size + 'px';
+            p.style.left = Math.random() * 100 + '%';
+            p.style.setProperty('--d', (Math.random() * 10 + 5) + 's');
+            p.style.animationDelay = Math.random() * 5 + 's';
+            partWrap.appendChild(p);
+        }
+
+        // Search logic
+        const sInput = document.getElementById('searchInput');
+        sInput.addEventListener('keypress', (e) => {
+            if(e.key === 'Enter') {
+                window.location.href = `browse.html?search=${encodeURIComponent(sInput.value)}`;
+            }
+        });
+
+        function quickSearch(tag) {
+            window.location.href = `browse.html?search=${encodeURIComponent(tag)}`;
+        }
+
+        // Fetch Coupons
+        async function loadHomepageData() {
+            try {
+                // Fetch trending/all coupons
+                const data = await apiRequest("/coupons?limit=8");
+                const coupons = data.coupons || [];
+                
+                const trendingWrap = document.getElementById('trendingGrid');
+                const latestWrap = document.getElementById('latestGrid');
+                
+                if (coupons.length > 0) {
+                    trendingWrap.innerHTML = '';
+                    latestWrap.innerHTML = '';
+                    
+                    // First 4 for trending
+                    coupons.slice(0,4).forEach(c => trendingWrap.appendChild(createCard(c)));
+                    // Last 4 for latest
+                    coupons.slice(4,8).forEach(c => latestWrap.appendChild(createCard(c)));
+                }
+            } catch (err) {
+                console.warn("Failed to fetch fresh coupons:", err);
             }
         }
 
-        function logout() {
-            if (typeof clearAuth === "function") {
-                clearAuth();
-            } else {
-                localStorage.removeItem("token");
-                localStorage.removeItem("user");
-            }
-            window.location.href = "login.html";
+        function createCard(c) {
+            const div = document.createElement('div');
+            div.className = 'coupon-card';
+            div.onclick = () => window.location.href = `coupon-details.html?id=${c._id}`;
+            div.innerHTML = `
+                <div class="card-top">
+                    <span class="card-category">${c.category || 'Deal'}</span>
+                    <div class="card-rating"><i data-lucide="star" style="width:14px; fill:#ffcc00"></i> ${c.seller_id?.rating_sum ? (c.seller_id.rating_sum / c.seller_id.rating_count).toFixed(1) : '5.0'}</div>
+                </div>
+                <h3 class="card-title">${c.title}</h3>
+                <p class="card-info">${c.details || 'No additional details provided.'}</p>
+                <div class="card-footer">
+                    <div class="card-price">₹${c.price} <span>/ deal</span></div>
+                    <button class="card-btn">Buy Now</button>
+                </div>
+            `;
+            setTimeout(() => lucide.createIcons(), 10);
+            return div;
         }
+
+        loadHomepageData();
+
+        // Header scroll effect
+        window.addEventListener('scroll', () => {
+            const nav = document.querySelector('.nav-bar');
+            if(window.scrollY > 50) {
+                nav.style.background = 'rgba(10, 13, 24, 0.95)';
+                nav.style.padding = '4px 0';
+            } else {
+                nav.style.background = 'rgba(10, 13, 24, 0.82)';
+                nav.style.padding = '0';
+            }
+        });
     </script>
 </body>
 </html>
