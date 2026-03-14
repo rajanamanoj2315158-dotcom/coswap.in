@@ -287,33 +287,6 @@
             <h1 style="font-size: 36px; font-weight: 800; letter-spacing: -0.02em;">Marketplace</h1>
             <p style="color: rgba(255,255,255,0.5); margin-top: 4px;">Find premium discounted vouchers from trusted sellers.</p>
         </header>
-
-        <!-- Search Bar Redesign -->
-        <div class="glass-card" style="padding: 24px; border-radius: 20px; margin-bottom: 48px;">
-            <div style="display: flex; gap: 12px;">
-                <div style="flex: 1; position: relative;">
-                    <i data-lucide="search" style="position: absolute; left: 16px; top: 50%; transform: translateY(-50%); color: rgba(255,255,255,0.4); width: 20px; height: 20px;"></i>
-                    <input type="text" id="searchInput" placeholder="Search by brand or category..." style="width: 100%; background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1); padding: 16px 16px 16px 52px; font-size: 16px;">
-                </div>
-                <button class="btn-primary" onclick="search()" style="padding: 0 40px; border-radius: 12px;">Search</button>
-            </div>
-        </div>
-        <div class="category-container" id="categoryChips">
-            <button class="chip" onclick="setQuery('OTT subscriptions')">OTT subscriptions</button>
-            <button class="chip" onclick="setQuery('food discounts')">Food discounts</button>
-            <button class="chip" onclick="setQuery('travel deals')">Travel deals</button>
-            <button class="chip" onclick="setQuery('fashion shopping')">Fashion shopping</button>
-            <button class="chip" onclick="setQuery('beauty & salon')">Beauty & salon</button>
-        </div>
-        </section>
-
-        <!-- Marketplace Results -->
-        <section>
-            <div class="section-header">
-                <h2>Marketplace Results</h2>
-            </div>
-            <div id="grid" class="results-grid">
-                <div class="empty-state">Loading marketplace listings...</div>
             </div>
         </section>
 

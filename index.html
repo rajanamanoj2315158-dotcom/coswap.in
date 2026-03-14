@@ -3,11 +3,21 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>CoSwap — Buy &amp; Sell Unused Coupons &amp; Vouchers in India</title>
-    <meta name="description" content="CoSwap is India's trusted marketplace to buy and sell unused discount coupons, gift cards, and vouchers. Get great deals on OTT, food, fashion, travel and more.">
+    <title>CoSwap – Semantic Coupon Marketplace</title>
+    <meta name="description" content="Search and share coupons for OTT, travel, food, fashion and more using semantic search.">
+    <meta name="keywords" content="coupon marketplace, discount coupons, OTT coupons, travel coupons, coupon sharing">
     <meta name="robots" content="index, follow">
     <link rel="canonical" href="https://coswap.in/">
     
+    <!-- Open Graph -->
+    <meta property="og:title" content="CoSwap – Find and Share Coupons Instantly">
+    <meta property="og:description" content="Search and share coupons for OTT, travel, food, fashion and more.">
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://coswap.in">
+    
+    <!-- Google Search Console Verification -->
+    <meta name="google-site-verification" content="GOOGLE_VERIFICATION_CODE">
+
     <link rel="stylesheet" href="theme.css">
     <script src="ui.js" defer></script>
     <style>
@@ -584,20 +594,54 @@
                     <p class="card-desc">Activation code for 1 year of Amazon Prime membership.</p>
                     <div class="card-footer">
                         <span class="card-price">₹899</span>
-                        <button class="card-btn">Buy Now</button>
-                    </div>
+        <!-- Top Nav (Desktop) -->
+        <nav class="nav-wrapper desktop-only" style="background: rgba(15, 19, 36, 0.82); backdrop-filter: blur(20px); height: 72px;">
+            <div class="content-container" style="display:flex; align-items:center; justify-content:space-between; height: 100%;">
+                <a href="index.html" class="brand" style="display: flex; align-items: center; gap: 12px; text-decoration: none; color: white;">
+                    <img src="logo.png" alt="CoSwap" style="width: 32px; height: 32px;" loading="lazy">
+                    <span style="font-size: 20px; font-weight: 800; letter-spacing: -0.02em;">CoSwap</span>
+                </a>
+                <div style="display: flex; gap: 12px; align-items: center;">
+                    <a href="chatlist.html" class="btn-icon" title="Messages"><i data-lucide="message-square"></i></a>
+                    <a href="terms.html" class="btn-icon" title="Terms"><i data-lucide="file-text"></i></a>
+                    <a href="profile.html" class="btn-icon" title="Profile"><i data-lucide="user"></i></a>
+                    <a href="login.html" class="btn-icon" title="Logout" style="margin-left:8px;"><i data-lucide="log-out"></i></a>
                 </div>
+            </div>
+        </nav>
 
-                <!-- Card 6 -->
-                <div class="product-card" onclick="window.location.href='browse.html';">
-                    <div class="card-category">Lifestyle</div>
-                    <h3 class="card-title">Cult.fit 1 Month Access</h3>
-                    <p class="card-desc">Full gym access for one month. Unused wellness reward.</p>
-                    <div class="card-footer">
-                        <span class="card-price">₹499</span>
-                        <button class="card-btn">Buy Now</button>
-                    </div>
-                </div>
+        <!-- Hero Section -->
+        <section class="hero content-container">
+            <div class="hero-text-limit">
+                <h1 class="heading-elite">Search the marketplace by meaning</h1>
+                <p class="subtext-elite" style="margin-bottom: 48px;">Find coupons for OTT, travel, food and shopping with the power of semantic search.</p>
+            </div>
+
+            <!-- Elite Search -->
+            <div class="search-container-elite">
+                <i data-lucide="search" style="width:20px; color:rgba(255,255,255,0.4); margin-right: 12px;"></i>
+                <input type="text" id="searchInput" placeholder="Search coupons like: cheap Netflix, pizza deals, travel discount">
+                <button class="btn-primary" id="searchBtn" style="height: 40px; border-radius: 10px; padding: 0 20px;">Search</button>
+            </div>
+
+            <!-- Suggestion Chips -->
+            <div style="display: flex; gap: 12px; justify-content: center; flex-wrap: wrap; margin-top: 32px;">
+                <button class="pill-chip" onclick="quickSearch('OTT')">OTT subscriptions</button>
+                <button class="pill-chip" onclick="quickSearch('Food')">Food discounts</button>
+                <button class="pill-chip" onclick="quickSearch('Travel')">Travel stays</button>
+                <button class="pill-chip" onclick="quickSearch('Fashion')">Fashion shopping</button>
+                <button class="pill-chip" onclick="quickSearch('Beauty')">Beauty deals</button>
+            </div>
+        </section>
+
+        <!-- Featured / Trending Section -->
+        <section class="content-container" style="padding: 80px 24px;">
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 32px;">
+                <h2 style="font-size: 24px; font-weight: 800; letter-spacing: -0.02em;">Trending Coupons</h2>
+                <a href="browse.html" style="color: var(--accent); text-decoration: none; font-weight: 700; font-size: 14px;">View All →</a>
+            </div>
+            <div id="featuredGrid" class="glass-card-grid">
+                <!-- Dynamically filled -->
             </div>
         </section>
     </main>
