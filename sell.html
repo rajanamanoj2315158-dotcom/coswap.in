@@ -8,20 +8,37 @@
     <link rel="stylesheet" href="theme.css">
     <script src="https://unpkg.com/lucide@latest"></script>
     <style>
+        /* ULTRA PREMIUM UI SYSTEM (Fintech/VisionOS Style) */
+        :root {
+            --ultra-blue: #4F8CFF;
+            --ultra-indigo: #6E5BFF;
+            --ultra-violet: #9A6BFF;
+            --ultra-neon: #22E3FF;
+            --ultra-text-sec: #A3AED0;
+            --ultra-card-bg: rgba(18, 28, 64, 0.72);
+            --ultra-input-bg: #0B1535;
+            --ultra-border: rgba(120, 150, 255, 0.25);
+            --ultra-highlight: #B8C6FF;
+        }
+
         .sell-card {
-            background: rgba(15, 23, 42, 0.85);
-            backdrop-filter: blur(12px);
-            border: 1px solid rgba(255, 255, 255, 0.08);
-            border-radius: 20px;
+            background: var(--ultra-card-bg);
+            backdrop-filter: blur(18px);
+            -webkit-backdrop-filter: blur(18px);
+            border: 1px solid var(--ultra-border);
+            border-radius: 22px;
             padding: 32px;
-            box-shadow: 0 25px 50px rgba(0, 0, 0, 0.4);
+            box-shadow: 
+                0 20px 60px rgba(0, 0, 0, 0.60),
+                0 0 40px rgba(79, 140, 255, 0.18);
+            position: relative;
+            overflow: hidden;
         }
         
-        /* Vibrant Premium Header */
         .header-gradient {
             background: linear-gradient(135deg, #1e293b 0%, #3b82f6 50%, #1d4ed8 100%);
             border-bottom: 1px solid rgba(255, 255, 255, 0.1);
-            padding: 70px 0;
+            padding: 80px 0;
             margin-bottom: 40px;
             text-align: center;
             position: relative;
@@ -39,26 +56,115 @@
         .form-group {
             display: flex;
             flex-direction: column;
-            gap: 8px;
-            margin-bottom: 20px;
+            gap: 10px;
+            margin-bottom: 24px;
         }
 
         .form-group label {
-            font-size: 12px;
-            font-weight: 700;
-            color: rgba(255, 255, 255, 0.4);
-            text-transform: uppercase;
-            letter-spacing: 0.05em;
+            font-size: 13px;
+            font-weight: 500;
+            color: var(--ultra-highlight);
+            letter-spacing: 0.5px;
+            text-transform: none;
         }
 
-        #categoryInput, #expiryInput, #priceInput {
-            background: #020617 !important;
-            color: #e5e7eb !important;
-            border: 1px solid rgba(255,255,255,0.1);
+        #titleInput, #categoryInput, #expiryInput, #priceInput, #detailsInput {
+            background: var(--ultra-input-bg) !important;
+            color: #FFFFFF !important;
+            border: 1px solid rgba(120, 140, 255, 0.30) !important;
+            border-radius: 12px;
+            height: 52px;
+            padding: 0 16px;
+            font-size: 15px;
+            transition: all 0.25s ease;
         }
 
-        #expiryInput {
+        #titleInput:focus, #categoryInput:focus, #expiryInput:focus, #priceInput:focus, #detailsInput:focus {
+            outline: none;
+            border-color: var(--ultra-blue) !important;
+            box-shadow: 
+                0 0 0 2px rgba(79, 140, 255, 0.18),
+                0 0 14px rgba(79, 140, 255, 0.35);
+        }
+
+        #titleInput::placeholder, #priceInput::placeholder, #detailsInput::placeholder {
+            color: #7F8CC0;
+        }
+
+        #detailsInput {
+            height: auto;
+            min-height: 120px;
+            padding: 16px;
+            line-height: 1.6;
+        }
+
+        #categoryInput {
             cursor: pointer;
+            appearance: none;
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24' fill='none' stroke='%23B8C6FF' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='m6 9 6 6 6-6'/%3E%3C/svg%3E");
+            background-repeat: no-repeat;
+            background-position: right 12px center;
+            background-size: 18px;
+        }
+
+        /* ULTRA HERO BUTTON */
+        .ultra-publish-btn {
+            background: linear-gradient(135deg, #4F8CFF, #6E5BFF, #9A6BFF);
+            color: white;
+            border-radius: 14px;
+            height: 56px;
+            width: 100%;
+            border: none;
+            font-weight: 600;
+            font-size: 16px;
+            margin-top: 12px;
+            cursor: pointer;
+            transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+            box-shadow: 
+                0 12px 35px rgba(79, 140, 255, 0.40),
+                0 0 20px rgba(154, 107, 255, 0.25);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+        }
+
+        .ultra-publish-btn:hover {
+            transform: translateY(-3px);
+            background: linear-gradient(135deg, #5FA0FF, #7E6BFF, #AA7BFF);
+            box-shadow: 0 18px 45px rgba(79, 140, 255, 0.50);
+        }
+
+        .ultra-publish-btn:active {
+            transform: translateY(-1px);
+        }
+
+        .ultra-publish-btn:disabled {
+            opacity: 0.7;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        .divider-glow {
+            border-bottom: 1px solid rgba(120, 150, 255, 0.18);
+            margin-bottom: 24px;
+            padding-bottom: 24px;
+        }
+
+        #trustPercent, #maxAllowedPrice {
+            color: var(--ultra-blue);
+            font-weight: 800;
+            font-size: 22px;
+            text-shadow: 0 0 10px rgba(79, 140, 255, 0.3);
+        }
+
+        .label-sec {
+            color: var(--ultra-text-sec);
+            font-size: 11px;
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+            display: block;
+            margin-bottom: 6px;
         }
     </style>
 </head>
@@ -87,32 +193,32 @@
 
     <header class="header-gradient">
         <div class="container">
-            <h1 style="font-size: 48px; font-weight: 800; letter-spacing: -0.04em; margin-bottom: 12px; color: white; text-shadow: 0 2px 10px rgba(0,0,0,0.2);">List Your Coupon</h1>
-            <p style="color: rgba(255,255,255,0.9); font-size: 18px; max-width: 600px; margin: 0 auto;">Reach thousands of buyers instantly. Fast, secure, and transparent marketplace.</p>
+            <h1 style="font-size: 56px; font-weight: 800; letter-spacing: -0.05em; margin-bottom: 16px; color: white; text-shadow: 0 4px 20px rgba(0,0,0,0.3);">Marketplace Intelligence</h1>
+            <p style="color: rgba(255,255,255,0.95); font-size: 20px; max-width: 650px; margin: 0 auto; line-height: 1.6;">Turn your digital assets into liquidity. Professional-grade trading for the next-gen internet.</p>
         </div>
     </header>
 
-    <main class="container" style="padding-bottom: 100px;">
-        <div class="sell-card" style="max-width: 540px; margin: 0 auto;">
-            <div style="margin-bottom: 32px; display: grid; grid-template-columns: 1fr 1fr; gap: 24px; padding-bottom: 24px; border-bottom: 1px solid rgba(255, 255, 255, 0.1);">
+    <main class="container" style="padding-bottom: 120px;">
+        <div class="sell-card" style="max-width: 580px; margin: 0 auto;">
+            <div class="divider-glow" style="display: grid; grid-template-columns: 1fr 1fr; gap: 24px;">
                 <div>
-                    <span style="font-size: 11px; text-transform: uppercase; color: rgba(255,255,255,0.4); letter-spacing: 0.1em; display: block; margin-bottom: 4px;">Trust Score</span>
-                    <span id="trustPercent" style="font-size: 20px; font-weight: 800; color: #38bdf8;">--%</span>
+                    <span class="label-sec">Trust Score</span>
+                    <span id="trustPercent">--%</span>
                 </div>
                 <div style="text-align: right;">
-                    <span style="font-size: 11px; text-transform: uppercase; color: rgba(255,255,255,0.4); letter-spacing: 0.1em; display: block; margin-bottom: 4px;">Selling Limit</span>
-                    <span id="maxAllowedPrice" style="font-size: 20px; font-weight: 800; color: #38bdf8;">₹--</span>
+                    <span class="label-sec">Selling Limit</span>
+                    <span id="maxAllowedPrice">₹--</span>
                 </div>
             </div>
 
             <form id="sellForm" onsubmit="handleListCoupon(event)">
                 <div class="form-group">
-                    <label for="titleInput">Coupon Title*</label>
-                    <input type="text" id="titleInput" placeholder="e.g. Amazon Gift Card ₹1000" maxlength="120" required>
+                    <label for="titleInput">Coupon Title</label>
+                    <input type="text" id="titleInput" placeholder="e.g. Amazon Elite Voucher ₹2,000" maxlength="120" required>
                 </div>
 
                 <div class="form-group">
-                    <label for="categoryInput">Category*</label>
+                    <label for="categoryInput">Asset Category</label>
                     <select id="categoryInput" required>
                         <option value="" disabled selected>Select Category</option>
                         <option value="OTT">OTT</option>
@@ -127,23 +233,29 @@
                 </div>
 
                 <div class="form-group">
-                    <label for="priceInput">Listing Price (₹)*</label>
+                    <label for="priceInput">Listing Price (INR)</label>
                     <input type="number" id="priceInput" placeholder="Min ₹1" min="1" step="1" required>
-                    <span id="priceHint" style="font-size: 12px; color: rgba(255,255,255,0.3); margin-top: 4px;">Loading limit...</span>
+                    <span id="priceHint" style="font-size: 12px; color: #7F8CC0; margin-top: 4px;">Syncing account limits...</span>
                 </div>
 
                 <div class="form-group">
-                    <label for="expiryInput">Expiry Date*</label>
+                    <label for="expiryInput">Platform Expiry</label>
                     <input type="date" id="expiryInput" readonly required placeholder="Choose Date" onclick="this.showPicker()">
-                    <span style="font-size: 12px; color: rgba(255,255,255,0.3); margin-top: 4px;">Select from calendar only.</span>
+                    <span style="font-size: 11px; color: #7F8CC0; margin-top: 4px; display: flex; align-items: center; gap: 4px;">
+                        <i data-lucide="info" style="width: 12px; height: 12px;"></i>
+                        Select from calendar only for verification.
+                    </span>
                 </div>
 
                 <div class="form-group">
-                    <label for="detailsInput">Offer Details*</label>
-                    <textarea id="detailsInput" placeholder="Describe the terms, conditions, and what the buyer gets." style="min-height: 100px;" required></textarea>
+                    <label for="detailsInput">Offer Specification</label>
+                    <textarea id="detailsInput" placeholder="Provide precise terms, conditions, and redemption steps." required></textarea>
                 </div>
 
-                <button type="submit" class="primary-btn" id="submitBtn" style="width: 100%; margin-top: 12px; height: 54px; font-size: 16px;">Publish Listing</button>
+                <button type="submit" class="ultra-publish-btn" id="submitBtn">
+                    Publish to Marketplace
+                    <i data-lucide="zap" style="width: 18px; height: 18px;"></i>
+                </button>
             </form>
         </div>
     </main>
@@ -168,10 +280,8 @@
             const expiry = document.getElementById("expiryInput");
             expiry.setAttribute("min", today);
             
-            // Block keyboard completely
             expiry.addEventListener("keydown", (e) => e.preventDefault());
             expiry.addEventListener("mousedown", (e) => {
-                // Ensure calendar opens on click
                 if (typeof expiry.showPicker === 'function') {
                     expiry.showPicker();
                 }
@@ -184,11 +294,11 @@
                 const fraud = profile.fraudPercent || 0;
                 
                 document.getElementById("trustPercent").innerText = `${100 - fraud}%`;
-                document.getElementById("maxAllowedPrice").innerText = `₹${userMaxPrice}`;
-                document.getElementById("priceHint").innerText = `Max allowed: ₹${userMaxPrice} (based on trust & sales)`;
+                document.getElementById("maxAllowedPrice").innerText = `₹${userMaxPrice.toLocaleString()}`;
+                document.getElementById("priceHint").innerText = `Available Limit: ₹${userMaxPrice.toLocaleString()} (Verified)`;
             } catch (err) {
                 console.error("Profile load failed", err);
-                document.getElementById("priceHint").innerText = "Failed to load limits.";
+                document.getElementById("priceHint").innerText = "Failed to sync limits.";
             }
         }
 
@@ -198,7 +308,7 @@
             const price = parseInt(document.getElementById("priceInput").value);
 
             if (price > userMaxPrice) {
-                showToast(`Price cannot exceed your limit of ₹${userMaxPrice}`, "error");
+                showToast(`Price exceeds verify limit of ₹${userMaxPrice}`, "error");
                 return;
             }
 
@@ -212,18 +322,21 @@
 
             try {
                 btn.disabled = true;
-                btn.innerText = "Publishing Listing...";
+                btn.innerHTML = `Syncing to Chain... <i data-lucide="loader-2" class="animate-spin" style="width: 18px; height: 18px;"></i>`;
+                lucide.createIcons();
+                
                 await apiRequest("/coupons", {
                     method: "POST",
                     body: JSON.stringify(payload)
                 });
 
-                showToast("Coupon listed successfully!", "success");
+                showToast("Listing published successfully.", "success");
                 setTimeout(() => window.location.href = "mylistings.html", 1500);
             } catch (err) {
-                showToast(err.message || "Failed to publish coupon", "error");
+                showToast(err.message || "Network synchronization error", "error");
                 btn.disabled = false;
-                btn.innerText = "Publish Listing";
+                btn.innerHTML = `Publish to Marketplace <i data-lucide="zap" style="width: 18px; height: 18px;"></i>`;
+                lucide.createIcons();
             }
         }
 
