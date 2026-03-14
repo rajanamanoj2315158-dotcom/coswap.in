@@ -628,17 +628,11 @@ app.get("/me/profile", authMiddleware, async (req, res) => {
     const fraudPercent = totalSold > 0 ? Math.round((fraudReports / totalSold) * 100) : 0;
     const rating = user.rating_count > 0 ? (user.rating_sum / user.rating_count).toFixed(1) : null;
 
-    let level = 1, maxPrice = 500;
-    if (customers >= 10) { level = 2; maxPrice = 1000; }
-    if (customers >= 25) { level = 3; maxPrice = 2500; }
-    if (customers >= 50) { level = 4; maxPrice = 5000; }
-    if (customers >= 100) { level = 5; maxPrice = 10000; }
-
-    if (fraudPercent > 5) {
-        maxPrice = Math.min(maxPrice, 200);
-    } else if (fraudPercent > 2) {
-        maxPrice = Math.min(maxPrice, 1000);
-    }
+    let level = 1, maxPrice = 10;
+    if (customers >= 10) { level = 2; maxPrice = 20; }
+    if (customers >= 25) { level = 3; maxPrice = 40; }
+    if (customers >= 50) { level = 4; maxPrice = 70; }
+    if (customers >= 100) { level = 5; maxPrice = 100; }
 
     res.json({ profile: { id: String(user._id), name: user.name, customers, totalSold, fraudReports, fraudPercent, rating, ratingCount: user.rating_count, level, maxPrice, status: user.status, pending_fee: 0 } });
   } catch (err) { res.status(500).json({ error: err.message }); }
@@ -885,34 +879,27 @@ app.post("/coupons", authMiddleware, async (req, res) => {
     const fraudPercent = stats.fraudPercent || 0;
     const customers = stats.customers || 0;
     
-    let backendMaxPrice = 500; // Default Level 1
+    let backendMaxPrice = 10; // Default Level 1
     
     // Level 1: 0-9 customers
     if (customers < 10) {
-        backendMaxPrice = 500;
+        backendMaxPrice = 10;
     } 
     // Level 2: 10-24 customers
     else if (customers < 25) {
-        backendMaxPrice = 1000;
+        backendMaxPrice = 20;
     }
     // Level 3: 25-49 customers
     else if (customers < 50) {
-        backendMaxPrice = 2500;
+        backendMaxPrice = 40;
     }
     // Level 4: 50-99 customers
     else if (customers < 100) {
-        backendMaxPrice = 5000;
+        backendMaxPrice = 70;
     }
     // Level 5: 100+ customers
     else {
-        backendMaxPrice = 10000;
-    }
-
-    // Fraud Penalty: If fraud is high, cap the price strictly
-    if (fraudPercent > 5) {
-        backendMaxPrice = Math.min(backendMaxPrice, 200); // High fraud cap
-    } else if (fraudPercent > 2) {
-        backendMaxPrice = Math.min(backendMaxPrice, 1000); // Moderate fraud cap
+        backendMaxPrice = 100;
     }
 
     if (numPrice > backendMaxPrice) {
