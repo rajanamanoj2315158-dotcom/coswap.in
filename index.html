@@ -488,7 +488,9 @@
         }
     </style>
 </head>
-<body>
+<!-- Load Lucide Icons -->
+<script src="https://unpkg.com/lucide@latest"></script>
+<body class="soft-bg has-hero">
     <div class="premium-bg" aria-hidden="true">
         <div class="blob blob-1"></div>
         <div class="blob blob-2"></div>
@@ -497,27 +499,11 @@
     </div>
 
     <nav class="nav-wrapper">
-        <div class="nav-container">
-            <a href="index.html" class="nav-left">
-                <img src="logo.png" alt="CoSwap" />
-                <span>CoSwap</span>
+        <div class="content-container" style="display:flex; align-items:center; justify-content:space-between; height: 100%;">
+            <a href="index.html" class="brand">
+                <img src="logo.png" alt="CoSwap" class="logo">
+                <span class="brand-name">CoSwap</span>
             </a>
-
-            <div class="nav-center">
-                <a href="dashboard.html">Dashboard</a>
-                <a href="browse.html">Browse Coupons</a>
-                <a href="sell.html">Sell Coupon</a>
-                <a href="mylistings.html">My Listings</a>
-            </div>
-
-            <div class="nav-right">
-                <button class="mobile-menu-btn" onclick="window.location.href='dashboard.html'">
-                    <svg viewBox="0 0 24 24"><path d="M3 12h18M3 6h18M3 18h18"/></svg>
-                </button>
-                <div class="profile-btn" onclick="goToProfile()" title="Login / Profile">
-                    <svg viewBox="0 0 24 24"><path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/></svg>
-                </div>
-            </div>
         </div>
     </nav>
 

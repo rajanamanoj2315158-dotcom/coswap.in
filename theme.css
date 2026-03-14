@@ -16,12 +16,13 @@
   --radius-lg: 16px;
   --radius-md: 12px;
   --radius-sm: 8px;
-  --transition-fast: 0.2s ease;
-  --transition-slow: 0.45s ease;
+  --transition-fast: 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+  --transition-slow: 0.4s cubic-bezier(0.4, 0, 0.2, 1);
   --surface: #1e2a3a;
   --surface-2: #2b3d52;
   --glow-blue: rgba(79, 208, 255, 0.18);
   --glow-purple: rgba(111, 108, 255, 0.18);
+  --shadow-elite: 0 10px 30px -10px rgba(0, 0, 0, 0.5);
 }
 
 * {
@@ -141,11 +142,12 @@ button:focus-visible,
 .purchase-card,
 .notif-card,
 .chat-card {
-  border-radius: var(--radius-lg);
+  border-radius: 16px;
   border: 1px solid var(--card-border);
   box-shadow: var(--shadow-soft);
   background: var(--card-bg);
-  transition: transform 0.22s ease, box-shadow 0.22s ease, border-color 0.22s ease;
+  transition: transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1), box-shadow 0.3s ease, border-color 0.3s ease;
+  overflow: hidden;
 }
 
 .purchase-card:hover,
@@ -624,4 +626,58 @@ button:focus-visible,
 .toast.show {
   opacity: 1;
   transform: translateX(-50%) translateY(0);
+}
+
+/* ─── Centering System ───────────────────────────────────────────────────── */
+.content-container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding-left: 24px;
+  padding-right: 24px;
+  width: 100%;
+}
+
+/* ─── Typography Polish ──────────────────────────────────────────────────── */
+.hero-text-limit {
+  max-width: 650px;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.heading-elite {
+  font-size: clamp(32px, 5vw, 48px);
+  font-weight: 800;
+  letter-spacing: -0.03em;
+  line-height: 1.1;
+  margin-bottom: 16px;
+}
+
+.subtext-elite {
+  color: var(--text-soft);
+  font-size: 1.125rem;
+  line-height: 1.6;
+}
+
+/* ─── Icon Button Utilities ──────────────────────────────────────────────── */
+.btn-icon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 40px;
+  height: 40px;
+  border-radius: 10px;
+  background: rgba(255, 255, 255, 0.06);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  color: white;
+  transition: 0.2s;
+}
+
+.btn-icon:hover {
+  background: rgba(255, 255, 255, 0.12);
+  transform: translateY(-2px);
+}
+
+.btn-icon svg {
+  width: 20px;
+  height: 20px;
 }
