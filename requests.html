@@ -7,6 +7,8 @@
     <link rel="stylesheet" href="theme.css">
     <script src="api.js"></script>
     <script src="ui.js" defer></script>
+    <!-- Load Lucide Icons -->
+    <script src="https://unpkg.com/lucide@latest"></script>
     <style>
         * { box-sizing: border-box; margin: 0; padding: 0; }
         body { 
@@ -18,42 +20,7 @@
         }
 
         /* Sidebar Styles (Consistent across Workspace) */
-        .sidebar {
-            width: 280px; height: 100vh; position: fixed; left: 0; top: 0;
-            background: rgba(11, 15, 29, 0.8); backdrop-filter: blur(20px);
-            border-right: 1px solid rgba(255, 255, 255, 0.08); padding: 32px 24px;
-            display: flex; flex-direction: column; z-index: 1000; transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-        }
-        .logo-area { display: flex; align-items: center; gap: 12px; margin-bottom: 48px; text-decoration: none; color: white; }
-        .logo-area img { width: 32px; height: 32px; }
-        .logo-area span { font-size: 20px; font-weight: 800; letter-spacing: -0.02em; }
-
-        .nav-links { display: flex; flex-direction: column; gap: 8px; flex-grow: 1; }
-        .nav-link {
-            display: flex; align-items: center; gap: 12px; padding: 12px 16px; border-radius: 12px;
-            color: rgba(255, 255, 255, 0.5); text-decoration: none; font-size: 14px; font-weight: 600; transition: 0.2s;
-        }
-        .nav-link:hover { background: rgba(255, 255, 255, 0.05); color: white; }
-        .nav-link.active { background: rgba(79, 208, 255, 0.1); color: #4fd0ff; }
-        .nav-link svg { width: 20px; height: 20px; stroke-width: 2; }
-
-        .sidebar-footer { padding-top: 24px; border-top: 1px solid rgba(255, 255, 255, 0.05); }
-
-        /* Main Content */
-        .main { margin-left: 280px; padding: 48px; min-height: 100vh; transition: 0.3s; }
-        .header { margin-bottom: 40px; }
-        .header h1 { font-size: 32px; font-weight: 800; letter-spacing: -0.02em; margin-bottom: 8px; }
-        .header p { color: rgba(255, 255, 255, 0.5); font-size: 16px; }
-
-        /* Mobile Header */
-        .mobile-header {
-            display: none; position: sticky; top: 0; z-index: 900;
-            background: rgba(11, 15, 29, 0.9); backdrop-filter: blur(20px);
-            padding: 16px 20px; border-bottom: 1px solid rgba(255, 255, 255, 0.08);
-            align-items: center; justify-content: space-between;
-        }
-        .hamburger { background: none; border: none; color: white; cursor: pointer; padding: 4px; }
-
+        
         /* Request Card - Enhanced Glassmorphism */
         .request-panel {
             background: rgba(255, 255, 255, 0.04);
@@ -277,5 +244,13 @@
 
         loadRequest();
     </script>
-</body>
-</html>
+    <!-- Bottom Nav for Mobile -->
+    <nav class="mobile-nav">
+        <div class="mobile-nav-inner">
+            <a href="dashboard.html" class="mobile-nav-item"><i data-lucide="layout-dashboard"></i><span>Home</span></a>
+            <a href="browse.html" class="mobile-nav-item"><i data-lucide="search"></i><span>Browse</span></a>
+            <a href="sell.html" class="mobile-nav-item"><i data-lucide="plus-circle"></i><span>Sell</span></a>
+            <a href="chatlist.html" class="mobile-nav-item"><i data-lucide="message-square"></i><span>Chat</span></a>
+        </div>
+    </nav>
+    <script>lucide.createIcons();</script>

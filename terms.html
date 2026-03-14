@@ -49,8 +49,10 @@
             .term-card { padding: 32px 24px; }
         }
     </style>
+    <!-- Load Lucide Icons -->
+    <script src="https://unpkg.com/lucide@latest"></script>
 </head>
-<body class="soft-bg">
+<body class="soft-bg has-mobile-nav">
     <div class="premium-bg" aria-hidden="true">
         <div class="blob blob-1"></div>
         <div class="blob blob-2"></div>
@@ -58,17 +60,29 @@
         <div class="mist-container"></div>
     </div>
 
-    <main class="container">
-        <header class="legal-header">
-            <h1>Terms & Conditions</h1>
-            <div class="effective-date">Effective Date: March 13, 2026</div>
+    <!-- Nav Support for Terms -->
+    <nav class="nav-wrapper desktop-only" style="background: rgba(15, 19, 36, 0.82); backdrop-filter: blur(20px); height: 72px; border-bottom: 1px solid rgba(255,255,255,0.08);">
+        <div class="content-container" style="display:flex; align-items:center; justify-content:space-between; height: 100%;">
+            <a href="index.html" class="brand" style="display: flex; align-items: center; gap: 12px; text-decoration: none; color: white;">
+                <img src="logo.png" alt="CoSwap" style="width: 32px; height: 32px;">
+                <span style="font-size: 20px; font-weight: 800; letter-spacing: -0.02em;">CoSwap</span>
+            </a>
+            <div style="display: flex; gap: 32px; align-items: center;">
+                <a href="index.html" style="color: rgba(255,255,255,0.7); font-weight: 600; text-decoration: none;">Home</a>
+                <a href="browse.html" style="color: rgba(255,255,255,0.7); font-weight: 600; text-decoration: none;">Browse</a>
+                <a href="sell.html" style="color: rgba(255,255,255,0.7); font-weight: 600; text-decoration: none;">Sell</a>
+            </div>
+            <a href="login.html" class="btn-primary" style="padding: 10px 24px; border-radius: 12px; text-decoration: none;">Log In</a>
+        </div>
+    </nav>
+
+    <main class="content-container" style="padding: 60px 24px 100px; max-width: 900px;">
+        <header style="margin-bottom: 48px;">
+            <h1 style="font-size: 40px; font-weight: 800; letter-spacing: -0.02em;">Terms & Conditions for CoSwap</h1>
+            <p style="color: rgba(255,255,255,0.5); margin-top: 8px;">Effective Date: March 13, 2026</p>
         </header>
 
-        <p class="intro-text">
-            These Terms & Conditions govern the use of the CoSwap platform, including browsing coupons, posting listings, and interacting with other users.
-        </p>
-
-        <div class="terms-grid">
+        <div class="glass-card" style="padding: 40px; border-radius: 24px; line-height: 1.8; color: rgba(255,255,255,0.8);">
             <section class="term-card">
                 <h2>Accounts</h2>
                 <p>Users must provide accurate, complete, and up-to-date account information when registering on the platform. You are responsible for maintaining the confidentiality of your login credentials.</p>
@@ -124,6 +138,13 @@
             <button class="btn-accept" onclick="window.history.back()">Accept Terms</button>
             <a href="index.html" class="btn-back">Back to Home</a>
         </footer>
-    </main>
-</body>
-</html>
+    <!-- Bottom Nav for Mobile -->
+    <nav class="mobile-nav">
+        <div class="mobile-nav-inner">
+            <a href="index.html" class="mobile-nav-item"><i data-lucide="home"></i><span>Home</span></a>
+            <a href="browse.html" class="mobile-nav-item"><i data-lucide="search"></i><span>Browse</span></a>
+            <a href="sell.html" class="mobile-nav-item"><i data-lucide="plus-circle"></i><span>Sell</span></a>
+            <a href="login.html" class="mobile-nav-item"><i data-lucide="log-in"></i><span>Login</span></a>
+        </div>
+    </nav>
+    <script>lucide.createIcons();</script>
