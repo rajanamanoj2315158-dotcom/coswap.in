@@ -99,6 +99,21 @@ app.get("/robots.txt", (req, res) => {
   res.send(`User-agent: *\nAllow: /\n\nSitemap: https://coswap.in/sitemap.xml`);
 });
 
+app.get("/categories", (req, res) => {
+  res.json({
+    categories: [
+      "OTT",
+      "Food",
+      "Travel",
+      "Shopping",
+      "Beauty",
+      "Electronics",
+      "Gift Cards",
+      "Gaming"
+    ]
+  });
+});
+
 app.get("/sitemap.xml", async (req, res) => {
   try {
     const baseUrl = "https://coswap.in";

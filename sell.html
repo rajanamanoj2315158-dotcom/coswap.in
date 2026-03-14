@@ -84,9 +84,9 @@
             background-size: 18px;
         }
 
-        /* Fixed Height for Select */
+        /* Removed max-height from select as it was causing invisible options in some browsers */
         #categoryInput {
-            max-height: 54px;
+            cursor: pointer;
         }
 
         .form-group textarea {
@@ -260,15 +260,7 @@
             <div class="form-group">
                 <label for="categoryInput">Category*</label>
                 <select id="categoryInput" required>
-                    <option value="">Select Category</option>
-                    <option value="OTT">OTT</option>
-                    <option value="Food">Food</option>
-                    <option value="Travel">Travel</option>
-                    <option value="Shopping">Shopping</option>
-                    <option value="Beauty">Beauty</option>
-                    <option value="Electronics">Electronics</option>
-                    <option value="Gift Cards">Gift Cards</option>
-                    <option value="Gaming">Gaming</option>
+                    <option value="">Loading categories...</option>
                 </select>
                 <div id="aiCategory" class="ai-suggestion" onclick="applySuggestion('categoryInput', this.dataset.value)">
                     <i data-lucide="tag" style="width: 14px;"></i> <span>Match: </span> <b id="catSugText"></b>
@@ -310,9 +302,7 @@
         async function initPage() {
             try {
                 const data = await apiRequest("/me/profile");
-                const profile = data.user || {}; // API returns user object usually
-                
-                // If the above failed or returned different structure, check local fallback
+                const profile = data.user || {}; 
                 const fraud = profile.fraud_percent || 0;
                 sellerMaxPrice = profile.max_price || 500;
                 
@@ -321,13 +311,41 @@
                 document.getElementById("statusText").innerText = profile.status === "frozen" ? "Frozen" : "Normal";
                 document.getElementById("statusText").style.color = profile.status === "frozen" ? "#ff6b6b" : "#067d62";
 
-                // Set min date for expiry
                 const today = new Date().toISOString().split('T')[0];
                 document.getElementById('expiryInput').min = today;
+
+                // Load Categories Dynamic
+                loadCategories();
                 
             } catch (err) {
                 console.error("Profile load failed", err);
+                loadCategories(); // Still try categories
             }
+        }
+
+        async function loadCategories() {
+            const select = document.getElementById('categoryInput');
+            const fallback = ["OTT", "Food", "Travel", "Shopping", "Beauty", "Electronics", "Gift Cards", "Gaming"];
+            
+            try {
+                const data = await apiRequest("/categories");
+                const cats = data.categories || fallback;
+                renderCategories(cats);
+            } catch (err) {
+                console.warn("Category API failed, using fallback");
+                renderCategories(fallback);
+            }
+        }
+
+        function renderCategories(list) {
+            const select = document.getElementById('categoryInput');
+            select.innerHTML = '<option value="">Select Category</option>';
+            list.forEach(c => {
+                const opt = document.createElement('option');
+                opt.value = c;
+                opt.textContent = c;
+                select.appendChild(opt);
+            });
         }
         initPage();
 
@@ -429,6 +447,10 @@
             const price = document.getElementById('priceInput').value;
             const expiry = document.getElementById('expiryInput').value;
             const details = document.getElementById('detailsInput').value.trim();
+            if (!category) {
+                showToast("Please select a category before posting the coupon.", "error");
+                return;
+            }
 
             if (parseInt(price) > sellerMaxPrice) {
                 showToast(`Price cannot exceed your trust limit of ₹${sellerMaxPrice}`, "error");
