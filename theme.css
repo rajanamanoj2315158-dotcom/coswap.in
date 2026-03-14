@@ -299,101 +299,103 @@ button,
   }
 }
 
-/* ─── Premium Living Interface (Global Background System) ─────────────────── */
-.premium-bg {
-  pointer-events: none;
+/* ─── Premium Living Interface (Responsive Animation Tiers) ─────────────────── */
+.premium-bg-system {
   position: fixed;
   inset: 0;
-  z-index: -1;
+  z-index: -2;
   overflow: hidden;
+  pointer-events: none;
 }
 
-.blob {
+/* 1. Aurora Gradient Motion */
+.aurora-layer {
   position: absolute;
-  border-radius: 50%;
+  inset: -50%;
+  background: radial-gradient(circle at 50% 50%, 
+    rgba(79, 140, 255, 0.08) 0%, 
+    rgba(110, 91, 255, 0.05) 30%, 
+    transparent 70%);
   filter: blur(80px);
-  opacity: 0.15;
-  will-change: transform;
+  animation: auroraMove 40s linear infinite;
+  opacity: 0.08;
 }
 
-.blob-1 {
-  width: 600px;
-  height: 600px;
-  background: radial-gradient(circle, #4fd0ff, transparent 70%);
-  top: -150px;
-  left: -100px;
-  animation: blobFloat 45s ease-in-out infinite;
+@keyframes auroraMove {
+  0%   { transform: rotate(0deg) scale(1.1); }
+  50%  { transform: rotate(180deg) scale(1.3); }
+  100% { transform: rotate(360deg) scale(1.1); }
 }
 
-.blob-2 {
-  width: 500px;
-  height: 500px;
-  background: radial-gradient(circle, #6f6cff, transparent 70%);
-  bottom: -100px;
-  right: -50px;
-  animation: blobFloat 60s ease-in-out infinite reverse;
-}
-
-.blob-3 {
-  width: 400px;
-  height: 400px;
-  background: radial-gradient(circle, #a78bff, transparent 70%);
-  top: 40%;
-  left: 60%;
-  animation: blobFloat 52s ease-in-out infinite;
-  animation-delay: -15s;
-}
-
-@keyframes blobFloat {
-  0%, 100% { transform: translate(0, 0) scale(1); }
-  33%       { transform: translate(40px, -60px) scale(1.1); }
-  66%       { transform: translate(-30px, 40px) scale(0.95); }
-}
-
-/* Glass Transparency for Cards to show depth */
-.card,
-.action-card,
-.notif-card,
-.chat-card,
-.purchase-card,
-.transaction-card,
-.panel-card,
-.settings-card,
-.glass-card {
-  background: rgba(255, 255, 255, 0.035) !important;
-  backdrop-filter: blur(20px) saturate(180%);
-  -webkit-backdrop-filter: blur(20px) saturate(180%);
-  border: 1px solid rgba(255, 255, 255, 0.08) !important;
-  box-shadow:
-    0 4px 24px -1px rgba(0, 0, 0, 0.2),
-    inset 0 0 20px 0 rgba(255, 255, 255, 0.02);
-}
-
-/* ─── Elite Mist Particles (Floating Droplets) ────────────────────────────── */
-.mist-container {
-  pointer-events: none;
-  position: fixed;
-  inset: 0;
-  z-index: -1;
-  overflow: hidden;
-}
-
-.mist-droplet {
+/* 2. Floating Droplet System */
+.droplet-container {
   position: absolute;
-  background: radial-gradient(circle at 30% 30%, rgba(255, 255, 255, 0.4), transparent 70%);
-  background-color: rgba(255, 255, 255, 0.05);
+  inset: 0;
+}
+
+.bg-droplet {
+  position: absolute;
+  background: var(--ultra-blue, #4F8CFF);
   border-radius: 50%;
-  filter: blur(2px);
+  filter: blur(4px);
+  opacity: 0.06;
+  animation: floatUp var(--duration, 20s) ease-in-out infinite;
   will-change: transform, opacity;
-  animation: driftUp var(--duration, 15s) ease-in-out infinite;
+}
+
+@keyframes floatUp {
+  0% { transform: translate(0, 110vh) scale(0.6); opacity: 0; }
+  20% { opacity: 0.06; }
+  80% { opacity: 0.06; }
+  100% { transform: translate(var(--sway, 30px), -10vh) scale(1.1); opacity: 0; }
+}
+
+/* 3. Liquid Ripple (Desktop Only) */
+.ripple-layer {
+  position: absolute;
+  inset: 0;
+  display: none; /* Default hidden */
+}
+
+.liquid-ripple {
+  position: absolute;
+  width: 2px;
+  height: 2px;
+  background: rgba(79, 140, 255, 0.2);
+  border-radius: 50%;
+  box-shadow: 0 0 40px 10px rgba(79, 140, 255, 0.1);
+  animation: ripplePulse 12s ease-out infinite;
   opacity: 0;
 }
 
-@keyframes driftUp {
-  0% { transform: translate(0, 100vh) scale(0.5); opacity: 0; }
-  15% { opacity: var(--max-opacity, 0.2); }
-  85% { opacity: var(--max-opacity, 0.2); }
-  100% { transform: translate(var(--sway, 40px), -100px) scale(1.2); opacity: 0; }
+@keyframes ripplePulse {
+  0% { transform: scale(0); opacity: 0; }
+  5% { opacity: 0.3; }
+  50% { transform: scale(300); opacity: 0; }
+  100% { opacity: 0; }
+}
+
+/* Breakpoint Tiers */
+
+/* Desktop Experience (1024px+) */
+@media (min-width: 1024px) {
+  .ripple-layer { display: block; }
+  .bg-droplet:nth-child(n+11) { display: none; } /* Show up to 10 droplets */
+}
+
+/* Tablet Experience (600px - 1024px) */
+@media (max-width: 1024px) and (min-width: 600px) {
+  .aurora-layer { animation-duration: 60s; opacity: 0.06; }
+  .bg-droplet:nth-child(n+6) { display: none; } /* Show only 5 droplets */
+  .bg-droplet { --duration: 30s; }
+}
+
+/* Mobile Experience (below 600px) */
+@media (max-width: 600px) {
+  .ripple-layer { display: none !important; }
+  .aurora-layer { animation-duration: 90s; opacity: 0.04; }
+  .bg-droplet:nth-child(n+3) { display: none; } /* Show only 2 droplets */
+  .bg-droplet { --duration: 45s; opacity: 0.04; }
 }
 
 /* ─── Micro-Interactions ────────────────────────────────────────────────── */
