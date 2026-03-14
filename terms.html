@@ -8,51 +8,9 @@
     <script src="ui.js" defer></script>
     <style>
         * { box-sizing: border-box; margin: 0; padding: 0; }
-        body { 
-            background: #000; 
-            color: white; 
-            font-family: "Inter", system-ui, -apple-system, sans-serif;
-            line-height: 1.6;
-            min-height: 100vh;
-        }
-
-        .container { max-width: 900px; margin: 0 auto; padding: 80px 24px; }
-        
-        .legal-header { margin-bottom: 64px; text-align: center; }
-        .legal-header h1 { font-size: 44px; font-weight: 800; letter-spacing: -0.02em; margin-bottom: 12px; }
-        .effective-date { display: inline-block; background: rgba(79, 208, 255, 0.1); padding: 8px 20px; border-radius: 99px; font-size: 13px; font-weight: 700; color: #4fd0ff; border: 1px solid rgba(79, 208, 255, 0.2); }
-
-        .intro-text { font-size: 18px; color: rgba(255,255,255,0.8); text-align: center; max-width: 700px; margin: 0 auto 64px; }
-
-        .terms-grid { display: grid; gap: 32px; }
-        .term-card {
-            background: rgba(255, 255, 255, 0.03); border: 1px solid rgba(255, 255, 255, 0.08);
-            border-radius: 28px; padding: 40px; transition: transform 0.2s, background 0.2s;
-        }
-        .term-card:hover { transform: translateY(-4px); background: rgba(255,255,255,0.05); border-color: rgba(255,255,255,0.15); }
-        .term-card h2 { font-size: 22px; font-weight: 800; margin-bottom: 16px; color: white; display: flex; align-items: center; gap: 12px; }
-        .term-card h2::before { content: ""; width: 8px; height: 16px; background: #4fd0ff; border-radius: 4px; }
-        .term-card p { color: rgba(255,255,255,0.6); font-size: 16px; line-height: 1.7; }
-
-        .actions { display: flex; flex-direction: column; align-items: center; gap: 16px; margin-top: 80px; padding-top: 64px; border-top: 1px solid rgba(255,255,255,0.08); }
-        .btn-accept { 
-            padding: 18px 56px; border-radius: 16px; background: white; color: black;
-            font-size: 17px; font-weight: 800; cursor: pointer; border: none; transition: 0.2s;
-        }
-        .btn-accept:hover { transform: scale(1.02); box-shadow: 0 12px 32px rgba(255,255,255,0.15); }
-        .btn-back { color: rgba(255,255,255,0.4); text-decoration: none; font-size: 15px; font-weight: 600; transition: 0.2s; }
-        .btn-back:hover { color: white; }
-
-        @media (max-width: 768px) {
-            .container { padding: 48px 20px; }
-            .legal-header h1 { font-size: 32px; }
-            .term-card { padding: 32px 24px; }
-        }
-    </style>
-    <!-- Load Lucide Icons -->
-    <script src="https://unpkg.com/lucide@latest"></script>
 </head>
-<body class="soft-bg has-mobile-nav">
+<body class="soft-bg">
+    <!-- Premium Background Effects -->
     <div class="premium-bg" aria-hidden="true">
         <div class="blob blob-1"></div>
         <div class="blob blob-2"></div>
@@ -60,43 +18,68 @@
         <div class="mist-container"></div>
     </div>
 
-    <!-- Nav Support for Terms -->
-    <nav class="nav-wrapper desktop-only" style="background: rgba(15, 19, 36, 0.82); backdrop-filter: blur(20px); height: 72px; border-bottom: 1px solid rgba(255,255,255,0.08);">
-        <div class="content-container" style="display:flex; align-items:center; justify-content:space-between; height: 100%;">
-            <a href="index.html" class="brand" style="display: flex; align-items: center; gap: 12px; text-decoration: none; color: white;">
-                <img src="logo.png" alt="CoSwap" style="width: 32px; height: 32px;">
-                <span style="font-size: 20px; font-weight: 800; letter-spacing: -0.02em;">CoSwap</span>
-            </a>
-            <div style="display: flex; gap: 32px; align-items: center;">
-                <a href="index.html" style="color: rgba(255,255,255,0.7); font-weight: 600; text-decoration: none;">Home</a>
-                <a href="browse.html" style="color: rgba(255,255,255,0.7); font-weight: 600; text-decoration: none;">Browse</a>
-                <a href="sell.html" style="color: rgba(255,255,255,0.7); font-weight: 600; text-decoration: none;">Sell</a>
+    <main>
+        <!-- Top Nav (Desktop) -->
+        <nav class="nav-wrapper desktop-only" style="background: rgba(15, 19, 36, 0.82); backdrop-filter: blur(20px); height: 72px;">
+            <div class="content-container" style="display:flex; align-items:center; justify-content:space-between; height: 100%;">
+                <a href="index.html" class="brand" style="display: flex; align-items: center; gap: 12px; text-decoration: none; color: white;">
+                    <img src="logo.png" alt="CoSwap" style="width: 32px; height: 32px;" loading="lazy">
+                    <span style="font-size: 20px; font-weight: 800; letter-spacing: -0.02em;">CoSwap</span>
+                </a>
+                <div style="display: flex; gap: 12px; align-items: center;">
+                    <a href="chatlist.html" class="btn-icon" title="Messages"><i data-lucide="message-square"></i></a>
+                    <a href="terms.html" class="btn-icon" title="Terms" style="color:var(--accent); background:rgba(79, 208, 255, 0.1);"><i data-lucide="file-text"></i></a>
+                    <a href="profile.html" class="btn-icon" title="Profile"><i data-lucide="user"></i></a>
+                    <a href="login.html" class="btn-icon" title="Logout" style="margin-left:8px; color: var(--danger);"><i data-lucide="log-out"></i></a>
+                </div>
             </div>
-            <a href="login.html" class="btn-primary" style="padding: 10px 24px; border-radius: 12px; text-decoration: none;">Log In</a>
-        </div>
-    </nav>
+        </nav>
 
-    <main class="content-container" style="padding: 60px 24px 100px; max-width: 900px;">
-        <header style="margin-bottom: 48px;">
-            <h1 style="font-size: 40px; font-weight: 800; letter-spacing: -0.02em;">Terms & Conditions for CoSwap</h1>
-            <p style="color: rgba(255,255,255,0.5); margin-top: 8px;">Effective Date: March 13, 2026</p>
-        </header>
+        <section class="content-container" style="padding: 60px 24px 100px; max-width: 900px;">
+            <div style="text-align: center; margin-bottom: 64px;">
+                <h1 class="heading-elite" style="font-size: 40px;">Terms & Conditions</h1>
+                <p class="subtext-elite" style="margin: 0 auto;">Effective Date: March 13, 2026. Please read these terms carefully before using our platform.</p>
+            </div>
 
-        <div class="glass-card" style="padding: 40px; border-radius: 24px; line-height: 1.8; color: rgba(255,255,255,0.8);">
-            <section class="term-card">
-                <h2>Accounts</h2>
-                <p>Users must provide accurate, complete, and up-to-date account information when registering on the platform. You are responsible for maintaining the confidentiality of your login credentials.</p>
-            </section>
+            <div class="glass-card" style="padding: 48px; display: flex; flex-direction: column; gap: 48px;">
+                <section>
+                    <h2 style="font-size: 20px; font-weight: 800; margin-bottom: 16px; color: white; display: flex; align-items: center; gap: 12px;">
+                        <span style="width:4px; height:20px; background:var(--accent); border-radius:2px;"></span>
+                        Accounts & Security
+                    </h2>
+                    <p style="color: rgba(255,255,255,0.7); line-height: 1.7; font-size: 15px;">Users must provide accurate, complete, and up-to-date account information when registering. You are solely responsible for maintaining the confidentiality of your credentials and for all activities that occur under your account.</p>
+                </section>
 
-            <section class="term-card">
-                <h2>Marketplace Listings</h2>
-                <p>Sellers are responsible for the accuracy of their coupon descriptions, expiration dates, and usage terms. CoSwap does not pre-verify every listing but reserves the right to remove non-compliant content.</p>
-            </section>
+                <section>
+                    <h2 style="font-size: 20px; font-weight: 800; margin-bottom: 16px; color: white; display: flex; align-items: center; gap: 12px;">
+                        <span style="width:4px; height:20px; background:var(--accent); border-radius:2px;"></span>
+                        Marketplace Integrity
+                    </h2>
+                    <p style="color: rgba(255,255,255,0.7); line-height: 1.7; font-size: 15px;">Sellers represent and warrant that all coupon listings are valid, accurately described, and within the authorization of the original issuer. Fake, expired, or fraudulent listings lead to permanent account suspension without warning.</p>
+                </section>
 
-            <section class="term-card">
-                <h2>Communication Between Users</h2>
-                <p>In-platform chat sessions are provided for finalizing deal details. Respectful conduct is required. Harassment, spamming, or attempting to move transactions off-platform is strictly prohibited.</p>
-            </section>
+                <section>
+                    <h2 style="font-size: 20px; font-weight: 800; margin-bottom: 16px; color: white; display: flex; align-items: center; gap: 12px;">
+                        <span style="width:4px; height:20px; background:var(--accent); border-radius:2px;"></span>
+                        Communication Policy
+                    </h2>
+                    <p style="color: rgba(255,255,255,0.7); line-height: 1.7; font-size: 15px;">In-platform chat is for transaction-related inquiries only. Harassment, solicitation of off-platform bypass, or sharing of sensitive personal financial information is strictly prohibited.</p>
+                </section>
+
+                <section>
+                    <h2 style="font-size: 20px; font-weight: 800; margin-bottom: 16px; color: white; display: flex; align-items: center; gap: 12px;">
+                        <span style="width:4px; height:20px; background:var(--accent); border-radius:2px;"></span>
+                        Liability Limitation
+                    </h2>
+                    <p style="color: rgba(255,255,255,0.7); line-height: 1.7; font-size: 15px;">CoSwap is a peer-to-peer facilitator and is not liable for the non-performance of individual coupons or user behavior, although we strive to maintain a safe environment through verification protocols.</p>
+                </section>
+
+                <div style="margin-top: 32px; padding-top: 48px; border-top: 1px solid rgba(255,255,255,0.05); text-align: center;">
+                    <a href="dashboard.html" class="btn-primary" style="padding: 16px 40px; border-radius: 12px; text-decoration: none; font-weight: 700;">I Understand</a>
+                </div>
+            </div>
+        </section>
+    </main>
 
             <section class="term-card">
                 <h2>Payments and Pricing</h2>

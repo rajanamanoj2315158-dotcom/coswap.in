@@ -10,58 +10,9 @@
     <!-- Load Lucide Icons -->
     <script src="https://unpkg.com/lucide@latest"></script>
     <style>
-        * { box-sizing: border-box; margin: 0; padding: 0; }
-        body { 
-            background: #000; 
-            color: white; 
-            font-family: "Inter", system-ui, -apple-system, sans-serif;
-            min-height: 100vh;
-            overflow-x: hidden;
-        }
-
-        /* Sidebar Styles (Consistent across Workspace) */
-        
-        /* Request Card - Enhanced Glassmorphism */
-        .request-panel {
-            background: rgba(255, 255, 255, 0.04);
-            backdrop-filter: blur(24px) saturate(180%);
-            -webkit-backdrop-filter: blur(24px) saturate(180%);
-            border: 1px solid rgba(255, 255, 255, 0.1);
-            border-radius: 28px; padding: 56px 48px; text-align: center; max-width: 600px;
-            margin: 40px auto;
-            box-shadow: 0 20px 50px rgba(0,0,0,0.3);
-            animation: riseIn 0.8s ease-out;
-        }
-        .request-info { font-size: 22px; font-weight: 700; line-height: 1.5; margin-bottom: 24px; color: white; letter-spacing: -0.01em; }
-        .timer-box { font-size: 44px; font-weight: 800; color: #4fd0ff; margin-bottom: 40px; font-variant-numeric: tabular-nums; letter-spacing: -0.02em; }
-
-        .btn-stack { display: grid; gap: 12px; }
-        .btn-lg {
-            padding: 16px; border-radius: 14px; font-size: 16px; font-weight: 700;
-            cursor: pointer; text-decoration: none; transition: 0.2s; border: none;
-        }
-        .btn-accept { background: linear-gradient(135deg, #4fd0ff, #6f6cff); color: white; }
-        .btn-accept:hover { transform: translateY(-1px); box-shadow: 0 4px 15px rgba(111, 108, 255, 0.4); }
-        .btn-ignore { background: rgba(255, 59, 48, 0.1); color: #ff3b30; border: 1px solid rgba(255, 59, 48, 0.2); }
-        .btn-ignore:hover { background: rgba(255, 59, 48, 0.2); }
-
-        /* Empty / Waiting State */
-        .waiting-box { padding: 80px 40px; border-radius: 24px; background: rgba(255,255,255,0.02); 
-            border: 1px dashed rgba(255,255,255,0.1); text-align: center;
-        }
-        .waiting-box h2 { font-size: 24px; font-weight: 800; margin-bottom: 12px; }
-        .waiting-box p { color: rgba(255,255,255,0.4); }
-
-        @media (max-width: 768px) {
-            .sidebar { transform: translateX(-100%); }
-            .sidebar.active { transform: translateX(0); }
-            .main { margin-left: 0; padding: 24px; }
-            .mobile-header { display: flex; }
-            .request-panel { padding: 32px 24px; }
-        }
-    </style>
 </head>
 <body class="soft-bg">
+    <!-- Premium Background Effects -->
     <div class="premium-bg" aria-hidden="true">
         <div class="blob blob-1"></div>
         <div class="blob blob-2"></div>
@@ -69,35 +20,41 @@
         <div class="mist-container"></div>
     </div>
 
-    <!-- Mobile Header -->
-    <header class="mobile-header">
-        <button class="hamburger" id="menuToggle" aria-label="Toggle Menu">
-            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="3" y1="12" x2="21" y2="12"></line><line x1="3" y1="6" x2="21" y2="6"></line><line x1="3" y1="18" x2="21" y2="18"></line></svg>
-        </button>
-        <span style="font-weight: 800; font-size: 18px;">Buy Requests</span>
-        <div style="width: 24px;"></div>
-    </header>
+    <main>
+        <!-- Top Nav (Desktop) -->
+        <nav class="nav-wrapper desktop-only" style="background: rgba(15, 19, 36, 0.82); backdrop-filter: blur(20px); height: 72px;">
+            <div class="content-container" style="display:flex; align-items:center; justify-content:space-between; height: 100%;">
+                <a href="index.html" class="brand" style="display: flex; align-items: center; gap: 12px; text-decoration: none; color: white;">
+                    <img src="logo.png" alt="CoSwap" style="width: 32px; height: 32px;" loading="lazy">
+                    <span style="font-size: 20px; font-weight: 800; letter-spacing: -0.02em;">CoSwap</span>
+                </a>
+                <div style="display: flex; gap: 12px; align-items: center;">
+                    <a href="chatlist.html" class="btn-icon" title="Messages"><i data-lucide="message-square"></i></a>
+                    <a href="terms.html" class="btn-icon" title="Terms"><i data-lucide="file-text"></i></a>
+                    <a href="profile.html" class="btn-icon" title="Profile"><i data-lucide="user"></i></a>
+                    <a href="login.html" class="btn-icon" title="Logout" style="margin-left:8px; color: var(--danger);"><i data-lucide="log-out"></i></a>
+                </div>
+            </div>
+        </nav>
 
-    <aside class="sidebar" id="sidebar">
-        <a href="dashboard.html" class="logo-area">
-            <img src="logo.png" alt="CoSwap">
-            <span>CoSwap</span>
-        </a>
+        <section class="content-container" style="padding: 60px 24px;">
+            <div style="text-align: center; margin-bottom: 48px;">
+                <h1 class="heading-elite">Buy Requests</h1>
+                <p class="subtext-elite" style="margin: 0 auto;">Manage incoming offers for your posted coupons. First to accept wins.</p>
+            </div>
 
-        <nav class="nav-links">
-            <a href="dashboard.html" class="nav-link">
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/></svg>
-                Dashboard
-            </a>
-            <a href="browse.html" class="nav-link">
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
-                Browse Coupons
-            </a>
-            <a href="sell.html" class="nav-link">
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
-                Sell Coupon
-            </a>
-            <a href="mylistings.html" class="nav-link">
+            <div id="requestArea">
+                <!-- Waiting State -->
+                <div class="waiting-box glass-card" style="max-width:600px; margin:0 auto; padding:60px 40px; border-style:dashed;">
+                    <div style="width:64px; height:64px; background:rgba(255,255,255,0.05); border-radius:50%; display:flex; align-items:center; justify-content:center; margin: 0 auto 24px;">
+                        <i data-lucide="loader" class="spin" style="color:var(--accent);"></i>
+                    </div>
+                    <h2 style="font-size:20px; font-weight:800; margin-bottom:8px;">Waiting for requests...</h2>
+                    <p style="color:rgba(255,255,255,0.4); font-size:14px;">Incoming requests will appear here in real-time.</p>
+                </div>
+            </div>
+        </section>
+    </main>
                 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
                 My Listings
             </a>
