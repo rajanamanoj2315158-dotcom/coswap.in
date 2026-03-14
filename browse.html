@@ -38,9 +38,22 @@
         .nav-left { display: flex; align-items: center; gap: 10px; text-decoration: none; color: white; font-weight: 800; }
         .nav-left img { width: 32px; height: 32px; }
         .nav-center { display: flex; gap: 24px; }
-        .nav-center a { color: rgba(255,255,255,0.6); text-decoration: none; font-size: 14px; font-weight: 500; transition: 0.2s; }
-        .nav-center a:hover { color: white; }
-        .nav-center a.active { color: white; }
+        .nav-center a { 
+            color: rgba(255,255,255,0.6); text-decoration: none; font-size: 14px; font-weight: 600; 
+            transition: all 0.2s ease; position: relative; 
+        }
+        .nav-center a:hover, .nav-center a.active { color: white; }
+        .nav-center a.active::after {
+            content: ''; position: absolute; bottom: -24px; left: 0; right: 0; height: 2px; background: #4fd0ff;
+        }
+
+        .nav-right { display: flex; align-items: center; gap: 16px; }
+        .nav-profile-img {
+            width: 38px; height: 38px; border-radius: 50%;
+            border: 2px solid rgba(255,255,255,0.1); object-fit: cover;
+            cursor: pointer; transition: all 0.2s ease;
+        }
+        .nav-profile-img:hover { transform: scale(1.05); border-color: #4fd0ff; }
 
         /* Hero / Search Section */
         .search-hero {
