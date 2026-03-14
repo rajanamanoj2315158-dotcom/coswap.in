@@ -9,88 +9,48 @@
     <script src="ui.js" defer></script>
     <style>
         * { box-sizing: border-box; margin: 0; padding: 0; }
-        body {
-            background: #000;
-            color: white;
-            font-family: "Inter", system-ui, -apple-system, sans-serif;
-            min-height: 100vh;
-            overflow-x: hidden;
-        }
+</head>
+<body class="soft-bg">
+    <!-- Premium Background Effects -->
+    <div class="premium-bg" aria-hidden="true">
+        <div class="blob blob-1"></div>
+        <div class="blob blob-2"></div>
+        <div class="blob blob-3"></div>
+        <div class="mist-container"></div>
+    </div>
 
-        /* Sidebar Styles (Same as mylistings.html) */
-        .sidebar {
-            width: 280px; height: 100vh; position: fixed; left: 0; top: 0;
-            background: rgba(11, 15, 29, 0.8); backdrop-filter: blur(20px);
-            border-right: 1px solid rgba(255, 255, 255, 0.08); padding: 32px 24px;
-            display: flex; flex-direction: column; z-index: 1000; transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-        }
-        .logo-area { display: flex; align-items: center; gap: 12px; margin-bottom: 48px; text-decoration: none; color: white; }
-        .logo-area img { width: 32px; height: 32px; }
-        .logo-area span { font-size: 20px; font-weight: 800; letter-spacing: -0.02em; }
+    <main>
+        <!-- Top Nav (Desktop) -->
+        <nav class="nav-wrapper desktop-only" style="background: rgba(15, 19, 36, 0.82); backdrop-filter: blur(20px); height: 72px;">
+            <div class="content-container" style="display:flex; align-items:center; justify-content:space-between; height: 100%;">
+                <a href="index.html" class="brand" style="display: flex; align-items: center; gap: 12px; text-decoration: none; color: white;">
+                    <img src="logo.png" alt="CoSwap" style="width: 32px; height: 32px;" loading="lazy">
+                    <span style="font-size: 20px; font-weight: 800; letter-spacing: -0.02em;">CoSwap</span>
+                </a>
+                <div style="display: flex; gap: 12px; align-items: center;">
+                    <a href="chatlist.html" class="btn-icon" title="Messages"><i data-lucide="message-square"></i></a>
+                    <a href="terms.html" class="btn-icon" title="Terms"><i data-lucide="file-text"></i></a>
+                    <a href="profile.html" class="btn-icon" title="Profile"><i data-lucide="user"></i></a>
+                    <a href="login.html" class="btn-icon" title="Logout" style="margin-left:8px; color: var(--danger);"><i data-lucide="log-out"></i></a>
+                </div>
+            </div>
+        </nav>
 
-        .nav-links { display: flex; flex-direction: column; gap: 8px; flex-grow: 1; }
-        .nav-link {
-            display: flex; align-items: center; gap: 12px; padding: 12px 16px; border-radius: 12px;
-            color: rgba(255, 255, 255, 0.5); text-decoration: none; font-size: 14px; font-weight: 600; transition: 0.2s;
-        }
-        .nav-link:hover { background: rgba(255, 255, 255, 0.05); color: white; }
-        .nav-link.active { background: rgba(79, 208, 255, 0.1); color: #4fd0ff; }
-        .nav-link svg { width: 20px; height: 20px; stroke-width: 2; }
+        <section class="content-container" style="padding: 60px 24px;">
+            <div style="text-align: center; margin-bottom: 48px;">
+                <h1 class="heading-elite">My Purchases</h1>
+                <p class="subtext-elite" style="margin: 0 auto;">Review your transaction history and access your purchased coupon codes.</p>
+            </div>
 
-        .sidebar-footer { padding-top: 24px; border-top: 1px solid rgba(255, 255, 255, 0.05); }
-
-        /* Main Content */
-        .main { margin-left: 280px; padding: 48px; min-height: 100vh; transition: 0.3s; }
-        .header { margin-bottom: 40px; }
-        .header h1 { font-size: 32px; font-weight: 800; letter-spacing: -0.02em; margin-bottom: 8px; }
-        .header p { color: rgba(255, 255, 255, 0.5); font-size: 16px; }
-
-        /* Mobile Header */
-        .mobile-header {
-            display: none; position: sticky; top: 0; z-index: 900;
-            background: rgba(11, 15, 29, 0.9); backdrop-filter: blur(20px);
-            padding: 16px 20px; border-bottom: 1px solid rgba(255, 255, 255, 0.08);
-            align-items: center; justify-content: space-between;
-        }
-        .hamburger { background: none; border: none; color: white; cursor: pointer; padding: 4px; }
-
-        /* Purchase Cards */
-        .purchase-grid { display: grid; gap: 16px; }
-        .purchase-card {
-            background: rgba(255, 255, 255, 0.03); border: 1px solid rgba(255, 255, 255, 0.08);
-            border-radius: 20px; padding: 24px; display: flex; align-items: center; justify-content: space-between;
-            transition: 0.2s;
-        }
-        .purchase-card:hover { transform: translateY(-2px); border-color: rgba(255, 255, 255, 0.15); background: rgba(255, 255, 255, 0.05); }
-
-        .c-info h3 { font-size: 18px; font-weight: 700; margin-bottom: 6px; }
-        .c-price { font-size: 20px; font-weight: 800; color: #4fd0ff; margin-bottom: 6px; }
-        .c-meta { display: flex; gap: 12px; font-size: 13px; color: rgba(255, 255, 255, 0.4); }
-
-        .status-badge {
-            padding: 6px 12px; border-radius: 8px; font-size: 12px; font-weight: 700; text-transform: uppercase;
-        }
-        .status-success { background: rgba(0, 255, 128, 0.1); color: #00ff80; border: 1px solid rgba(0, 255, 128, 0.2); }
-        .status-pending { background: rgba(255, 180, 0, 0.1); color: #ffb400; border: 1px solid rgba(255, 180, 0, 0.2); }
-        .status-fraud { background: rgba(255, 50, 50, 0.1); color: #ff3232; border: 1px solid rgba(255, 50, 50, 0.2); }
-
-        .btn-group { display: flex; gap: 10px; }
-        .btn-sm {
-            padding: 10px 16px; border-radius: 10px; font-size: 13px; font-weight: 700;
-            cursor: pointer; text-decoration: none; transition: 0.2s;
-        }
-        .btn-primary { background: white; color: black; border: none; }
-        .btn-primary:hover { transform: translateY(-1px); box-shadow: 0 4px 12px rgba(255, 255, 255, 0.2); }
-        .btn-blur { background: rgba(255, 255, 255, 0.08); color: white; border: 1px solid rgba(255, 255, 255, 0.1); }
-        .btn-blur:hover { background: rgba(255, 255, 255, 0.15); }
-
-        /* Empty State */
-        .empty-box {
-            background: rgba(255, 255, 255, 0.02); border: 1px dashed rgba(255, 255, 255, 0.1);
-            border-radius: 24px; padding: 80px 40px; text-align: center;
-        }
-        .empty-box h2 { font-size: 24px; font-weight: 800; margin-bottom: 12px; }
-        .empty-box p { color: rgba(255, 255, 255, 0.5); margin-bottom: 32px; }
+            <div id="purchaseGrid" class="glass-card-grid">
+                <!-- Dynamically filled -->
+                <div class="empty-box" style="grid-column: 1 / -1;">
+                    <p>You haven't purchased any coupons yet.</p>
+                    <button onclick="location.href='browse.html'" class="btn-primary" style="padding: 16px 32px; border-radius: 12px;">Browse Deals</button>
+                </div>
+            </div>
+        </section>
+    </main>
 
         @media (max-width: 768px) {
             .sidebar { transform: translateX(-100%); }

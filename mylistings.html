@@ -8,95 +8,48 @@
     <script src="ui.js" defer></script>
     <style>
         * { margin: 0; padding: 0; box-sizing: border-box; font-family: "Inter", sans-serif; }
-        body { background: #000; color: white; min-height: 100vh; overflow-x: hidden; }
+</head>
+<body class="soft-bg">
+    <!-- Premium Background Effects -->
+    <div class="premium-bg" aria-hidden="true">
+        <div class="blob blob-1"></div>
+        <div class="blob blob-2"></div>
+        <div class="blob blob-3"></div>
+        <div class="mist-container"></div>
+    </div>
 
-        /* DESKTOP SIDEBAR (Visible > 768px) */
-        .sidebar {
-            width: 260px;
-            background: rgba(255, 255, 255, 0.05);
-            backdrop-filter: blur(20px);
-            border-right: 1px solid rgba(255, 255, 255, 0.08);
-            height: 100vh;
-            position: fixed;
-            left: 0; top: 0;
-            padding: 40px 24px;
-            z-index: 1000;
-            transition: transform 0.3s ease;
-        }
+    <main>
+        <!-- Top Nav (Desktop) -->
+        <nav class="nav-wrapper desktop-only" style="background: rgba(15, 19, 36, 0.82); backdrop-filter: blur(20px); height: 72px;">
+            <div class="content-container" style="display:flex; align-items:center; justify-content:space-between; height: 100%;">
+                <a href="index.html" class="brand" style="display: flex; align-items: center; gap: 12px; text-decoration: none; color: white;">
+                    <img src="logo.png" alt="CoSwap" style="width: 32px; height: 32px;" loading="lazy">
+                    <span style="font-size: 20px; font-weight: 800; letter-spacing: -0.02em;">CoSwap</span>
+                </a>
+                <div style="display: flex; gap: 12px; align-items: center;">
+                    <a href="chatlist.html" class="btn-icon" title="Messages"><i data-lucide="message-square"></i></a>
+                    <a href="terms.html" class="btn-icon" title="Terms"><i data-lucide="file-text"></i></a>
+                    <a href="profile.html" class="btn-icon" title="Profile"><i data-lucide="user"></i></a>
+                    <a href="login.html" class="btn-icon" title="Logout" style="margin-left:8px; color: var(--danger);"><i data-lucide="log-out"></i></a>
+                </div>
+            </div>
+        </nav>
 
-        .logo { font-size: 24px; font-weight: 800; margin-bottom: 40px; text-align: center; color: white; }
-        .menu-item {
-            padding: 12px 16px; margin-bottom: 8px; border-radius: 12px;
-            cursor: pointer; transition: 0.2s; font-size: 15px; font-weight: 500; color: rgba(255,255,255,0.6);
-        }
-        .menu-item:hover { background: rgba(255,255,255,0.08); color: white; }
-        .menu-item.active { background: white; color: black; font-weight: 700; }
+        <section class="content-container" style="padding: 60px 24px;">
+            <div style="text-align: center; margin-bottom: 48px;">
+                <h1 class="heading-elite">My Active Listings</h1>
+                <p class="subtext-elite" style="margin: 0 auto;">Manage your posted coupons and track your sales progress.</p>
+            </div>
 
-        /* MAIN AREA */
-        .main {
-            margin-left: 260px;
-            padding: 60px 48px;
-            max-width: 1400px;
-        }
-
-        .header-section { margin-bottom: 48px; }
-        .header-section h1 { font-size: 32px; font-weight: 800; letter-spacing: -0.02em; margin-bottom: 8px; }
-        .header-section p { color: rgba(255,255,255,0.5); font-size: 16px; }
-
-        /* MOBILE TOP BAR (Visible < 768px) */
-        .mobile-header {
-            display: none;
-            position: sticky; top: 0; z-index: 900;
-            background: rgba(0,0,0,0.8); backdrop-filter: blur(20px);
-            padding: 16px 24px;
-            border-bottom: 1px solid rgba(255,255,255,0.08);
-            align-items: center; justify-content: space-between;
-        }
-        .hamburger { background: none; border: none; color: white; cursor: pointer; padding: 4px; }
-        .mobile-title { font-size: 18px; font-weight: 700; }
-
-        /* LISTING GRID */
-        .grid {
-            display: grid;
-            gap: 24px;
-            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
-        }
-        .card {
-            background: rgba(255, 255, 255, 0.03);
-            border: 1px solid rgba(255, 255, 255, 0.08);
-            border-radius: 20px;
-            padding: 24px;
-            transition: 0.3s;
-        }
-        .card:hover { transform: translateY(-4px); border-color: rgba(255,255,255,0.2); }
-        .card-title { font-size: 18px; font-weight: 700; margin-bottom: 12px; }
-        .card-price { font-size: 20px; font-weight: 800; color: #4fd0ff; margin-bottom: 12px; }
-        .card-meta { font-size: 13px; color: rgba(255,255,255,0.5); display: flex; gap: 12px; margin-bottom: 20px; }
-        .btn-row { display: flex; gap: 12px; }
-        .btn {
-            flex: 1; padding: 12px; border-radius: 12px; border: none;
-            font-size: 14px; font-weight: 700; cursor: pointer; transition: 0.2s;
-        }
-        .btn-edit { background: white; color: black; }
-        .btn-delete { background: rgba(255, 59, 48, 0.1); color: #ff3b30; border: 1px solid rgba(255, 59, 48, 0.2); }
-
-        /* EMPTY STATE */
-        .empty-box {
-            text-align: center; padding: 100px 24px;
-        }
-        .empty-box p { font-size: 18px; color: rgba(255,255,255,0.4); margin-bottom: 24px; }
-        .sell-btn {
-            background: linear-gradient(90deg, #4fd0ff, #7b5bff);
-            color: white; border: none; padding: 16px 32px; border-radius: 14px;
-            font-size: 16px; font-weight: 700; cursor: pointer; transition: 0.2s;
-        }
-        .sell-btn:hover { transform: scale(1.02); opacity: 0.9; }
-
-        /* OVERLAY for mobile drawer */
-        .sidebar-overlay {
-            position: fixed; inset: 0; background: rgba(0,0,0,0.5); backdrop-filter: blur(4px);
-            z-index: 999; display: none;
-        }
+            <div id="grid" class="glass-card-grid">
+                <!-- Dynamically filled -->
+                <div class="empty-box" style="grid-column: 1 / -1;">
+                    <p>You haven't posted any coupons yet.</p>
+                    <button onclick="location.href='sell.html'" class="btn-primary" style="padding: 16px 32px; border-radius: 12px;">Sell a Coupon</button>
+                </div>
+            </div>
+        </section>
+    </main>
 
         /* RESPONSIVENESS */
         @media (max-width: 768px) {
