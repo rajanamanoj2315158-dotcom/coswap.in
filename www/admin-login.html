@@ -1,0 +1,193 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <link rel="preconnect" href="https://unpkg.com">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Login – CoSwap</title>
+
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: Poppins, sans-serif;
+        }
+
+        body {
+            height: 100vh;
+            background: radial-gradient(circle at center, #0d1020, #060713, #000);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            color: white;
+        }
+
+        .card {
+            width: 420px;
+            padding: 40px;
+            border-radius: 22px;
+            background: rgba(255, 255, 255, 0.08);
+            backdrop-filter: blur(20px);
+            box-shadow: 0 0 25px rgba(0, 0, 0, 0.5);
+            border: 1px solid rgba(255, 255, 255, 0.12);
+            text-align: center;
+            animation: fadeIn 0.6s ease;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        h2 {
+            font-size: 28px;
+            margin-bottom: 25px;
+            font-weight: 700;
+        }
+
+        .input-group {
+            text-align: left;
+            margin-bottom: 20px;
+        }
+
+        label {
+            font-size: 14px;
+            opacity: 0.8;
+            margin-bottom: 6px;
+            display: block;
+        }
+
+        input {
+            width: 100%;
+            padding: 14px;
+            border-radius: 14px;
+            background: rgba(255, 255, 255, 0.13);
+            border: none;
+            outline: none;
+            font-size: 15px;
+            color: white;
+            transition: 0.2s;
+        }
+
+        input:focus {
+            background: rgba(255, 255, 255, 0.18);
+            box-shadow: 0 0 0 2px #4fd0ff;
+        }
+
+        .forgot {
+            text-align: right;
+            font-size: 14px;
+            margin-bottom: 15px;
+            color: #4fd0ff;
+            cursor: pointer;
+        }
+
+        .btn-login {
+            width: 100%;
+            padding: 14px;
+            border-radius: 14px;
+            background: linear-gradient(90deg, #4fd0ff, #6f6cff);
+            border: none;
+            color: white;
+            font-size: 18px;
+            font-weight: 600;
+            cursor: pointer;
+            margin-top: 10px;
+        }
+
+        .btn-login:hover {
+            opacity: 0.9;
+        }
+    </style>
+
+    <link rel="preload" href="theme.css" as="style">
+    <link rel="stylesheet" href="theme.css">
+    <script src="ui.js" defer></script>
+    <!-- Open Graph / Facebook -->
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://coswap.in/">
+    <meta property="og:title" content="CoSwap – Buy and Sell Coupons Instantly">
+    <meta property="og:description" content="Discover unused coupons from other users or sell your own in seconds.">
+    <meta property="og:image" content="https://coswap.in/logo.png">
+
+    <!-- Twitter -->
+    <meta property="twitter:card" content="summary_large_image">
+    <meta property="twitter:url" content="https://coswap.in/">
+    <meta property="twitter:title" content="CoSwap – Buy and Sell Coupons Instantly">
+    <meta property="twitter:description" content="Discover unused coupons from other users or sell your own in seconds.">
+    <meta property="twitter:image" content="https://coswap.in/logo.png">
+
+</head>
+
+<body>
+
+    <div class="card">
+
+        <h2>Admin Login</h2>
+
+        <div class="input-group">
+            <label>Email</label>
+            <input type="email" id="adminEmail" placeholder="Enter admin email">
+        </div>
+
+        <div class="input-group">
+            <label>Password</label>
+            <input type="password" id="adminPass" placeholder="Enter admin password">
+        </div>
+
+        <p class="forgot" onclick="forgotPassword()">Forgot Password?</p>
+
+        <button class="btn-login" onclick="loginAdmin()">Login</button>
+
+    </div>
+
+    <script src="api.js" defer></script>
+    <script>
+        async function loginAdmin() {
+            let email = document.getElementById("adminEmail").value.trim();
+            let pass = document.getElementById("adminPass").value.trim();
+
+            if (email === "" || pass === "") {
+                alert("Please fill all fields!");
+                return;
+            }
+
+            try {
+                const data = await apiRequest("/admin/login", {
+                    method: "POST",
+                    body: JSON.stringify({ email, password: pass })
+                });
+                setAuth(data.token, data.user);
+                alert("Login Successful");
+
+                const redirect = localStorage.getItem("redirectAfterLogin");
+                if (redirect && redirect.startsWith("admin-")) {
+                    localStorage.removeItem("redirectAfterLogin");
+                    window.location.href = redirect;
+                } else {
+                    window.location.href = "admin-dashboard.html";
+                }
+            } catch (err) {
+                alert(err.message || "Invalid admin credentials.");
+            }
+        }
+
+        function forgotPassword() {
+            alert("OTP has been sent to your admin email.");
+            window.location.href = "forgot.html";
+        }
+    </script>
+
+    <script src="components.js" defer></script>
+</body>
+
+</html>

@@ -1,0 +1,261 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <link rel="preconnect" href="https://unpkg.com">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>About CoSwap — India's Coupon Marketplace</title>
+    <meta name="description" content="Learn about CoSwap, India's trusted platform for buying and selling unused discount coupons and vouchers.">
+    <meta name="robots" content="index, follow">
+    <link rel="canonical" href="https://coswap.in/about.html">
+    <meta property="og:title" content="About CoSwap — India's Coupon Marketplace">
+    <meta property="og:description" content="Learn about CoSwap, India's trusted platform for buying and selling unused discount coupons and vouchers.">
+    <meta property="og:image" content="https://coswap.in/logo.png">
+    <meta property="og:url" content="https://coswap.in/about.html">
+    <!-- Google Analytics 4 -->
+    <!-- <script async src="https://www.googletagmanager.com/gtag/js?id=G-XXXXXXXXXX"></script>
+    <script>window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments)}gtag('js',new Date());gtag('config','G-XXXXXXXXXX');</script> -->
+    <link rel="preload" href="theme.css" as="style">
+    <link rel="stylesheet" href="theme.css">
+    <script src="ui.js" defer></script>
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            background:
+                radial-gradient(circle at 16% 14%, rgba(79, 208, 255, 0.14), transparent 25%),
+                linear-gradient(180deg, #0a1020, #0b1020 42%, #070b14 100%);
+            color: white;
+            min-height: 100vh;
+            padding: 28px;
+        }
+
+        .page {
+            margin: 0 auto;
+            max-width: 1120px;
+        }
+
+        .hero {
+            display: grid;
+            gap: 18px;
+            grid-template-columns: minmax(0, 1.05fr) minmax(300px, 0.95fr);
+            margin-bottom: 20px;
+        }
+
+        .eyebrow {
+            color: #8fe5ff;
+            font-size: 12px;
+            font-weight: 700;
+            letter-spacing: 0.18em;
+            text-transform: uppercase;
+        }
+
+        h1 {
+            font-size: clamp(38px, 7vw, 66px);
+            letter-spacing: -0.06em;
+            line-height: 0.95;
+            margin: 12px 0 14px;
+            max-width: 12ch;
+        }
+
+        .hero p,
+        .card p {
+            color: rgba(255, 255, 255, 0.76);
+            line-height: 1.78;
+        }
+
+        .panel,
+        .card {
+            backdrop-filter: blur(16px);
+            background: rgba(255, 255, 255, 0.07);
+            border: 1px solid rgba(255, 255, 255, 0.12);
+            border-radius: 24px;
+            box-shadow: 0 20px 48px rgba(0, 0, 0, 0.22);
+        }
+
+        .panel {
+            padding: 24px;
+        }
+
+        .panel h2 {
+            font-size: 28px;
+            letter-spacing: -0.04em;
+        }
+
+        .stack {
+            display: grid;
+            gap: 16px;
+            grid-template-columns: repeat(3, minmax(0, 1fr));
+        }
+
+        .card {
+            min-height: 188px;
+            padding: 20px;
+            position: relative;
+        }
+
+        .card h3 {
+            font-size: 20px;
+            margin: 10px 0 8px;
+        }
+
+        .dot {
+            background:
+                radial-gradient(circle at 28% 24%, rgba(255, 255, 255, 0.5), transparent 20%),
+                linear-gradient(180deg, rgba(255, 255, 255, 0.18), rgba(79, 208, 255, 0.08));
+            border: 1px solid rgba(255, 255, 255, 0.12);
+            border-radius: 60% 40% 58% 42% / 42% 58% 42% 58%;
+            height: 34px;
+            opacity: 0.58;
+            position: absolute;
+            right: 18px;
+            top: 18px;
+            width: 28px;
+        }
+
+        .footer {
+            color: rgba(255, 255, 255, 0.68);
+            display: flex;
+            flex-wrap: wrap;
+            gap: 16px;
+            justify-content: space-between;
+            margin-top: 28px;
+        }
+
+        .footer a {
+            color: #8fe5ff;
+            font-weight: 700;
+        }
+
+        @media (max-width: 1024px) {
+            .hero,
+            .stack {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        @media (max-width: 680px) {
+            body {
+                padding: 18px;
+            }
+
+            .footer {
+                flex-direction: column;
+            }
+        }
+
+        @media (min-width: 1280px) {
+            body {
+                padding: 40px 56px;
+            }
+
+            .page {
+                max-width: 1240px;
+            }
+
+            .hero {
+                gap: 24px;
+                margin-bottom: 28px;
+            }
+
+            .panel {
+                padding: 30px;
+            }
+
+            .stack {
+                gap: 20px;
+            }
+
+            .card {
+                min-height: 200px;
+                padding: 24px;
+            }
+        }
+
+        @media (min-width: 1440px) {
+            body {
+                padding: 48px 72px;
+            }
+
+            .page {
+                max-width: 1360px;
+            }
+        }
+
+        @media (min-width: 1920px) {
+            body {
+                padding: 56px 120px;
+            }
+
+            .page {
+                max-width: 1480px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="premium-bg" aria-hidden="true">
+        <div class="blob blob-1"></div>
+        <div class="blob blob-2"></div>
+        <div class="blob blob-3"></div>
+        <div class="mist-container"></div>
+    </div>
+    <main class="page">
+        <section class="hero">
+            <div>
+                <div class="eyebrow">About CoSwap</div>
+                <h1>Unused coupons, rebuilt into a more professional marketplace.</h1>
+                <p>
+                    CoSwap helps buyers and sellers exchange unused coupons through a cleaner product experience
+                    built around search intelligence, trusted transactions, and persistent communication.
+                </p>
+            </div>
+
+            <aside class="panel">
+                <div class="eyebrow">Mission</div>
+                <h2>Simple, trusted, and modern coupon marketplace.</h2>
+                <p>
+                    The platform is designed with semantic search, recommendation logic, seller trust visibility, and
+                    persistent chat that stays connected across the marketplace flow.
+                </p>
+            </aside>
+        </section>
+
+        <section class="stack">
+            <article class="card">
+                <span class="dot"></span>
+                <div class="eyebrow">Discovery</div>
+                <h3>Search by meaning</h3>
+                <p>Semantic search expands broad shopper intent to help users discover better marketplace matches.</p>
+            </article>
+            <article class="card">
+                <span class="dot"></span>
+                <div class="eyebrow">Recommendations</div>
+                <h3>Rank the right listings</h3>
+                <p>Recommendation logic combines category affinity, freshness, and seller trust to surface better picks.</p>
+            </article>
+            <article class="card">
+                <span class="dot"></span>
+                <div class="eyebrow">Trust</div>
+                <h3>Protect the marketplace</h3>
+                <p>Reports, fraud indicators, and seller quality signals help keep the platform safer and more reliable.</p>
+            </article>
+        </section>
+
+        <footer class="footer">
+            <div>CoSwap is designed for launch-ready marketplace clarity.</div>
+            <div>
+                <a href="index.html">Home</a>
+                <a href="browse.html">Browse</a>
+                <a href="how-it-works.html">How It Works</a>
+                <a href="terms.html">Terms &amp; Conditions</a>
+            </div>
+        </footer>
+    </main>
+    <script src="components.js" defer></script>
+</body>
+</html>

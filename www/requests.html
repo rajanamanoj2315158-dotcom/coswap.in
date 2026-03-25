@@ -1,0 +1,230 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <link rel="preconnect" href="https://unpkg.com">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Buy Requests — CoSwap</title>
+    <link rel="preload" href="theme.css" as="style">
+    <link rel="stylesheet" href="theme.css">
+    <script src="api.js" defer></script>
+    <script src="ui.js" defer></script>
+    <!-- Load Lucide Icons -->
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <link rel="canonical" href="https://coswap.in/requests.html">
+
+    <!-- Open Graph / Facebook -->
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://coswap.in/">
+    <meta property="og:title" content="CoSwap – Buy and Sell Coupons Instantly">
+    <meta property="og:description" content="Discover unused coupons from other users or sell your own in seconds.">
+    <meta property="og:image" content="https://coswap.in/logo.png">
+
+    <!-- Twitter -->
+    <meta property="twitter:card" content="summary_large_image">
+    <meta property="twitter:url" content="https://coswap.in/">
+    <meta property="twitter:title" content="CoSwap – Buy and Sell Coupons Instantly">
+    <meta property="twitter:description" content="Discover unused coupons from other users or sell your own in seconds.">
+    <meta property="twitter:image" content="https://coswap.in/logo.png">
+
+</head>
+<body class="soft-bg">
+    <!-- Premium Background Effects -->
+    <div class="premium-bg" aria-hidden="true">
+        <div class="blob blob-1"></div>
+        <div class="blob blob-2"></div>
+        <div class="blob blob-3"></div>
+        <div class="mist-container"></div>
+    </div>
+
+    <main>
+        <!-- Top Nav (Desktop) -->
+        <nav class="nav-wrapper desktop-only" style="background: rgba(15, 19, 36, 0.82); backdrop-filter: blur(20px); height: 72px;">
+            <div class="content-container" style="display:flex; align-items:center; justify-content:space-between; height: 100%;">
+                <a href="index.html" class="brand" style="display: flex; align-items: center; gap: 12px; text-decoration: none; color: white;">
+                    <img src="logo.png" alt="CoSwap" style="width: 32px; height: 32px;" loading="lazy">
+                    <span style="font-size: 20px; font-weight: 800; letter-spacing: -0.02em;">CoSwap</span>
+                </a>
+                <div style="display: flex; gap: 12px; align-items: center;">
+                    <a href="chatlist.html" class="btn-icon" title="Messages"><i data-lucide="message-square"></i></a>
+                    <a href="terms.html" class="btn-icon" title="Terms"><i data-lucide="file-text"></i></a>
+                    <a href="profile.html" class="btn-icon" title="Profile"><i data-lucide="user"></i></a>
+                    <a href="login.html" class="btn-icon" title="Logout" style="margin-left:8px; color: var(--danger);"><i data-lucide="log-out"></i></a>
+                </div>
+            </div>
+        </nav>
+
+        <section class="content-container" style="padding: 60px 24px;">
+            <div style="text-align: center; margin-bottom: 48px;">
+                <h1 class="heading-elite">Buy Requests</h1>
+                <p class="subtext-elite" style="margin: 0 auto;">Manage incoming offers for your posted coupons. First to accept wins.</p>
+            </div>
+
+            <div id="requestArea">
+                <!-- Waiting State -->
+                <div class="waiting-box glass-card" style="max-width:600px; margin:0 auto; padding:60px 40px; border-style:dashed;">
+                    <div style="width:64px; height:64px; background:rgba(255,255,255,0.05); border-radius:50%; display:flex; align-items:center; justify-content:center; margin: 0 auto 24px;">
+                        <i data-lucide="loader" class="spin" style="color:var(--accent);"></i>
+                    </div>
+                    <h2 style="font-size:20px; font-weight:800; margin-bottom:8px;">Waiting for requests...</h2>
+                    <p style="color:rgba(255,255,255,0.4); font-size:14px;">Incoming requests will appear here in real-time.</p>
+                </div>
+            </div>
+        </section>
+    </main>
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
+                My Listings
+            </a>
+            <a href="mypurchases.html" class="nav-link">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M6 2L3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4Z"/><path d="M3 6h18"/><path d="M16 10a4 4 0 0 1-8 0"/></svg>
+                My Purchases
+            </a>
+            <a href="sellerprofile.html" class="nav-link">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+                My Profile
+            </a>
+            <a href="requests.html" class="nav-link active">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M22 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+                Requests
+            </a>
+            <a href="chatlist.html" class="nav-link">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+                Chat
+            </a>
+        </nav>
+
+        <div class="sidebar-footer">
+            <a href="profile.html" class="nav-link">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>
+                Settings
+            </a>
+        </div>
+    </aside>
+
+    <main class="main" id="mainContent">
+        <header class="header">
+            <h1>Buy Requests</h1>
+            <p>Manage incoming purchase inquiries and accept or decline potential sales.</p>
+        </header>
+
+        <section id="requestContent">
+            <div class="waiting-box">
+                <div style="font-size: 40px; margin-bottom: 16px;">⏳</div>
+                <h2>Checking for requests...</h2>
+                <p>Establishing real-time connection to the marketplace.</p>
+            </div>
+        </section>
+
+        <!-- Template for Active Request (vhidden) -->
+        <div id="activeTemplate" style="display:none;">
+            <div class="request-panel">
+                <div class="request-info" id="requestInfo">Loading...</div>
+                <div class="timer-box" id="timer">--:--</div>
+                <div class="btn-stack">
+                    <button class="btn-lg btn-accept" onclick="acceptRequest()">Accept Request</button>
+                    <button class="btn-lg btn-ignore" onclick="ignoreRequest()">Ignore</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Template for Waiting State (vhidden) -->
+        <div id="waitingTemplate" style="display:none;">
+            <div class="waiting-box">
+                <div style="font-size: 40px; margin-bottom: 24px;">🏝️</div>
+                <h2 style="font-size: 24px; font-weight: 800; margin-bottom: 12px;">No pending requests</h2>
+                <p style="color: rgba(255,255,255,0.4); max-width: 400px; margin: 0 auto;">You can relax — we'll notify you as soon as a buyer expresses interest in one of your listings.</p>
+            </div>
+        </div>
+    </main>
+
+    <script>
+        if (!requireAuth("requests.html")) {
+            // redirected
+        }
+
+        // Mobile Menu Toggle
+        const menuToggle = document.getElementById('menuToggle');
+        const sidebar = document.getElementById('sidebar');
+        const mainContent = document.getElementById('mainContent');
+
+        menuToggle.addEventListener('click', () => sidebar.classList.toggle('active'));
+        mainContent.addEventListener('click', () => sidebar.classList.remove('active'));
+
+        let activeRequest = null;
+        let countdown = null;
+
+        async function loadRequest() {
+            const container = document.getElementById("requestContent");
+            try {
+                const data = await apiRequest("/me/requests");
+                const pending = (data.asSeller || []).find(r => r.status === "pending");
+
+                if (!pending) {
+                    container.innerHTML = document.getElementById("waitingTemplate").innerHTML;
+                    return;
+                }
+
+                activeRequest = pending;
+                container.innerHTML = document.getElementById("activeTemplate").innerHTML;
+                
+                // Re-bind IDs since we just innerHTML'd them
+                const info = container.querySelector("#requestInfo");
+                const timer = container.querySelector("#timer");
+                
+                info.innerText = `${pending.buyer_name} wants to buy your coupon: ${pending.coupon_title}.`;
+                startTimer(pending.expires_at, timer);
+            } catch (err) {
+                container.innerHTML = `<div class="waiting-box"><h2>Failed to load</h2><p>${err.message}</p></div>`;
+            }
+        }
+
+        function startTimer(expiresAt, element) {
+            if (countdown) clearInterval(countdown);
+            function tick() {
+                const diff = new Date(expiresAt) - new Date();
+                if (diff <= 0) {
+                    clearInterval(countdown);
+                    element.innerText = "00:00";
+                    alert("Request expired!");
+                    loadRequest(); // Refresh state
+                    return;
+                }
+                const totalSeconds = Math.floor(diff / 1000);
+                const m = Math.floor(totalSeconds / 60);
+                const s = totalSeconds % 60;
+                element.innerText = `${m.toString().padStart(2, '0')}:${s.toString().padStart(2, '0')}`;
+            }
+            tick();
+            countdown = setInterval(tick, 1000);
+        }
+
+        async function acceptRequest() {
+            if (!activeRequest) return;
+            try {
+                const data = await apiRequest(`/requests/${activeRequest.id}/accept`, { method: "POST" });
+                alert("Request accepted! Opening chat...");
+                window.location.href = `chat.html?id=${data.chat.id}`;
+            } catch (err) { alert(err.message || "Failed to accept"); }
+        }
+
+        async function ignoreRequest() {
+            if (!activeRequest) return;
+            if(!confirm("Ignore this request?")) return;
+            try {
+                await apiRequest(`/requests/${activeRequest.id}/ignore`, { method: "POST" });
+                loadRequest();
+            } catch (err) { alert(err.message || "Failed to ignore"); }
+        }
+
+        loadRequest();
+    </script>
+    <!-- Bottom Nav for Mobile -->
+    <nav class="mobile-nav">
+        <div class="mobile-nav-inner">
+            <a href="dashboard.html" class="mobile-nav-item"><i data-lucide="layout-dashboard"></i><span>Home</span></a>
+            <a href="browse.html" class="mobile-nav-item"><i data-lucide="search"></i><span>Browse</span></a>
+            <a href="sell.html" class="mobile-nav-item"><i data-lucide="plus-circle"></i><span>Sell</span></a>
+            <a href="chatlist.html" class="mobile-nav-item"><i data-lucide="message-square"></i><span>Chat</span></a>
+        </div>
+    </nav>
+    <script>lucide.createIcons();</script>

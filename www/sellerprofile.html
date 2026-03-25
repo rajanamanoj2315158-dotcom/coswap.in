@@ -1,0 +1,255 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <link rel="preconnect" href="https://unpkg.com">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Seller Profile — CoSwap</title>
+    <link rel="preload" href="theme.css" as="style">
+    <link rel="stylesheet" href="theme.css">
+    <script src="api.js" defer></script>
+    <script src="ui.js" defer></script>
+    <style>
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        body { 
+            background: #000; 
+            color: white; 
+            font-family: "Inter", system-ui, -apple-system, sans-serif;
+            min-height: 100vh;
+        }
+
+        h1 {
+            font-size: 34px;
+            font-weight: 700;
+            margin-bottom: 25px;
+            text-align: center;
+        }
+
+        .profile-card {
+            background: rgba(255, 255, 255, 0.08);
+            padding: 25px;
+            border-radius: 18px;
+            backdrop-filter: blur(14px);
+            border: 1px solid rgba(255, 255, 255, 0.12);
+            width: 100%;
+            max-width: 550px;
+            margin-bottom: 30px;
+            box-shadow: 0 0 25px rgba(0, 0, 0, 0.5);
+        }
+
+        .profile-header {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            margin-bottom: 20px;
+        }
+
+        .profile-img {
+            width: 80px;
+            height: 80px;
+            border-radius: 50%;
+            object-fit: cover;
+            border: 3px solid #4fd0ff;
+        }
+
+        .badge {
+            background: #ffd850;
+            padding: 6px 10px;
+            border-radius: 10px;
+            font-size: 14px;
+            font-weight: 700;
+            color: black;
+        }
+
+        .stat-box {
+            background: rgba(255, 255, 255, 0.08);
+            padding: 20px;
+            border-radius: 16px;
+            margin-bottom: 18px;
+            border-left: 4px solid #4fd0ff;
+        }
+
+        .stat-title {
+            font-size: 17px;
+            opacity: 0.8;
+        }
+
+        .stat-value {
+            font-size: 24px;
+            font-weight: 700;
+            margin-top: 4px;
+        }
+
+        .freeze-alert {
+            background: rgba(255, 0, 0, 0.25);
+            border-left: 5px solid red;
+            padding: 20px;
+            border-radius: 16px;
+            margin-top: 20px;
+        }
+
+        /* Buttons */
+        .btn {
+            width: 100%;
+            padding: 16px;
+            border-radius: 14px;
+            border: none;
+            cursor: pointer;
+            margin-top: 20px;
+            font-size: 18px;
+            font-weight: 600;
+        }
+
+        .btn-main {
+            background: linear-gradient(90deg, #4fd0ff, #6f6cff);
+            color: white;
+            box-shadow: 0 8px 25px rgba(79, 208, 255, 0.3);
+        }
+
+        .btn-main:hover {
+            transform: scale(1.02);
+        }
+
+        @media (min-width: 1280px) {
+            body {
+                padding: 56px 35px;
+            }
+
+            .profile-card {
+                max-width: 580px;
+                padding: 30px;
+            }
+        }
+
+        @media (min-width: 1440px) {
+            body {
+                padding: 72px 35px;
+            }
+
+            .profile-card {
+                max-width: 600px;
+            }
+        }
+    </style>
+
+    <link rel="stylesheet" href="theme.css">
+    <script src="ui.js" defer></script>
+    <!-- Open Graph / Facebook -->
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://coswap.in/">
+    <meta property="og:title" content="CoSwap – Buy and Sell Coupons Instantly">
+    <meta property="og:description" content="Discover unused coupons from other users or sell your own in seconds.">
+    <meta property="og:image" content="https://coswap.in/logo.png">
+
+    <!-- Twitter -->
+    <meta property="twitter:card" content="summary_large_image">
+    <meta property="twitter:url" content="https://coswap.in/">
+    <meta property="twitter:title" content="CoSwap – Buy and Sell Coupons Instantly">
+    <meta property="twitter:description" content="Discover unused coupons from other users or sell your own in seconds.">
+    <meta property="twitter:image" content="https://coswap.in/logo.png">
+
+</head>
+
+<body class="soft-bg">
+    <div class="premium-bg" aria-hidden="true">
+        <div class="blob blob-1"></div>
+        <div class="blob blob-2"></div>
+        <div class="blob blob-3"></div>
+        <div class="mist-container"></div>
+    </div>
+
+    <h1>My Profile</h1>
+
+    <div class="profile-card">
+
+        <div class="profile-header">
+            <img src="logo.png" class="profile-img" loading="lazy" alt="Image">
+            <div>
+                <h2 id="sellerName">Loading...</h2>
+                <div id="badgeArea"></div>
+            </div>
+        </div>
+
+        <!-- Stats -->
+        <div class="stat-box">
+            <div class="stat-title">Total Customers</div>
+            <div class="stat-value" id="customerCount">0</div>
+        </div>
+
+        <div class="stat-box">
+            <div class="stat-title">Rating</div>
+            <div class="stat-value" id="rating">4.8 ⭐</div>
+        </div>
+
+        <div class="stat-box">
+            <div class="stat-title">Fraud Reports (%)</div>
+            <div class="stat-value" id="fraudPercent">0%</div>
+        </div>
+
+        <div class="stat-box">
+            <div class="stat-title">Seller Level</div>
+            <div class="stat-value" id="level">Level 1</div>
+        </div>
+
+        <div class="stat-box">
+            <div class="stat-title">Maximum Allowed Price</div>
+            <div class="stat-value" id="maxPrice">₹10</div>
+        </div>
+
+        <div id="freezeBox" style="display:none;">
+            <div class="freeze-alert">
+                ⚠ <b>Your account is frozen!</b><br>
+                Fraud reports exceed 40% of your sales.<br>
+                Contact support to unfreeze.
+            </div>
+        </div>
+
+        <!-- Only ONE button now -->
+        <button class="btn btn-main" onclick="window.location.href='mypurchases.html'">
+            View Purchase History
+        </button>
+    </div>
+
+    <script src="api.js" defer></script>
+    <script>
+        if (!requireAuth("sellerprofile.html")) {
+            // redirected
+        }
+
+        async function loadProfile() {
+            try {
+                const data = await apiRequest("/me/profile");
+                const p = data.profile;
+
+                document.getElementById("sellerName").innerText = p.name;
+                document.getElementById("customerCount").innerText = p.customers;
+                const ratingValue = p.rating ? Number(p.rating).toFixed(1) : null;
+                document.getElementById("rating").innerText = ratingValue ? `${ratingValue} ⭐` : "Not rated";
+                document.getElementById("fraudPercent").innerText = p.fraudPercent + "%";
+                document.getElementById("level").innerText = "Level " + p.level;
+                document.getElementById("maxPrice").innerText = "₹" + p.maxPrice;
+
+                if (p.fraudPercent >= 40 || p.status === "frozen") {
+                    document.getElementById("freezeBox").style.display = "block";
+                }
+
+                if (p.customers >= 200) {
+                    document.getElementById("badgeArea").innerHTML =
+                        `<span class="badge">🏅 Trusted Seller</span>`;
+                }
+
+                localStorage.setItem("profileData", JSON.stringify({
+                    maxPrice: p.maxPrice
+                }));
+            } catch (err) {
+                alert(err.message || "Failed to load profile.");
+            }
+        }
+
+        loadProfile();
+    </script>
+
+    <script src="components.js" defer></script>
+</body>
+
+</html>

@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <link rel="preconnect" href="https://unpkg.com">
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <title>Dashboard — CoSwap</title>
+    <link rel="canonical" href="https://coswap.in/dashboard.html">
+    <link rel="preload" href="theme.css" as="style">
+    <link rel="stylesheet" href="theme.css">
+    <script src="api.js" defer></script>
+    <script src="ui.js" defer></script>
+
+    <!-- Open Graph / Facebook -->
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://coswap.in/">
+    <meta property="og:title" content="CoSwap – Buy and Sell Coupons Instantly">
+    <meta property="og:description" content="Discover unused coupons from other users or sell your own in seconds.">
+    <meta property="og:image" content="https://coswap.in/logo.png">
+
+    <!-- Twitter -->
+    <meta property="twitter:card" content="summary_large_image">
+    <meta property="twitter:url" content="https://coswap.in/">
+    <meta property="twitter:title" content="CoSwap – Buy and Sell Coupons Instantly">
+    <meta property="twitter:description" content="Discover unused coupons from other users or sell your own in seconds.">
+    <meta property="twitter:image" content="https://coswap.in/logo.png">
+
+</head>
+<body class="soft-bg">
+    <!-- Premium Background System -->
+    <div class="premium-bg-system parallax-bg" aria-hidden="true">
+        <div class="aurora-layer"></div>
+        <div class="droplet-container parallax-particles">
+            <div class="bg-droplet" style="width:12px; height:12px; left:10%;"></div>
+            <div class="bg-droplet" style="width:8px; height:8px; left:80%; animation-delay:-4s;"></div>
+        </div>
+        <div class="ripple-layer">
+            <div class="liquid-ripple" style="top:20%; left:20%;"></div>
+            <div class="liquid-ripple" style="top:60%; left:80%; animation-delay:-6s;"></div>
+        </div>
+    </div>
+
+    <nav class="navbar"></nav>
+
+    <main class="container" style="padding: 40px 24px 120px;">
+        <!-- Welcome Area -->
+        <header style="margin-bottom: 48px; text-align: left;">
+            <h1 class="hero-title" style="margin-bottom: 8px;">Welcome back, <span id="welcomeName">CoSwapper</span></h1>
+            <p class="hero-subtitle">Here's what's happening with your trades today.</p>
+        </header>
+
+        <!-- Quick Actions -->
+        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 24px; margin-bottom: 48px;">
+            <div class="card" onclick="window.location.href='sell.html'" style="cursor: pointer; transition: transform 0.3s ease;">
+                <h3 style="font-size: 22px; font-weight: 800; margin-bottom: 12px;">Sell a Coupon</h3>
+                <p style="color: rgba(255,255,255,0.5); font-size: 14px; margin-bottom: 24px;">List your unused vouchers and get paid instantly by buyers across the platform.</p>
+                <div style="display: flex; align-items: center; color: #4fd0ff; font-weight: 700; font-size: 14px; gap: 8px;">
+                    Start Listing <i data-lucide="arrow-right" style="width: 16px;"></i>
+                </div>
+            </div>
+
+            <div class="card" onclick="window.location.href='browse.html'" style="cursor: pointer; transition: transform 0.3s ease;">
+                <h3 style="font-size: 22px; font-weight: 800; margin-bottom: 12px;">Browse Deals</h3>
+                <p style="color: rgba(255,255,255,0.5); font-size: 14px; margin-bottom: 24px;">Explore the marketplace for exclusive discounts and limited-time vouchers.</p>
+                <div style="display: flex; align-items: center; color: #4fd0ff; font-weight: 700; font-size: 14px; gap: 8px;">
+                    Explore Now <i data-lucide="arrow-right" style="width: 16px;"></i>
+                </div>
+            </div>
+        </div>
+
+        <h3 style="font-size: 13px; font-weight: 800; color: rgba(255,255,255,0.4); text-transform: uppercase; letter-spacing: 0.1em; margin-bottom: 24px;">Marketplace Activity</h3>
+        
+        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 24px; margin-bottom: 64px;">
+            <div class="card" style="text-align: center; padding: 24px;">
+                <div style="font-size: 11px; color: rgba(255,255,255,0.4); font-weight: 800; text-transform: uppercase; margin-bottom: 8px;">Seller Level</div>
+                <div id="sellerLevel" style="font-size: 32px; font-weight: 800; color: white;">Level 1</div>
+            </div>
+            <div class="card" style="text-align: center; padding: 24px;">
+                <div style="font-size: 11px; color: rgba(255,255,255,0.4); font-weight: 800; text-transform: uppercase; margin-bottom: 8px;">Trust Score</div>
+                <div style="font-size: 32px; font-weight: 800; color: #22c55e;">Verified</div>
+            </div>
+            <div class="card" style="text-align: center; padding: 24px;">
+                <div style="font-size: 11px; color: rgba(255,255,255,0.4); font-weight: 800; text-transform: uppercase; margin-bottom: 8px;">Sales Track</div>
+                <div style="font-size: 32px; font-weight: 800; color: #4fd0ff;">Active</div>
+            </div>
+        </div>
+
+        <section class="divider-glow" style="padding-top: 40px;">
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 32px;">
+                <div>
+                    <h2 style="font-size: 24px; font-weight: 800;">Recommended for You</h2>
+                    <p style="color: rgba(255,255,255,0.5); font-size: 14px;">Hand-picked deals based on your recent activity.</p>
+                </div>
+                <div id="strategyBadge" style="background: rgba(79, 208, 255, 0.1); color: #4fd0ff; padding: 6px 12px; border-radius: 99px; font-size: 11px; font-weight: 800; letter-spacing: 0.05em;">TRENDING</div>
+            </div>
+            
+            <div id="recommendationGrid" class="coupon-grid">
+                <p style="color: rgba(255,255,255,0.2); text-align: center; grid-column: 1/-1; padding: 40px;">Searching for deals...</p>
+            </div>
+        </section>
+    </main>
+
+    <nav class="mobile-nav" aria-label="Mobile navigation">
+        <div class="mobile-nav-inner">
+            <a href="dashboard.html" class="mobile-nav-item active"><i data-lucide="layout-dashboard"></i><span>Home</span></a>
+            <a href="browse.html" class="mobile-nav-item"><i data-lucide="search"></i><span>Browse</span></a>
+            <a href="sell.html" class="mobile-nav-item"><i data-lucide="plus-circle"></i><span>Sell</span></a>
+            <a href="chatlist.html" class="mobile-nav-item"><i data-lucide="message-square"></i><span>Chat</span></a>
+        </div>
+    </nav>
+
+    <script>
+        document.addEventListener("DOMContentLoaded", () => {
+            if (!getAuthToken()) {
+                window.location.href = "login.html";
+                return;
+            }
+            loadData();
+        });
+
+        async function loadData() {
+            const user = getCurrentUser();
+            if (user && user.name) {
+                document.getElementById("welcomeName").textContent = user.name;
+            }
+
+            try {
+                const [me, profile] = await Promise.all([
+                    apiRequest("/me"),
+                    apiRequest("/me/profile")
+                ]).catch(() => [{}, {}]);
+
+                if (me.user && me.user.name) document.getElementById("welcomeName").textContent = me.user.name;
+                if (profile.profile) document.getElementById("sellerLevel").textContent = `Level ${profile.profile.level || 1}`;
+
+                const recoEl = document.getElementById("recommendationGrid");
+                const data = await apiRequest("/recommendations?limit=4");
+                const recos = data.recommendations || [];
+                
+                document.getElementById("strategyBadge").textContent = (data.strategy || "trending").toUpperCase();
+
+                if (recos.length > 0) {
+                    recoEl.innerHTML = recos.map(item => `
+                        <article class="coupon-card" onclick="window.location.href='coupon-details.html?id=${item.id}'" style="cursor:pointer;">
+                            <img src="${item.image_url || 'bg.png'}" onerror="this.src='bg.png'" class="card-img" loading="lazy" alt="${item.title}">
+                            <div class="card-content">
+                                <div class="card-tag">${item.category || 'Voucher'}</div>
+                                <div class="card-title">${item.title}</div>
+                                <div class="card-meta">
+                                    <span style="color: #4fd0ff; font-weight: 700; font-size: 18px;">₹${item.price}</span>
+                                </div>
+                            </div>
+                        </article>
+                    `).join("");
+                } else {
+                    recoEl.innerHTML = `<p style="color:rgba(255,255,255,0.3); grid-column: 1/-1; text-align: center; padding: 40px 0;">No recommendations available yet.</p>`;
+                }
+                if (window.lucide) window.lucide.createIcons();
+            } catch (e) {
+                console.error("Dashboard data load error", e);
+            }
+        }
+    </script>
+    <script src="components.js" defer></script>
+</body>
+</html>

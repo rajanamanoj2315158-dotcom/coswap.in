@@ -1,0 +1,172 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <link rel="preconnect" href="https://unpkg.com">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Report Fraud – CoSwap</title>
+
+    <style>
+        body {
+            background: radial-gradient(circle at center, #1e223a, #0f1120, #06070d);
+            color: white;
+            font-family: Poppins, sans-serif;
+            padding: 30px;
+        }
+
+        .card {
+            background: rgba(255, 255, 255, 0.08);
+            padding: 30px;
+            border-radius: 18px;
+            max-width: 600px;
+            margin: auto;
+            backdrop-filter: blur(14px);
+            border: 1px solid rgba(255, 255, 255, 0.12);
+        }
+
+        h1 {
+            margin-bottom: 15px;
+            font-size: 28px;
+        }
+
+        .input-group {
+            margin-top: 18px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 6px;
+            opacity: 0.9;
+        }
+
+        input,
+        select,
+        textarea {
+            width: 100%;
+            padding: 14px;
+            border-radius: 12px;
+            border: none;
+            background: rgba(255, 255, 255, 0.12);
+            color: white;
+            font-size: 15px;
+            outline: none;
+        }
+
+        textarea {
+            height: 140px;
+            resize: none;
+        }
+
+        .btn {
+            margin-top: 25px;
+            width: 100%;
+            padding: 15px;
+            border: none;
+            border-radius: 12px;
+            background: #ff4e4e;
+            color: white;
+            cursor: pointer;
+            font-size: 17px;
+        }
+
+        .btn:hover {
+            opacity: 0.9;
+        }
+    </style>
+    <link rel="preload" href="theme.css" as="style">
+    <link rel="stylesheet" href="theme.css">
+    <script src="ui.js" defer></script>
+    <!-- Open Graph / Facebook -->
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://coswap.in/">
+    <meta property="og:title" content="CoSwap – Buy and Sell Coupons Instantly">
+    <meta property="og:description" content="Discover unused coupons from other users or sell your own in seconds.">
+    <meta property="og:image" content="https://coswap.in/logo.png">
+
+    <!-- Twitter -->
+    <meta property="twitter:card" content="summary_large_image">
+    <meta property="twitter:url" content="https://coswap.in/">
+    <meta property="twitter:title" content="CoSwap – Buy and Sell Coupons Instantly">
+    <meta property="twitter:description" content="Discover unused coupons from other users or sell your own in seconds.">
+    <meta property="twitter:image" content="https://coswap.in/logo.png">
+
+</head>
+
+<body>
+
+    <div class="card">
+        <h1>Report Fraud</h1>
+        <p>Please provide details so the admin can review it properly.</p>
+        <p id="reportContext" style="margin-top:8px; opacity:0.85;"></p>
+
+        <div class="input-group">
+            <label>Reason</label>
+            <select id="reason">
+                <option>Invalid Coupon Code</option>
+                <option>Expired Coupon</option>
+                <option>Seller Cheated</option>
+                <option>Other</option>
+            </select>
+        </div>
+
+        <div class="input-group">
+            <label>Description</label>
+            <textarea id="desc" placeholder="Explain what happened..."></textarea>
+        </div>
+
+        <button class="btn" onclick="submitReport()">Submit Report</button>
+    </div>
+
+    <script src="api.js" defer></script>
+    <script>
+        if (!requireAuth("report.html" + window.location.search)) {
+            // redirected
+        }
+
+        const params = new URLSearchParams(window.location.search);
+        const couponId = params.get("id");
+        let sellerId = params.get("sellerId");
+
+        async function loadContext() {
+            if (!couponId) return;
+            try {
+                const data = await apiRequest(`/coupons/${couponId}`);
+                const c = data.coupon;
+                sellerId = c.seller_id;
+                document.getElementById("reportContext").innerText =
+                    `Reporting coupon: ${escapeHtml(c.title)} (Seller: ${escapeHtml(c.seller_name)})`;
+            } catch {
+                // ignore
+            }
+        }
+
+        async function submitReport() {
+            const reason = document.getElementById("reason").value;
+            const description = document.getElementById("desc").value.trim();
+
+            try {
+                await apiRequest("/reports", {
+                    method: "POST",
+                    body: JSON.stringify({
+                        couponId,
+                        sellerId,
+                        reason,
+                        description
+                    })
+                });
+
+                alert("Fraud report submitted successfully.");
+                window.location.href = "success.html";
+            } catch (err) {
+                alert(err.message || "Failed to submit report.");
+            }
+        }
+
+        loadContext();
+    </script>
+
+    <script src="components.js" defer></script>
+</body>
+
+</html>

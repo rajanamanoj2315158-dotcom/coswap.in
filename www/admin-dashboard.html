@@ -1,0 +1,201 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <link rel="preconnect" href="https://unpkg.com">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Dashboard – CoSwap</title>
+
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: Poppins, sans-serif;
+        }
+
+        body {
+            background: radial-gradient(circle at top, #13172b, #0b0e1b, #05060a);
+            color: white;
+            padding: 30px;
+        }
+
+        h1 {
+            font-size: 34px;
+            font-weight: 700;
+            margin-bottom: 25px;
+        }
+
+        .grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 25px;
+            margin-bottom: 35px;
+        }
+
+        .card {
+            background: rgba(255, 255, 255, 0.08);
+            padding: 25px;
+            border-radius: 16px;
+            backdrop-filter: blur(14px);
+            border: 1px solid rgba(255, 255, 255, 0.12);
+            box-shadow: 0 0 20px rgba(0, 0, 0, 0.4);
+            transition: 0.3s;
+        }
+
+        .card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 0 28px rgba(0, 0, 0, 0.5);
+        }
+
+        .card h2 {
+            font-size: 30px;
+            margin-bottom: 8px;
+            font-weight: 700;
+        }
+
+        .card p {
+            opacity: 0.85;
+            font-size: 15px;
+        }
+
+        .actions {
+            display: flex;
+            gap: 20px;
+            margin-top: 40px;
+        }
+
+        .btn {
+            flex: 1;
+            padding: 18px;
+            border-radius: 14px;
+            background: linear-gradient(90deg, #4fd0ff, #6f6cff);
+            border: none;
+            color: white;
+            font-size: 18px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: 0.2s;
+        }
+
+        .btn:hover {
+            opacity: 0.85;
+        }
+
+        .logout {
+            margin-top: 30px;
+            padding: 14px 20px;
+            background: rgba(255, 0, 0, 0.25);
+            border: 1px solid red;
+            border-radius: 12px;
+            color: white;
+            font-size: 16px;
+            cursor: pointer;
+        }
+    </style>
+
+    <link rel="preload" href="theme.css" as="style">
+    <link rel="stylesheet" href="theme.css">
+    <script src="ui.js" defer></script>
+    <!-- Open Graph / Facebook -->
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://coswap.in/">
+    <meta property="og:title" content="CoSwap – Buy and Sell Coupons Instantly">
+    <meta property="og:description" content="Discover unused coupons from other users or sell your own in seconds.">
+    <meta property="og:image" content="https://coswap.in/logo.png">
+
+    <!-- Twitter -->
+    <meta property="twitter:card" content="summary_large_image">
+    <meta property="twitter:url" content="https://coswap.in/">
+    <meta property="twitter:title" content="CoSwap – Buy and Sell Coupons Instantly">
+    <meta property="twitter:description" content="Discover unused coupons from other users or sell your own in seconds.">
+    <meta property="twitter:image" content="https://coswap.in/logo.png">
+
+</head>
+
+<body>
+
+    <h1>Admin Dashboard</h1>
+
+    <div class="grid">
+
+        <div class="card">
+            <h2 id="usersCount">0</h2>
+            <p>Total Users</p>
+        </div>
+
+        <div class="card">
+            <h2 id="couponCount">0</h2>
+            <p>Total Coupons Listed</p>
+        </div>
+
+        <div class="card">
+            <h2 id="revenue">₹0</h2>
+            <p>Total Sales Volume</p>
+        </div>
+
+        <div class="card">
+            <h2 id="reports">0</h2>
+            <p>Pending Seller Reviews</p>
+        </div>
+
+        <div class="card">
+            <h2 id="suspicious">0</h2>
+            <p>Suspicious Sellers</p>
+        </div>
+
+        <div class="card">
+            <h2 id="activeChats">0</h2>
+            <p>Active Chats</p>
+        </div>
+
+    </div>
+
+    <!-- ACTION BUTTONS -->
+    <div class="actions">
+        <button class="btn" onclick="go('admin-users.html')">Manage Users</button>
+        <button class="btn" onclick="go('admin-reports.html')">Review Reports</button>
+        <button class="btn" onclick="go('admin-coupons.html')">Manage Coupons</button>
+    </div>
+
+    <button class="logout" onclick="logout()">Logout</button>
+
+    <script src="api.js" defer></script>
+    <script>
+        if (!requireAdmin("admin-dashboard.html")) {
+            // redirected
+        }
+
+        async function loadOverview() {
+            try {
+                const data = await apiRequest("/admin/overview");
+                const o = data.overview;
+
+                document.getElementById("usersCount").innerText = o.totalUsers;
+                document.getElementById("couponCount").innerText = o.couponCount;
+                document.getElementById("revenue").innerText = "₹" + (o.salesVolume ?? o.revenue ?? 0);
+                document.getElementById("reports").innerText = o.pendingReports;
+                document.getElementById("suspicious").innerText = o.suspiciousSellers;
+                document.getElementById("activeChats").innerText = o.activeChats;
+            } catch (err) {
+                alert(err.message || "Failed to load admin overview.");
+            }
+        }
+
+        function go(page) {
+            window.location.href = page;
+        }
+
+        function logout() {
+            clearAuth();
+            window.location.href = "admin-login.html";
+        }
+
+        loadOverview();
+    </script>
+
+    <script src="components.js" defer></script>
+</body>
+
+</html>

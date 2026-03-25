@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <link rel="preconnect" href="https://unpkg.com">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Wallet — CoSwap</title>
+    <meta name="description" content="View your CoSwap wallet balance and payment history.">
+    <meta name="robots" content="noindex, nofollow">
+    <link rel="canonical" href="https://coswap.in/wallet.html">
+    <meta property="og:title" content="Wallet — CoSwap">
+    <meta property="og:description" content="View your CoSwap wallet balance and payment history.">
+    <meta property="og:image" content="https://coswap.in/logo.png">
+    <meta property="og:url" content="https://coswap.in/wallet.html">
+    <!-- Google Analytics 4 -->
+    <!-- <script async src="https://www.googletagmanager.com/gtag/js?id=G-XXXXXXXXXX"></script>
+    <script>window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments)}gtag('js',new Date());gtag('config','G-XXXXXXXXXX');</script> -->
+    <link rel="preload" href="theme.css" as="style">
+    <link rel="stylesheet" href="theme.css">
+    <script src="ui.js" defer></script>
+
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: Poppins, sans-serif;
+        }
+
+        body {
+            align-items: center;
+            background: radial-gradient(circle at center, #141828, #0b0f1e, #05060a);
+            color: white;
+            display: flex;
+            justify-content: center;
+            min-height: 100vh;
+            padding: 24px;
+        }
+
+        .card {
+            background: rgba(255, 255, 255, 0.09);
+            border: 1px solid rgba(255, 255, 255, 0.12);
+            border-radius: 22px;
+            box-shadow: 0 24px 48px rgba(0, 0, 0, 0.3);
+            max-width: 560px;
+            padding: 36px;
+            text-align: center;
+        }
+
+        h1 {
+            font-size: 34px;
+            margin-bottom: 14px;
+        }
+
+        p {
+            color: rgba(255, 255, 255, 0.78);
+            font-size: 16px;
+            line-height: 1.7;
+        }
+
+        .actions {
+            display: flex;
+            gap: 12px;
+            justify-content: center;
+            margin-top: 24px;
+        }
+
+        .btn {
+            background: linear-gradient(135deg, #4fd0ff, #6f6cff);
+            border: none;
+            border-radius: 14px;
+            color: white;
+            cursor: pointer;
+            font-size: 15px;
+            font-weight: 700;
+            padding: 14px 18px;
+        }
+
+        .btn.secondary {
+            background: rgba(255, 255, 255, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.12);
+        }
+
+        @media (max-width: 640px) {
+            .actions {
+                flex-direction: column;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <div class="card">
+        <h1>Wallet removed from CoSwap</h1>
+        <p>
+            The old wallet and platform fee flow is no longer required. Selling, buying, and chat now continue directly
+            from the main product experience.
+        </p>
+
+        <div class="actions">
+            <button class="btn" onclick="window.location.href='dashboard.html'">Go to Dashboard</button>
+            <button class="btn secondary" onclick="window.location.href='chatlist.html'">Open Chat</button>
+        </div>
+    </div>
+    <script src="components.js" defer></script>
+</body>
+
+</html>

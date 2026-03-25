@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <link rel="preconnect" href="https://unpkg.com">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sign In — CoSwap</title>
+    <meta name="description" content="Sign in to CoSwap to manage your coupon listings and purchases.">
+    <link rel="preload" href="theme.css" as="style">
+    <link rel="stylesheet" href="theme.css">
+    <script src="ui.js" defer></script>
+    <script src="https://accounts.google.com/gsi/client" async defer></script>
+
+    <!-- Open Graph / Facebook -->
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://coswap.in/">
+    <meta property="og:title" content="CoSwap – Buy and Sell Coupons Instantly">
+    <meta property="og:description" content="Discover unused coupons from other users or sell your own in seconds.">
+    <meta property="og:image" content="https://coswap.in/logo.png">
+
+    <!-- Twitter -->
+    <meta property="twitter:card" content="summary_large_image">
+    <meta property="twitter:url" content="https://coswap.in/">
+    <meta property="twitter:title" content="CoSwap – Buy and Sell Coupons Instantly">
+    <meta property="twitter:description" content="Discover unused coupons from other users or sell your own in seconds.">
+    <meta property="twitter:image" content="https://coswap.in/logo.png">
+
+</head>
+<body class="soft-bg">
+    <!-- Premium Background System -->
+    <div class="premium-bg-system parallax-bg" aria-hidden="true">
+        <div class="aurora-layer"></div>
+        <div class="droplet-container parallax-particles">
+            <div class="bg-droplet" style="width:10px; height:10px; left:10%; --duration:18s;"></div>
+            <div class="bg-droplet" style="width:8px; height:8px; left:80%; --duration:22s; animation-delay:-5s;"></div>
+        </div>
+        <div class="ripple-layer">
+            <div class="liquid-ripple" style="top:50%; left:50%;"></div>
+        </div>
+    </div>
+    <main class="container" style="min-height: 100vh; display: flex; align-items: center; justify-content: center; padding: 24px 0;">
+        <section class="login-card">
+            <div style="text-align: center; margin-bottom: 32px;">
+                <img src="logo.png" alt="CoSwap" style="width: 64px; height: 64px; margin-bottom: 16px;" loading="lazy">
+                <h1 style="font-size: 32px; font-weight: 800; letter-spacing: -0.04em; margin-bottom: 8px;">Welcome Back</h1>
+                <p style="color: rgba(255,255,255,0.5); font-size: 14px;">Sign in to your CoSwap account</p>
+            </div>
+
+            <form id="loginForm" style="display: flex; flex-direction: column; gap: 20px;">
+                <div style="display: flex; flex-direction: column; gap: 8px;">
+                    <label for="email" style="font-size: 13px; font-weight: 700; color: rgba(255,255,255,0.4); text-transform: uppercase;">Email Address</label>
+                    <input id="email" type="email" placeholder="name@email.com" required>
+                </div>
+
+                <div style="display: flex; flex-direction: column; gap: 8px;">
+                    <div style="display: flex; justify-content: space-between; align-items: center;">
+                        <label for="password" style="font-size: 13px; font-weight: 700; color: rgba(255,255,255,0.4); text-transform: uppercase;">Password</label>
+                        <a href="forgot.html" style="font-size: 12px; color: #38bdf8; text-decoration: none; font-weight: 600;">Forgot password?</a>
+                    </div>
+                    <input id="password" type="password" placeholder="••••••••" required>
+                </div>
+
+                <button class="primary-btn" id="loginButton" type="submit" style="width: 100%; margin-top: 8px;">Sign In</button>
+            </form>
+
+            <div style="margin: 24px 0; display: flex; align-items: center; gap: 16px; color: rgba(255,255,255,0.1);">
+                <div style="flex: 1; height: 1px; background: currentColor;"></div>
+                <span style="font-size: 12px; font-weight: 700; opacity: 0.5;">OR</span>
+                <div style="flex: 1; height: 1px; background: currentColor;"></div>
+            </div>
+
+            <button class="google-btn" id="googleLoginBtn">
+                <img src="https://www.gstatic.com/images/branding/product/1x/gsa_512dp.png" alt="Google" loading="lazy">
+                Continue with Google
+            </button>
+
+            <div style="margin-top: 32px; text-align: center; font-size: 14px; color: rgba(255,255,255,0.5);">
+                Don't have an account? <a href="signup.html" style="color: #38bdf8; text-decoration: none; font-weight: 700;">Join CoSwap</a>
+            </div>
+        </section>
+    </main>
+
+    <div id="toast" class="toast"></div>
+
+    <script src="api.js" defer></script>
+    <script>
+        const GOOGLE_CLIENT_ID = "633777352427-d46e8ks94tgkkug8sei8n90mhub6q786.apps.googleusercontent.com";
+
+        // Auto-skip if logged in
+        if (typeof getAuthToken === "function" && getAuthToken()) {
+            window.location.replace("dashboard.html");
+        }
+
+        window.onload = function() {
+            google.accounts.id.initialize({
+                client_id: GOOGLE_CLIENT_ID,
+                callback: handleGoogleCredential
+            });
+
+            document.getElementById('googleLoginBtn').onclick = () => {
+                google.accounts.id.prompt();
+            };
+        };
+
+        async function handleGoogleCredential(response) {
+            try {
+                const data = await apiRequest("/auth/google", {
+                    method: "POST",
+                    body: JSON.stringify({ idToken: response.credential })
+                });
+
+                setAuth(data.token, data.user);
+                showToast("Login successful.");
+                window.location.href = "dashboard.html";
+            } catch (err) {
+                showToast(err.message || "Google login failed.");
+            }
+        }
+
+        async function loginUser(event) {
+            event.preventDefault();
+            const email = document.getElementById("email").value.trim();
+            const password = document.getElementById("password").value.trim();
+
+            const btn = document.getElementById("loginButton");
+            btn.disabled = true;
+            btn.textContent = "Checking...";
+
+            try {
+                const data = await apiRequest("/auth/login", {
+                    method: "POST",
+                    body: JSON.stringify({ email, password })
+                });
+
+                setAuth(data.token, data.user);
+                showToast("Login successful.");
+                window.location.href = "dashboard.html";
+            } catch (err) {
+                showToast(err.message || "Invalid credentials.");
+            } finally {
+                btn.disabled = false;
+                btn.textContent = "Sign In";
+            }
+        }
+
+        document.getElementById("loginForm").addEventListener("submit", loginUser);
+    </script>
+    <script src="components.js" defer></script>
+</body>
+</html>

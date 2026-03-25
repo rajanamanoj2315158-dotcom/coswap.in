@@ -1,0 +1,485 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <link rel="preconnect" href="https://unpkg.com">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sell Coupons — CoSwap</title>
+    <meta name="description" content="List your unused coupons or vouchers for sale on CoSwap India's marketplace.">
+    <link rel="preload" href="theme.css" as="style">
+    <link rel="stylesheet" href="theme.css">
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <style>
+        /* LIQUID GLASS UI SYSTEM (Venture Startup Style) */
+        :root {
+            --ultra-blue: #4F8CFF;
+            --ultra-indigo: #6E5BFF;
+            --ultra-violet: #9A6BFF;
+            --ultra-neon: #22E3FF;
+            --ultra-text-sec: #A3AED0;
+            --ultra-card-bg: rgba(18, 28, 64, 0.78);
+            --ultra-input-bg: #0B1535;
+            --ultra-border: rgba(120, 150, 255, 0.25);
+            --ultra-highlight: #B8C6FF;
+        }
+
+        /* Spotlight Focus System */
+        .spotlight-backdrop {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 100vw;
+            height: 100vh;
+            background: radial-gradient(circle at center, rgba(90, 120, 255, 0.18), transparent 65%);
+            pointer-events: none;
+            z-index: 0;
+        }
+
+        .sell-card {
+            background: var(--ultra-card-bg);
+            backdrop-filter: blur(24px);
+            -webkit-backdrop-filter: blur(24px);
+            border: 1px solid var(--ultra-border);
+            border-radius: 24px;
+            padding: 32px;
+            box-shadow: 
+                0 30px 80px rgba(0, 0, 0, 0.70),
+                0 0 45px rgba(79, 140, 255, 0.20);
+            position: relative;
+            overflow: hidden;
+            z-index: 1;
+            transition: all 0.25s ease;
+        }
+
+        /* Ambient Droplets (Depth Effect) */
+        .droplet {
+            position: absolute;
+            background: var(--ultra-blue);
+            border-radius: 50%;
+            filter: blur(4px);
+            opacity: 0.05;
+            pointer-events: none;
+            z-index: -1;
+            animation: floatDroplet 15s ease-in-out infinite;
+        }
+
+        @keyframes floatDroplet {
+            0%, 100% { transform: translate(0, 0) scale(1); }
+            50% { transform: translate(20px, -20px) scale(1.2); }
+        }
+        
+        .header-gradient {
+            background: linear-gradient(135deg, #1e293b 0%, #3b82f6 50%, #1d4ed8 100%);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            padding: 80px 0;
+            margin-bottom: 40px;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .form-group {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            margin-bottom: 18px;
+        }
+
+        .form-group label {
+            font-size: 13px;
+            font-weight: 500;
+            color: var(--ultra-highlight);
+            letter-spacing: 0.5px;
+        }
+
+        /* Form UI handled globally in theme.css */
+
+        /* Custom Glass Dropdown */
+        .custom-select {
+            position: relative;
+            width: 100%;
+        }
+        .select-selected {
+            background: #0B1535;
+            color: #7F8CC0;
+            border: 1px solid rgba(120, 140, 255, 0.35);
+            border-radius: 12px;
+            height: 52px;
+            padding: 14px 16px;
+            font-size: 16px;
+            cursor: pointer;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        .select-selected.has-value {
+            color: #FFFFFF;
+        }
+        .select-selected::after {
+            content: '';
+            width: 20px;
+            height: 20px;
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24' fill='none' stroke='%234F8CFF' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='m6 9 6 6 6-6'/%3E%3C/svg%3E");
+            background-size: contain;
+            background-repeat: no-repeat;
+            transition: transform 0.3s;
+        }
+        .select-selected.select-active::after {
+            transform: rotate(180deg);
+        }
+        .select-selected.select-active {
+            border-color: #4F8CFF;
+            box-shadow: 0 0 0 2px rgba(79, 140, 255, 0.15);
+        }
+        .select-items {
+            position: absolute;
+            background: rgba(11, 21, 53, 0.95);
+            backdrop-filter: blur(24px);
+            border: 1px solid rgba(120, 140, 255, 0.35);
+            border-radius: 12px;
+            top: 100%;
+            left: 0;
+            right: 0;
+            z-index: 99;
+            margin-top: 8px;
+            overflow: hidden;
+            box-shadow: 0 16px 40px rgba(0, 0, 0, 0.4);
+            animation: riseIn 0.2s ease-out;
+        }
+        .select-hide {
+            display: none;
+        }
+        .select-items div {
+            color: #ffffff;
+            padding: 14px 16px;
+            cursor: pointer;
+            transition: background 0.2s;
+        }
+        .select-items div:hover {
+            background: rgba(79, 140, 255, 0.18);
+        }
+
+        .divider-glow {
+            border-bottom: 1px solid rgba(120, 150, 255, 0.18);
+            margin-bottom: 24px;
+            padding-bottom: 24px;
+        }
+
+        #trustPercent, #maxAllowedPrice {
+            color: var(--ultra-blue);
+            font-weight: 800;
+            font-size: 22px;
+            text-shadow: 0 0 10px rgba(79, 140, 255, 0.3);
+        }
+
+        .label-sec {
+            color: var(--ultra-text-sec);
+            font-size: 11px;
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+            display: block;
+            margin-bottom: 6px;
+        }
+
+        /* Mobile Responsive Designer Rules */
+        @media (max-width: 480px) {
+            .sell-card {
+                max-width: 92%;
+                margin: auto;
+                padding: 18px;
+            }
+            .form-group {
+                gap: 18px;
+                margin-bottom: 24px;
+            }
+            #titleInput, #categoryInput, #expiryInput, #priceInput, #detailsInput {
+                height: 52px;
+                font-size: 16px;
+            }
+            .ultra-publish-btn {
+                height: 54px;
+            }
+        }
+    </style>
+
+    <!-- Open Graph / Facebook -->
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://coswap.in/">
+    <meta property="og:title" content="CoSwap – Buy and Sell Coupons Instantly">
+    <meta property="og:description" content="Discover unused coupons from other users or sell your own in seconds.">
+    <meta property="og:image" content="https://coswap.in/logo.png">
+
+    <!-- Twitter -->
+    <meta property="twitter:card" content="summary_large_image">
+    <meta property="twitter:url" content="https://coswap.in/">
+    <meta property="twitter:title" content="CoSwap – Buy and Sell Coupons Instantly">
+    <meta property="twitter:description" content="Discover unused coupons from other users or sell your own in seconds.">
+    <meta property="twitter:image" content="https://coswap.in/logo.png">
+
+</head>
+
+<body class="soft-bg">
+    <!-- Premium Background System -->
+    <div class="premium-bg-system parallax-bg">
+        <div class="aurora-layer"></div>
+        <div class="droplet-container parallax-particles">
+            <div class="bg-droplet" style="width:10px; height:10px; left:5%; --duration:18s; --sway:40px;"></div>
+            <div class="bg-droplet" style="width:6px; height:6px; left:15%; --duration:24s; --sway:-30px; animation-delay:-5s;"></div>
+            <div class="bg-droplet" style="width:8px; height:8px; left:40%; --duration:20s; --sway:20px; animation-delay:-2s;"></div>
+            <div class="bg-droplet" style="width:12px; height:12px; left:60%; --duration:28s; --sway:-40px; animation-delay:-8s;"></div>
+            <div class="bg-droplet" style="width:5px; height:5px; left:85%; --duration:22s; --sway:35px; animation-delay:-3s;"></div>
+            <div class="bg-droplet" style="width:9px; height:9px; left:25%; --duration:19s; --sway:-25px; animation-delay:-1s;"></div>
+            <div class="bg-droplet" style="width:7px; height:7px; left:70%; --duration:25s; --sway:30px; animation-delay:-6s;"></div>
+            <div class="bg-droplet" style="width:11px; height:11px; left:50%; --duration:21s; --sway:-35px; animation-delay:-4s;"></div>
+            <div class="bg-droplet" style="width:6px; height:6px; left:10%; --duration:23s; --sway:25px; animation-delay:-7s;"></div>
+            <div class="bg-droplet" style="width:10px; height:10px; left:95%; --duration:26s; --sway:-30px; animation-delay:-9s;"></div>
+        </div>
+        <div class="ripple-layer">
+            <div class="liquid-ripple" style="top:20%; left:30%;"></div>
+            <div class="liquid-ripple" style="top:70%; left:80%; animation-delay:-4s;"></div>
+            <div class="liquid-ripple" style="top:40%; left:60%; animation-delay:-8s;"></div>
+        </div>
+    </div>
+
+    <div class="spotlight-backdrop"></div>
+
+    <nav class="navbar"></nav>
+
+    <header class="header-gradient">
+        <div class="container">
+            <h1 style="font-size: 56px; font-weight: 800; letter-spacing: -0.05em; margin-bottom: 16px; color: white; text-shadow: 0 4px 20px rgba(0,0,0,0.3);">Marketplace Intelligence</h1>
+            <p style="color: rgba(255,255,255,0.95); font-size: 20px; max-width: 650px; margin: 0 auto; line-height: 1.6;">Turn your digital assets into liquidity. Professional-grade trading for the next-gen internet.</p>
+        </div>
+    </header>
+
+    <main class="container" style="padding-bottom: 120px; position: relative;">
+        <div class="sell-card" style="max-width: 580px; margin: 0 auto;">
+            <div class="divider-glow" style="display: grid; grid-template-columns: 1fr 1fr; gap: 24px;">
+                <div>
+                    <span class="label-sec">Trust Score</span>
+                    <span id="trustPercent">--%</span>
+                </div>
+                <div style="text-align: right;">
+                    <span class="label-sec">Selling Limit</span>
+                    <span id="maxAllowedPrice">₹--</span>
+                </div>
+            </div>
+
+            <form id="sellForm" onsubmit="handleListCoupon(event)">
+                <div class="form-group">
+                    <label for="titleInput">Coupon Title</label>
+                    <input type="text" id="titleInput" placeholder="e.g. Amazon Elite Voucher ₹2,000" maxlength="120" required>
+                </div>
+
+                    <div class="form-group" style="display: flex; flex-direction: column; gap: 8px;">
+                        <label for="categoryInput" style="font-size: 13px; font-weight: 700; color: rgba(255,255,255,0.4); text-transform: uppercase;">Category</label>
+                        <div class="custom-select" tabindex="0" id="customCategoryDropdown">
+                            <div class="select-selected" id="categoryDisplay">Select Category</div>
+                            <div class="select-items select-hide" id="categoryOptions">
+                                <div data-value="OTT">OTT & Entertainment</div>
+                                <div data-value="Food">Food & Dining</div>
+                                <div data-value="Shopping">Shopping</div>
+                                <div data-value="Travel">Travel</div>
+                                <div data-value="Gaming">Gaming</div>
+                                <div data-value="Other">Other Category</div>
+                            </div>
+                        </div>
+                        <input type="hidden" id="categoryInput" required>
+                    </div>
+
+                <div class="form-group">
+                    <label for="priceInput">Listing Price (INR)</label>
+                    <input type="number" id="priceInput" placeholder="Min ₹1" min="1" step="1" required>
+                    <span id="priceHint" style="font-size: 12px; color: #7F8CC0; margin-top: 4px;">Syncing account limits...</span>
+                </div>
+
+                <div class="form-group">
+                    <label for="expiryInput">Platform Expiry</label>
+                    <input type="date" id="expiryInput" readonly required placeholder="Choose Date" onclick="this.showPicker()">
+                    <span style="font-size: 11px; color: #7F8CC0; margin-top: 4px; display: flex; align-items: center; gap: 4px;">
+                        <i data-lucide="info" style="width: 12px; height: 12px;"></i>
+                        Select from calendar only for verification.
+                    </span>
+                </div>
+
+                <div class="form-group">
+                    <label for="detailsInput">Offer Specification</label>
+                    <textarea id="detailsInput" placeholder="Provide precise terms, conditions, and redemption steps." required></textarea>
+                </div>
+
+                <button type="submit" class="ultra-publish-btn" id="submitBtn">
+                    Publish to Marketplace
+                    <i data-lucide="zap" style="width: 18px; height: 18px;"></i>
+                </button>
+            </form>
+        </div>
+    </main>
+
+    <div id="toast" class="toast"></div>
+
+    <script src="api.js" defer></script>
+    <script src="ui.js" defer></script>
+    <script>
+        lucide.createIcons();
+
+        let userMaxPrice = 500;
+
+        async function initPage() {
+            if (!getAuthToken()) {
+                window.location.href = "login.html";
+                return;
+            }
+
+            // Expiry Date Hardening
+            const today = new Date().toISOString().split("T")[0];
+            const expiry = document.getElementById("expiryInput");
+            expiry.setAttribute("min", today);
+            
+            // Prevent all keyboard input
+            expiry.addEventListener("keydown", (e) => e.preventDefault());
+            expiry.addEventListener("paste", (e) => e.preventDefault());
+            
+            // Handle visual-only click
+            expiry.addEventListener("click", function() {
+                if (typeof this.showPicker === 'function') {
+                    this.showPicker();
+                }
+            });
+
+            // Custom Glass Dropdown Logic
+            const display = document.getElementById("categoryDisplay");
+            const optionsBox = document.getElementById("categoryOptions");
+            const hiddenInput = document.getElementById("categoryInput");
+
+            display.addEventListener("click", function(e) {
+                e.stopPropagation();
+                optionsBox.classList.toggle("select-hide");
+                this.classList.toggle("select-active");
+            });
+
+            optionsBox.querySelectorAll("div").forEach(option => {
+                option.addEventListener("click", function(e) {
+                    e.stopPropagation();
+                    display.innerText = this.innerText;
+                    display.classList.add("has-value");
+                    hiddenInput.value = this.getAttribute("data-value");
+                    optionsBox.classList.add("select-hide");
+                    display.classList.remove("select-active");
+                });
+            });
+
+            document.addEventListener("click", function() {
+                optionsBox.classList.add("select-hide");
+                display.classList.remove("select-active");
+            });
+
+            try {
+                const data = await apiRequest("/me/profile");
+                const profile = data.profile || {};
+                userMaxPrice = profile.maxPrice || 500;
+                const fraud = profile.fraudPercent || 0;
+                
+                document.getElementById("trustPercent").innerText = `${100 - fraud}%`;
+                document.getElementById("maxAllowedPrice").innerText = `₹${userMaxPrice.toLocaleString()}`;
+                
+                // Set the specific "Maximum allowed price" hint requested
+                document.getElementById("priceHint").innerText = `Maximum allowed price: ₹${userMaxPrice.toLocaleString()} from code`;
+                document.getElementById("priceHint").style.color = "#A3AED0";
+                document.getElementById("priceHint").style.fontSize = "13px";
+                
+                document.getElementById("priceInput").setAttribute("max", userMaxPrice);
+            } catch (err) {
+                console.error("Profile load failed", err);
+                document.getElementById("priceHint").innerText = "Failed to sync marketplace limits.";
+            }
+        }
+
+        function triggerSuccessAnimation() {
+            const btn = document.getElementById("submitBtn");
+            const card = document.querySelector(".sell-card");
+            
+            // 1. Button Glow
+            btn.classList.add("listing-success-glow");
+            
+            // 2. Ripple Spread
+            const ripple = document.createElement("div");
+            ripple.className = "success-ripple";
+            const rect = btn.getBoundingClientRect();
+            const cardRect = card.getBoundingClientRect();
+            
+            ripple.style.width = ripple.style.height = "100px";
+            ripple.style.left = (rect.left - cardRect.left + rect.width / 2 - 50) + "px";
+            ripple.style.top = (rect.top - cardRect.top + rect.height / 2 - 50) + "px";
+            card.appendChild(ripple);
+            
+            // 3. Small Droplets Float Up
+            for (let i = 0; i < 6; i++) {
+                setTimeout(() => {
+                    const drop = document.createElement("div");
+                    drop.className = "success-droplet";
+                    drop.style.left = (rect.left - cardRect.left + (Math.random() * rect.width)) + "px";
+                    drop.style.top = (rect.top - cardRect.top) + "px";
+                    card.appendChild(drop);
+                    setTimeout(() => drop.remove(), 800);
+                }, i * 80);
+            }
+            
+            setTimeout(() => ripple.remove(), 600);
+        }
+
+        async function handleListCoupon(e) {
+            e.preventDefault();
+            const btn = document.getElementById("submitBtn");
+            const price = parseInt(document.getElementById("priceInput").value);
+            const categoryValue = document.getElementById("categoryInput").value;
+
+            if (!categoryValue) {
+                showToast("Please select a category.", "error");
+                return;
+            }
+
+            if (price > userMaxPrice) {
+                showToast(`Maximum allowed price is ₹${userMaxPrice}`, "error");
+                return;
+            }
+
+            const payload = {
+                title: document.getElementById("titleInput").value.trim(),
+                category: categoryValue,
+                price: price,
+                expiry: document.getElementById("expiryInput").value,
+                details: document.getElementById("detailsInput").value.trim()
+            };
+
+            try {
+                btn.disabled = true;
+                btn.innerHTML = `Publishing... <i data-lucide="loader-2" class="animate-spin" style="width: 18px; height: 18px;"></i>`;
+                lucide.createIcons();
+                
+                await apiRequest("/coupons", {
+                    method: "POST",
+                    body: JSON.stringify(payload)
+                });
+
+                // EXECUTE PREMIUM SUCCESS SEQUENCE
+                triggerSuccessAnimation();
+                showToast("Coupon Listed Successfully.", "success");
+                
+                setTimeout(() => {
+                    window.location.href = "mylistings.html";
+                }, 1800);
+            } catch (err) {
+                showToast(err.message || "Failed to list item.", "error");
+                btn.disabled = false;
+                btn.innerHTML = `Publish to Marketplace <i data-lucide="zap" style="width: 18px; height: 18px;"></i>`;
+                lucide.createIcons();
+            }
+        }
+
+        initPage();
+    </script>
+    <script src="components.js" defer></script>
+</body>
+</html>

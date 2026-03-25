@@ -1,0 +1,296 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <link rel="preconnect" href="https://unpkg.com">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>How It Works — CoSwap Coupon Marketplace</title>
+    <meta name="description" content="Discover how CoSwap works: list your unwanted coupons, get buy requests, chat with buyers, and complete deals safely.">
+    <meta name="robots" content="index, follow">
+    <link rel="canonical" href="https://coswap.in/how-it-works.html">
+    <meta property="og:title" content="How It Works — CoSwap Coupon Marketplace">
+    <meta property="og:description" content="Discover how CoSwap works: list your unwanted coupons, get buy requests, chat with buyers, and complete deals safely.">
+    <meta property="og:image" content="https://coswap.in/logo.png">
+    <meta property="og:url" content="https://coswap.in/how-it-works.html">
+    <!-- Google Analytics 4 -->
+    <!-- <script async src="https://www.googletagmanager.com/gtag/js?id=G-XXXXXXXXXX"></script>
+    <script>window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments)}gtag('js',new Date());gtag('config','G-XXXXXXXXXX');</script> -->
+    <link rel="preload" href="theme.css" as="style">
+    <link rel="stylesheet" href="theme.css">
+    <script src="ui.js" defer></script>
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            background:
+                radial-gradient(circle at 18% 14%, rgba(79, 208, 255, 0.14), transparent 25%),
+                linear-gradient(180deg, #0a1020, #0b1020 42%, #070b14 100%);
+            color: white;
+            min-height: 100vh;
+            padding: 28px;
+        }
+
+        .page {
+            margin: 0 auto;
+            max-width: 1120px;
+        }
+
+        .hero {
+            align-items: flex-end;
+            display: flex;
+            gap: 18px;
+            justify-content: space-between;
+            margin-bottom: 22px;
+        }
+
+        .eyebrow {
+            color: #8fe5ff;
+            font-size: 12px;
+            font-weight: 700;
+            letter-spacing: 0.18em;
+            text-transform: uppercase;
+        }
+
+        h1 {
+            font-size: clamp(38px, 7vw, 66px);
+            letter-spacing: -0.06em;
+            line-height: 0.95;
+            margin: 12px 0 14px;
+            max-width: 11ch;
+        }
+
+        .hero p,
+        .step p {
+            color: rgba(255, 255, 255, 0.76);
+            line-height: 1.78;
+        }
+
+        .actions {
+            display: flex;
+            gap: 12px;
+        }
+
+        .btn {
+            border-radius: 16px;
+            color: white;
+            font-size: 14px;
+            font-weight: 800;
+            padding: 14px 16px;
+        }
+
+        .btn.primary {
+            background: linear-gradient(135deg, #4fd0ff, #6f6cff);
+        }
+
+        .btn.secondary {
+            background: rgba(255, 255, 255, 0.08);
+            border: 1px solid rgba(255, 255, 255, 0.12);
+        }
+
+        .steps {
+            display: grid;
+            gap: 16px;
+            grid-template-columns: repeat(3, minmax(0, 1fr));
+        }
+
+        .step {
+            backdrop-filter: blur(16px);
+            background: rgba(255, 255, 255, 0.07);
+            border: 1px solid rgba(255, 255, 255, 0.12);
+            border-radius: 24px;
+            box-shadow: 0 20px 48px rgba(0, 0, 0, 0.22);
+            min-height: 210px;
+            padding: 20px;
+            position: relative;
+        }
+
+        .step h2 {
+            font-size: 22px;
+            line-height: 1.3;
+            margin: 10px 0 8px;
+        }
+
+        .step-index {
+            color: #8fe5ff;
+            font-size: 12px;
+            font-weight: 700;
+            letter-spacing: 0.14em;
+            text-transform: uppercase;
+        }
+
+        .dot {
+            background:
+                radial-gradient(circle at 28% 24%, rgba(255, 255, 255, 0.5), transparent 20%),
+                linear-gradient(180deg, rgba(255, 255, 255, 0.18), rgba(79, 208, 255, 0.08));
+            border: 1px solid rgba(255, 255, 255, 0.12);
+            border-radius: 60% 40% 58% 42% / 42% 58% 42% 58%;
+            height: 34px;
+            opacity: 0.58;
+            position: absolute;
+            right: 18px;
+            top: 18px;
+            width: 28px;
+        }
+
+        .footer {
+            color: rgba(255, 255, 255, 0.68);
+            display: flex;
+            flex-wrap: wrap;
+            gap: 16px;
+            justify-content: space-between;
+            margin-top: 28px;
+        }
+
+        .footer a {
+            color: #8fe5ff;
+            font-weight: 700;
+        }
+
+        @media (max-width: 1024px) {
+            .hero,
+            .steps {
+                grid-template-columns: 1fr;
+                flex-direction: column;
+            }
+        }
+
+        @media (max-width: 680px) {
+            body {
+                padding: 18px;
+            }
+
+            .actions,
+            .footer {
+                flex-direction: column;
+            }
+        }
+
+        @media (min-width: 1280px) {
+            body {
+                padding: 40px 56px;
+            }
+
+            .page {
+                max-width: 1240px;
+            }
+
+            .hero {
+                margin-bottom: 30px;
+            }
+
+            .steps {
+                gap: 20px;
+            }
+
+            .step {
+                min-height: 230px;
+                padding: 24px;
+            }
+        }
+
+        @media (min-width: 1440px) {
+            body {
+                padding: 48px 72px;
+            }
+
+            .page {
+                max-width: 1360px;
+            }
+        }
+
+        @media (min-width: 1920px) {
+            body {
+                padding: 56px 120px;
+            }
+
+            .page {
+                max-width: 1480px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="premium-bg" aria-hidden="true">
+        <div class="blob blob-1"></div>
+        <div class="blob blob-2"></div>
+        <div class="blob blob-3"></div>
+        <div class="mist-container"></div>
+    </div>
+    <main class="page">
+        <section class="hero">
+            <div>
+                <div class="eyebrow">Marketplace Flow</div>
+                <h1>How CoSwap works</h1>
+                <p>
+                    The flow now connects semantic discovery, trusted seller operations, request handling, persistent
+                    chat, and transaction completion into one more professional marketplace path.
+                </p>
+            </div>
+
+            <div class="actions">
+                <a class="btn primary" href="browse.html">Browse Listings</a>
+                <a class="btn secondary" href="terms.html">Terms &amp; Conditions</a>
+            </div>
+        </section>
+
+        <section class="steps">
+            <article class="step">
+                <span class="dot"></span>
+                <div class="step-index">Step 1</div>
+                <h2>List your coupon</h2>
+                <p>Upload coupon details, set your price, and publish a live listing into the marketplace.</p>
+            </article>
+
+            <article class="step">
+                <span class="dot"></span>
+                <div class="step-index">Step 2</div>
+                <h2>Buyers search by intent</h2>
+                <p>Semantic search helps buyers discover coupons through meaning, category relevance, and related terms.</p>
+            </article>
+
+            <article class="step">
+                <span class="dot"></span>
+                <div class="step-index">Step 3</div>
+                <h2>Requests trigger the sales flow</h2>
+                <p>Interested buyers send requests and sellers respond through one connected operational flow.</p>
+            </article>
+
+            <article class="step">
+                <span class="dot"></span>
+                <div class="step-index">Step 4</div>
+                <h2>Professional chat opens</h2>
+                <p>Once the request is accepted, a persistent chat session becomes available for continued coordination.</p>
+            </article>
+
+            <article class="step">
+                <span class="dot"></span>
+                <div class="step-index">Step 5</div>
+                <h2>Inventory updates in real time</h2>
+                <p>Purchase completion updates listing status, notifications, and related marketplace visibility.</p>
+            </article>
+
+            <article class="step">
+                <span class="dot"></span>
+                <div class="step-index">Step 6</div>
+                <h2>Trust grows over time</h2>
+                <p>Ratings, reports, seller levels, and moderation signals help maintain a cleaner marketplace.</p>
+            </article>
+        </section>
+
+        <footer class="footer">
+            <div>Semantic discovery, recommendations, and chat are now connected in the core marketplace flow.</div>
+            <div>
+                <a href="index.html">Home</a>
+                <a href="about.html">About</a>
+                <a href="login.html">Login</a>
+                <a href="terms.html">Terms &amp; Conditions</a>
+            </div>
+        </footer>
+    </main>
+    <script src="components.js" defer></script>
+</body>
+</html>

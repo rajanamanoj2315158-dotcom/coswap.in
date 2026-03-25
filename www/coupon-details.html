@@ -1,0 +1,590 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <link rel="preconnect" href="https://unpkg.com">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Coupon Details — CoSwap</title>
+    <meta name="description" content="View coupon details, seller information, and buy this deal on CoSwap.">
+    <meta name="robots" content="index, follow">
+    <link rel="canonical" href="https://coswap.in/coupon-details.html">
+    <meta property="og:title" content="Coupon Details — CoSwap">
+    <meta property="og:description" content="View coupon details, seller information, and buy this deal on CoSwap.">
+    <meta property="og:image" content="https://coswap.in/logo.png">
+    <meta property="og:url" content="https://coswap.in/coupon-details.html">
+    <!-- Google Analytics 4 -->
+    <!-- <script async src="https://www.googletagmanager.com/gtag/js?id=G-XXXXXXXXXX"></script>
+    <script>window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments)}gtag('js',new Date());gtag('config','G-XXXXXXXXXX');</script> -->
+    <link rel="preload" href="theme.css" as="style">
+    <link rel="stylesheet" href="theme.css">
+    <script src="ui.js" defer></script>
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            background:
+                radial-gradient(circle at 18% 14%, rgba(79, 208, 255, 0.16), transparent 24%),
+                linear-gradient(180deg, #0b101e 0%, #11162b 46%, #090d16 100%);
+            color: white;
+            min-height: 100vh;
+            padding: 28px;
+        }
+
+        .page {
+            margin: 0 auto;
+            max-width: 1180px;
+        }
+
+        .top-bar {
+            align-items: flex-start;
+            display: flex;
+            gap: 18px;
+            justify-content: space-between;
+            margin-bottom: 22px;
+        }
+
+        .eyebrow {
+            color: #90e9ff;
+            font-size: 12px;
+            font-weight: 700;
+            letter-spacing: 0.18em;
+            text-transform: uppercase;
+        }
+
+        h1 {
+            font-size: clamp(34px, 6vw, 58px);
+            letter-spacing: -0.06em;
+            line-height: 0.95;
+            margin: 12px 0 10px;
+        }
+
+        .intro {
+            color: rgba(255, 255, 255, 0.74);
+            line-height: 1.75;
+            max-width: 62ch;
+        }
+
+        .actions {
+            display: flex;
+            gap: 12px;
+        }
+
+        .btn {
+            border-radius: 16px;
+            color: white;
+            font-size: 14px;
+            font-weight: 800;
+            padding: 14px 16px;
+        }
+
+        .btn.primary {
+            background: linear-gradient(135deg, #4fd0ff, #6f6cff);
+        }
+
+        .btn.secondary {
+            background: rgba(255, 255, 255, 0.08);
+            border: 1px solid rgba(255, 255, 255, 0.12);
+        }
+
+        .layout {
+            display: grid;
+            gap: 18px;
+            grid-template-columns: minmax(0, 1.05fr) minmax(320px, 0.75fr);
+        }
+
+        .panel,
+        .summary-card,
+        .recommendation-card {
+            backdrop-filter: blur(16px);
+            background: rgba(255, 255, 255, 0.07);
+            border: 1px solid rgba(255, 255, 255, 0.12);
+            border-radius: 24px;
+            box-shadow: 0 22px 50px rgba(0, 0, 0, 0.22);
+        }
+
+        .detail-card {
+            overflow: hidden;
+        }
+
+        .detail-image {
+            display: block;
+            height: 320px;
+            object-fit: cover;
+            width: 100%;
+        }
+
+        .detail-body {
+            padding: 24px;
+        }
+
+        .price-row {
+            align-items: center;
+            display: flex;
+            gap: 14px;
+            justify-content: space-between;
+            margin-top: 14px;
+        }
+
+        .price {
+            color: #4fd0ff;
+            font-size: 34px;
+            font-weight: 800;
+        }
+
+        .pill {
+            background: rgba(79, 208, 255, 0.14);
+            border: 1px solid rgba(79, 208, 255, 0.18);
+            border-radius: 999px;
+            color: #90e9ff;
+            font-size: 12px;
+            font-weight: 700;
+            letter-spacing: 0.12em;
+            padding: 9px 12px;
+            text-transform: uppercase;
+        }
+
+        .info-grid {
+            display: grid;
+            gap: 14px;
+            grid-template-columns: repeat(2, minmax(0, 1fr));
+            margin-top: 18px;
+        }
+
+        .summary-card {
+            min-height: 120px;
+            padding: 18px;
+            position: relative;
+        }
+
+        .summary-card strong {
+            display: block;
+            font-size: 26px;
+            margin-top: 10px;
+        }
+
+        .summary-card span {
+            color: rgba(255, 255, 255, 0.7);
+            display: block;
+            line-height: 1.6;
+            margin-top: 10px;
+        }
+
+        .dot {
+            background:
+                radial-gradient(circle at 28% 24%, rgba(255, 255, 255, 0.5), transparent 20%),
+                linear-gradient(180deg, rgba(255, 255, 255, 0.18), rgba(79, 208, 255, 0.08));
+            border: 1px solid rgba(255, 255, 255, 0.12);
+            border-radius: 60% 40% 58% 42% / 42% 58% 42% 58%;
+            height: 34px;
+            opacity: 0.58;
+            position: absolute;
+            right: 18px;
+            top: 18px;
+            width: 28px;
+        }
+
+        .section {
+            margin-top: 20px;
+        }
+
+        .section h2 {
+            font-size: 22px;
+            line-height: 1.3;
+            margin-bottom: 10px;
+        }
+
+        .section p {
+            color: rgba(255, 255, 255, 0.76);
+            line-height: 1.75;
+        }
+
+        .rail {
+            display: grid;
+            gap: 16px;
+        }
+
+        .rail-panel {
+            padding: 20px;
+        }
+
+        .rail-panel h2 {
+            font-size: 24px;
+            line-height: 1.2;
+        }
+
+        .rail-panel p {
+            color: rgba(255, 255, 255, 0.74);
+            line-height: 1.7;
+            margin-top: 10px;
+        }
+
+        .meta-list {
+            display: grid;
+            gap: 12px;
+            margin-top: 16px;
+        }
+
+        .meta-item {
+            background: rgba(255, 255, 255, 0.06);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            border-radius: 16px;
+            padding: 14px;
+        }
+
+        .meta-item .label {
+            color: rgba(255, 255, 255, 0.56);
+            font-size: 12px;
+            letter-spacing: 0.12em;
+            text-transform: uppercase;
+        }
+
+        .meta-item .value {
+            font-size: 16px;
+            font-weight: 700;
+            line-height: 1.5;
+            margin-top: 8px;
+        }
+
+        .rail-actions {
+            display: grid;
+            gap: 10px;
+            margin-top: 18px;
+        }
+
+        .rail-actions button,
+        .rail-actions a {
+            border-radius: 14px;
+            color: white;
+            display: inline-flex;
+            font-size: 14px;
+            font-weight: 800;
+            justify-content: center;
+            padding: 14px 16px;
+        }
+
+        .rail-actions .primary {
+            background: linear-gradient(135deg, #4fd0ff, #6f6cff);
+        }
+
+        .rail-actions .secondary {
+            background: rgba(255, 255, 255, 0.08);
+            border: 1px solid rgba(255, 255, 255, 0.12);
+        }
+
+        .recommendation-list {
+            display: grid;
+            gap: 12px;
+            margin-top: 16px;
+        }
+
+        .recommendation-card {
+            overflow: hidden;
+        }
+
+        .recommendation-card img {
+            display: block;
+            height: 132px;
+            object-fit: cover;
+            width: 100%;
+        }
+
+        .recommendation-body {
+            padding: 14px;
+        }
+
+        .recommendation-title {
+            font-size: 16px;
+            font-weight: 700;
+            line-height: 1.4;
+            margin-top: 8px;
+        }
+
+        .recommendation-copy {
+            color: rgba(255, 255, 255, 0.7);
+            font-size: 14px;
+            line-height: 1.6;
+            margin-top: 8px;
+        }
+
+        .recommendation-meta {
+            align-items: center;
+            display: flex;
+            justify-content: space-between;
+            margin-top: 12px;
+        }
+
+        .recommendation-price {
+            color: #4fd0ff;
+            font-size: 18px;
+            font-weight: 800;
+        }
+
+        .empty {
+            color: rgba(255, 255, 255, 0.72);
+            padding: 18px 0;
+        }
+
+        @media (max-width: 1024px) {
+            .layout,
+            .info-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .top-bar {
+                flex-direction: column;
+            }
+        }
+
+        @media (max-width: 680px) {
+            body {
+                padding: 18px;
+            }
+
+            .actions,
+            .price-row {
+                flex-direction: column;
+                align-items: stretch;
+            }
+        }
+    </style>
+</head>
+<body>
+    <main class="page">
+        <section class="top-bar">
+            <div>
+                <div class="eyebrow">Listing Detail</div>
+                <h1 id="pageTitle">Marketplace listing details</h1>
+                <p class="intro">
+                    Review seller trust, listing quality, and connected marketplace actions before you proceed.
+                </p>
+            </div>
+
+            <div class="actions">
+                <a class="btn secondary" href="browse.html">Back to Browse</a>
+                <a class="btn primary" href="terms.html">Terms &amp; Conditions</a>
+            </div>
+        </section>
+
+        <section class="layout">
+            <article class="panel detail-card">
+                <img class="detail-image" id="couponImage" src="bg.png" alt="Listing image" loading="lazy">
+
+                <div class="detail-body">
+                    <div class="eyebrow" id="couponCategory">Marketplace Listing</div>
+                    <h2 id="couponTitle" style="font-size:34px;line-height:1.08;margin-top:12px;">Loading listing...</h2>
+
+                    <div class="price-row">
+                        <div class="price" id="couponPrice">₹0</div>
+                        <div class="pill" id="expiryPill">Checking expiry</div>
+                    </div>
+
+                    <div class="info-grid">
+                        <article class="summary-card">
+                            <span class="dot"></span>
+                            <div class="eyebrow">Seller Trust</div>
+                            <strong id="sellerRating">-</strong>
+                            <span id="sellerTrustCopy">Loading seller rating and trust signals.</span>
+                        </article>
+                        <article class="summary-card">
+                            <span class="dot"></span>
+                            <div class="eyebrow">Seller Level</div>
+                            <strong id="sellerLevel">Level 1</strong>
+                            <span id="sellerLevelCopy">Seller marketplace level and fraud-signal visibility.</span>
+                        </article>
+                    </div>
+
+                    <div class="section">
+                        <h2>Description</h2>
+                        <p id="couponDetails">Loading listing details...</p>
+                    </div>
+
+                    <div class="section">
+                        <h2>Seller</h2>
+                        <p id="sellerName">Loading seller information...</p>
+                    </div>
+                </div>
+            </article>
+
+            <aside class="rail">
+                <section class="panel rail-panel">
+                    <div class="eyebrow">Transaction Actions</div>
+                    <h2>Continue with the connected purchase flow.</h2>
+                    <p>
+                        CoSwap links browsing, requests, chat access, and transaction completion into one flow.
+                    </p>
+
+                    <div class="meta-list">
+                        <div class="meta-item">
+                            <div class="label">Listing category</div>
+                            <div class="value" id="metaCategory">Loading</div>
+                        </div>
+                        <div class="meta-item">
+                            <div class="label">Expiry date</div>
+                            <div class="value" id="metaExpiry">Loading</div>
+                        </div>
+                        <div class="meta-item">
+                            <div class="label">Seller fraud signal</div>
+                            <div class="value" id="metaFraud">Loading</div>
+                        </div>
+                    </div>
+
+                    <div class="rail-actions">
+                        <button class="primary" id="buyButton" type="button">Proceed to Buy</button>
+                        <a class="secondary" href="chatlist.html">Open Chat Workspace</a>
+                        <a class="secondary" href="browse.html">Browse More Listings</a>
+                    </div>
+                </section>
+
+                <section class="panel rail-panel">
+                    <div class="eyebrow">Recommendation System</div>
+                    <h2>Related marketplace picks</h2>
+                    <p>Live recommendations help keep the discovery flow connected from detail view back into browse.</p>
+                    <div class="recommendation-list" id="recommendationList">
+                        <div class="empty">Loading recommendations...</div>
+                    </div>
+                </section>
+            </aside>
+        </section>
+    </main>
+
+    <script src="api.js" defer></script>
+    <script>
+        const params = new URLSearchParams(window.location.search);
+        const couponId = params.get("id");
+        let currentCoupon = null;
+
+        function escapeHtml(str) {
+            if (!str) return "";
+            return String(str)
+                .replace(/&/g, "&amp;")
+                .replace(/</g, "&lt;")
+                .replace(/>/g, "&gt;")
+                .replace(/"/g, "&quot;")
+                .replace(/'/g, "&#39;");
+        }
+
+        function setExpiry(expiry) {
+            const pill = document.getElementById("expiryPill");
+            const metaExpiry = document.getElementById("metaExpiry");
+
+            if (!expiry) {
+                pill.textContent = "No expiry provided";
+                metaExpiry.textContent = "Not provided";
+                return;
+            }
+
+            const date = new Date(expiry);
+            if (Number.isNaN(date.getTime())) {
+                pill.textContent = "Expiry unavailable";
+                metaExpiry.textContent = expiry;
+                return;
+            }
+
+            metaExpiry.textContent = date.toDateString();
+
+            const diffDays = Math.ceil((date.getTime() - Date.now()) / (1000 * 60 * 60 * 24));
+            if (diffDays < 0) {
+                pill.textContent = "Expired";
+            } else if (diffDays <= 3) {
+                pill.textContent = "Expires soon";
+            } else {
+                pill.textContent = "Active listing";
+            }
+        }
+
+        function updateBuyButton() {
+            const button = document.getElementById("buyButton");
+            button.onclick = () => {
+                if (!currentCoupon) return;
+                if (!getAuthToken()) {
+                    localStorage.setItem("redirectAfterLogin", `buy.html?id=${currentCoupon.id}`);
+                    window.location.href = "login.html";
+                    return;
+                }
+                window.location.href = `buy.html?id=${currentCoupon.id}`;
+            };
+        }
+
+        async function loadCoupon() {
+            if (!couponId) {
+                showToast("Listing not found.");
+                window.location.href = "browse.html";
+                return;
+            }
+
+            try {
+                const data = await apiRequest(`/coupons/${couponId}`);
+                const coupon = data.coupon;
+                currentCoupon = coupon;
+
+                document.getElementById("pageTitle").textContent = coupon.title || "Marketplace listing details";
+                document.getElementById("couponTitle").textContent = coupon.title || "Untitled listing";
+                document.getElementById("couponCategory").textContent = coupon.category || "Marketplace Listing";
+                document.getElementById("couponPrice").textContent = `₹${coupon.price || 0}`;
+                document.getElementById("couponDetails").textContent = coupon.details || "No description provided.";
+                document.getElementById("sellerName").textContent = coupon.seller_name || "Unknown seller";
+                document.getElementById("couponImage").src = coupon.image_url || "bg.png";
+                document.getElementById("couponImage").alt = coupon.title || "Listing image";
+                document.getElementById("sellerRating").textContent =
+                    coupon.seller_rating ? `${coupon.seller_rating} / 5` : "Not rated";
+                document.getElementById("sellerTrustCopy").textContent =
+                    `Fraud signal: ${coupon.seller_fraud_percent ?? 0}% across seller activity.`;
+                document.getElementById("sellerLevel").textContent =
+                    `Level ${coupon.seller_level || 1}`;
+                document.getElementById("sellerLevelCopy").textContent =
+                    "Seller level reflects marketplace participation and trust growth.";
+                document.getElementById("metaCategory").textContent = coupon.category || "Not specified";
+                document.getElementById("metaFraud").textContent =
+                    `${coupon.seller_fraud_percent ?? 0}% reported fraud signal`;
+                setExpiry(coupon.expiry);
+                updateBuyButton();
+            } catch (err) {
+                showToast(err.message || "Unable to load this listing.");
+                window.setTimeout(() => {
+                    window.location.href = "browse.html";
+                }, 600);
+            }
+        }
+
+        async function loadRecommendations() {
+            const container = document.getElementById("recommendationList");
+            container.innerHTML = `<div class="empty">Loading recommendations...</div>`;
+
+            try {
+                const data = await apiRequest("/recommendations?limit=3");
+                const items = (data.recommendations || []).filter((item) => String(item.id) !== String(couponId));
+
+                if (!items.length) {
+                    container.innerHTML = `<div class="empty">No additional recommendations are available right now.</div>`;
+                    return;
+                }
+
+                container.innerHTML = items.map((item) => `
+                    <article class="recommendation-card">
+                        <img src="${escapeHtml(item.image_url || "bg.png")}" onerror="this.src='bg.png'" alt="${escapeHtml(item.title)}" loading="lazy">
+                        <div class="recommendation-body">
+                            <div class="eyebrow">${escapeHtml(item.category || "Recommended")}</div>
+                            <div class="recommendation-title">${escapeHtml(item.title)}</div>
+                            <div class="recommendation-copy">${escapeHtml(item.recommendation_reason || "Recommended listing")}</div>
+                            <div class="recommendation-meta">
+                                <div class="recommendation-price">₹${escapeHtml(item.price)}</div>
+                                <a class="btn secondary" href="coupon-details.html?id=${item.id}" style="padding:10px 12px;">Open</a>
+                            </div>
+                        </div>
+                    </article>
+                `).join("");
+            } catch (err) {
+                container.innerHTML = `<div class="empty">Recommendations are temporarily unavailable.</div>`;
+            }
+        }
+
+        loadCoupon();
+        loadRecommendations();
+    </script>
+    <script src="components.js" defer></script>
+</body>
+</html>

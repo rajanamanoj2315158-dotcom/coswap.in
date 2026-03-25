@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <link rel="preconnect" href="https://unpkg.com">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Coupon Details – CoSwap</title>
+
+    <style>
+        body {
+            background: radial-gradient(circle at center, #1e223a, #0f1120, #06070d, #000);
+            font-family: "Poppins", sans-serif;
+            color: white;
+            padding: 30px;
+        }
+
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+            display: flex;
+            gap: 30px;
+        }
+
+        .left {
+            flex: 1;
+        }
+
+        .coupon-img {
+            width: 100%;
+            border-radius: 16px;
+            object-fit: cover;
+            box-shadow: 0 0 25px rgba(0, 0, 0, 0.5);
+        }
+
+        .right {
+            flex: 1.2;
+            background: rgba(255, 255, 255, 0.08);
+            padding: 25px;
+            border-radius: 16px;
+            backdrop-filter: blur(12px);
+            border: 1px solid rgba(255, 255, 255, 0.12);
+        }
+
+        .title {
+            font-size: 32px;
+            font-weight: 700;
+            margin-bottom: 10px;
+        }
+
+        .price {
+            font-size: 28px;
+            color: #4fd0ff;
+            margin-bottom: 10px;
+        }
+
+        .expiry {
+            opacity: 0.8;
+            margin-bottom: 20px;
+        }
+
+        .seller-box {
+            background: rgba(255, 255, 255, 0.08);
+            padding: 15px;
+            border-radius: 12px;
+            margin-bottom: 20px;
+        }
+
+        .details {
+            opacity: 0.9;
+            margin-bottom: 20px;
+        }
+
+        .btn {
+            width: 100%;
+            padding: 14px;
+            font-size: 18px;
+            border-radius: 12px;
+            border: none;
+            cursor: pointer;
+            margin-top: 10px;
+        }
+
+        .buy-btn {
+            background: linear-gradient(90deg, #4fd0ff, #6f6cff);
+            color: white;
+        }
+    </style>
+    <link rel="preload" href="theme.css" as="style">
+    <link rel="stylesheet" href="theme.css">
+    <script src="ui.js" defer></script>
+    <!-- Open Graph / Facebook -->
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://coswap.in/">
+    <meta property="og:title" content="CoSwap – Buy and Sell Coupons Instantly">
+    <meta property="og:description" content="Discover unused coupons from other users or sell your own in seconds.">
+    <meta property="og:image" content="https://coswap.in/logo.png">
+
+    <!-- Twitter -->
+    <meta property="twitter:card" content="summary_large_image">
+    <meta property="twitter:url" content="https://coswap.in/">
+    <meta property="twitter:title" content="CoSwap – Buy and Sell Coupons Instantly">
+    <meta property="twitter:description" content="Discover unused coupons from other users or sell your own in seconds.">
+    <meta property="twitter:image" content="https://coswap.in/logo.png">
+
+</head>
+
+<body>
+
+    <h1>Coupon Details</h1>
+
+    <div class="container">
+        <div class="left">
+            <img src="bg.png" id="couponImage" class="coupon-img" alt="Image" loading="lazy">
+        </div>
+
+        <div class="right">
+
+            <h2 class="title" id="couponTitle">Loading...</h2>
+            <p class="price" id="couponPrice">₹0</p>
+            <p class="expiry">Expiry Date: <span id="couponExpiry"></span></p>
+
+            <div class="seller-box">
+                <h3>Seller Information</h3>
+                <p>Level: <b id="sellerLevel"></b></p>
+                <p>Customers: <b id="sellerCustomers"></b></p>
+                <p>Rating: <b id="sellerRating"></b></p>
+            </div>
+
+            <p class="details" id="couponDetails">Loading...</p>
+
+            <button class="btn buy-btn" onclick="startChat()">Proceed to Buy</button>
+        </div>
+    </div>
+
+    <script>
+        const params = new URLSearchParams(window.location.search);
+        const couponId = params.get("id");
+
+        if (couponId) {
+            window.location.href = `coupon-details.html?id=${couponId}`;
+        }
+    </script>
+
+    <script src="components.js" defer></script>
+</body>
+
+</html>

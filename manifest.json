@@ -1,0 +1,21 @@
+{
+  "name": "CoSwap",
+  "short_name": "CoSwap",
+  "description": "Premium Marketplace for Coupons",
+  "start_url": "/index.html",
+  "display": "standalone",
+  "background_color": "#0a0d18",
+  "theme_color": "#0a0d18",
+  "icons": [
+    {
+      "src": "logo.png",
+      "sizes": "192x192",
+      "type": "image/png"
+    },
+    {
+      "src": "logo.png",
+      "sizes": "512x512",
+      "type": "image/png"
+    }
+  ]
+}

@@ -1,0 +1,558 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <link rel="preconnect" href="https://unpkg.com">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CoSwap – Find and Share Coupons Instantly</title>
+    <link rel="canonical" href="https://coswap.in/browse.html">
+    <link rel="preload" href="theme.css" as="style">
+    <link rel="stylesheet" href="theme.css">
+    <script src="ui.js" defer></script>
+    <style>
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        body { 
+            background: #000; 
+            color: white; 
+            font-family: "Inter", system-ui, -apple-system, sans-serif;
+            min-height: 100vh;
+            overflow-x: hidden;
+        }
+
+        .page-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 40px 24px 100px;
+            position: relative;
+            z-index: 1;
+        }
+
+        /* Top Nav */
+        .nav-wrapper {
+            position: sticky; top: 0; z-index: 100;
+            background: rgba(11, 15, 29, 0.8); backdrop-filter: blur(20px);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+        }
+        .nav-container {
+            max-width: 1200px; margin: 0 auto; padding: 16px 24px;
+            display: flex; align-items: center; justify-content: space-between;
+        }
+        .nav-left { display: flex; align-items: center; gap: 10px; text-decoration: none; color: white; font-weight: 800; }
+        .nav-left img { width: 32px; height: 32px; }
+        .nav-center { display: flex; gap: 24px; }
+        .nav-center a { 
+            color: rgba(255,255,255,0.6); text-decoration: none; font-size: 14px; font-weight: 600; 
+            transition: all 0.2s ease; position: relative; 
+        }
+        .nav-center a:hover, .nav-center a.active { color: white; }
+        .nav-center a.active::after {
+            content: ''; position: absolute; bottom: -24px; left: 0; right: 0; height: 2px; background: #4fd0ff;
+        }
+
+        .nav-right { display: flex; align-items: center; gap: 16px; }
+        .nav-profile-img {
+            width: 38px; height: 38px; border-radius: 50%;
+            border: 2px solid rgba(255,255,255,0.1); object-fit: cover;
+            cursor: pointer; transition: all 0.2s ease;
+        }
+        .nav-profile-img:hover { transform: scale(1.05); border-color: #4fd0ff; }
+
+        /* Hero / Search Section */
+        .search-hero {
+            text-align: center;
+            margin: 80px 0 60px;
+        }
+        .search-hero h1 {
+            font-size: clamp(36px, 6vw, 56px);
+            font-weight: 800;
+            letter-spacing: -0.04em;
+            margin-bottom: 24px;
+            background: linear-gradient(135deg, #fff 0%, rgba(255,255,255,0.7) 100%);
+            -webkit-background-clip: text;
+            background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+        .search-wrapper {
+            max-width: 800px;
+            margin: 0 auto;
+            position: relative;
+        }
+        .search-inner {
+            display: flex;
+            gap: 12px;
+            background: #0B1535;
+            border: 1px solid rgba(120, 140, 255, 0.35);
+            border-radius: 24px;
+            padding: 10px;
+            backdrop-filter: blur(20px);
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+        }
+        .search-inner:focus-within {
+            border-color: #4fd0ff;
+            background: rgba(255, 255, 255, 0.05);
+            box-shadow: 0 0 0 5px rgba(79, 208, 255, 0.15), 0 20px 40px rgba(0,0,0,0.3);
+            transform: translateY(-2px);
+        }
+        .search-box {
+            flex: 1;
+            background: transparent;
+            border: none;
+            color: white;
+            font-size: 20px;
+            padding: 14px 24px;
+            outline: none;
+            font-weight: 500;
+        }
+        .search-btn {
+            background: #4fd0ff;
+            color: #000;
+            border: none;
+            padding: 14px 32px;
+            border-radius: 16px;
+            font-weight: 800;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        .search-btn:hover {
+            background: #79e0ff;
+            transform: scale(1.02);
+            box-shadow: 0 0 20px rgba(79, 208, 255, 0.4);
+        }
+
+        /* Category Chips */
+        .category-container {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 10px;
+            margin-top: 24px;
+        }
+        .chip {
+            background: rgba(255, 255, 255, 0.08);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            color: rgba(255, 255, 255, 0.8);
+            padding: 10px 18px;
+            border-radius: 30px;
+            font-size: 14px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: 0.2s;
+        }
+        .chip:hover {
+            background: rgba(255, 255, 255, 0.15);
+            color: white;
+            transform: translateY(-1px);
+        }
+        .chip.active {
+            background: white;
+            color: black;
+        }
+
+        /* Grids */
+        .section-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 24px;
+            margin-top: 64px;
+        }
+        .section-header h2 {
+            font-size: 28px;
+            font-weight: 800;
+            letter-spacing: -0.03em;
+            color: white;
+        }
+
+        .results-grid {
+            display: grid;
+            gap: 28px;
+            grid-template-columns: repeat(3, 1fr);
+        }
+
+        @media (max-width: 1100px) {
+            .results-grid { grid-template-columns: repeat(2, 1fr); }
+        }
+
+        @media (max-width: 768px) {
+            .results-grid { grid-template-columns: 1fr; }
+            .section-header h2 { font-size: 22px; }
+        }
+
+        .coupon-card {
+            background: rgba(255, 255, 255, 0.02);
+            border: 1px solid rgba(255, 255, 255, 0.07);
+            border-radius: 24px;
+            overflow: hidden;
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            display: flex;
+            flex-direction: column;
+            position: relative;
+        }
+        .coupon-card:hover {
+            transform: translateY(-8px);
+            background: rgba(255, 255, 255, 0.04);
+            border-color: rgba(79, 208, 255, 0.3);
+            box-shadow: 0 24px 48px -12px rgba(0, 0, 0, 0.5);
+        }
+        .card-img {
+            height: 180px;
+            width: 100%;
+            object-fit: cover;
+            background: #111;
+            border-bottom: 1px solid rgba(255,255,255,0.05);
+        }
+        .card-content {
+            padding: 24px;
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+        }
+        .card-tag {
+            font-size: 11px;
+            font-weight: 800;
+            text-transform: uppercase;
+            letter-spacing: 0.08em;
+            color: #4fd0ff;
+            margin-bottom: 10px;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+        .card-tag::before {
+            content: '';
+            width: 6px; height: 6px;
+            background: #4fd0ff;
+            border-radius: 50%;
+        }
+        .card-title {
+            font-size: 19px;
+            font-weight: 700;
+            margin-bottom: 16px;
+            line-height: 1.4;
+            color: #fff;
+        }
+        .card-meta {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 24px;
+        }
+        .card-price {
+            font-size: 24px;
+            font-weight: 800;
+            color: white;
+        }
+        .seller-badge {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            font-size: 12px;
+            color: rgba(255,255,255,0.5);
+            background: rgba(255,255,255,0.05);
+            padding: 4px 10px;
+            border-radius: 20px;
+        }
+        .card-footer {
+            margin-top: auto;
+            display: flex;
+            gap: 12px;
+        }
+        .btn-card {
+            padding: 14px;
+            border-radius: 14px;
+            font-size: 14px;
+            font-weight: 800;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            border: none;
+            flex: 1;
+        }
+        .btn-primary {
+            background: #4fd0ff;
+            color: #000;
+        }
+        .btn-primary:hover { transform: translateY(-2px); box-shadow: 0 8px 20px rgba(79, 208, 255, 0.3); }
+        .btn-secondary {
+            background: rgba(255, 255, 255, 0.05);
+            color: white;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        .btn-secondary:hover { background: rgba(255, 255, 255, 0.1); }
+
+        .empty-state {
+            text-align: center;
+            padding: 80px 40px;
+            background: rgba(255, 255, 255, 0.02);
+            border: 1px dashed rgba(255, 255, 255, 0.1);
+            border-radius: 32px;
+            grid-column: 1 / -1;
+        }
+        .empty-state h3 { font-size: 24px; margin-bottom: 12px; color: white; }
+        .empty-state p { color: rgba(255,255,255,0.5); margin-bottom: 24px; }
+        .empty-state .btn-sell {
+            display: inline-block;
+            background: #4fd0ff;
+            color: #000;
+            padding: 12px 32px;
+            border-radius: 12px;
+            font-weight: 800;
+            text-decoration: none;
+            transition: 0.2s;
+        }
+
+        /* Mobile specific adjustments */
+        @media (max-width: 768px) {
+            .nav-center { display: none; }
+            .search-inner { flex-direction: row; padding: 10px; gap: 8px; }
+            .search-box { font-size: 16px; padding: 10px 12px; }
+            .search-btn { padding: 10px 16px; span { display: none; } }
+            .page-container { padding-top: 20px; }
+            .search-hero { margin: 40px 0; }
+        }
+    </style>
+    <!-- Load Lucide Icons -->
+    <script src="https://unpkg.com/lucide@latest"></script>
+
+    <!-- Open Graph / Facebook -->
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://coswap.in/">
+    <meta property="og:title" content="CoSwap – Buy and Sell Coupons Instantly">
+    <meta property="og:description" content="Discover unused coupons from other users or sell your own in seconds.">
+    <meta property="og:image" content="https://coswap.in/logo.png">
+
+    <!-- Twitter -->
+    <meta property="twitter:card" content="summary_large_image">
+    <meta property="twitter:url" content="https://coswap.in/">
+    <meta property="twitter:title" content="CoSwap – Buy and Sell Coupons Instantly">
+    <meta property="twitter:description" content="Discover unused coupons from other users or sell your own in seconds.">
+    <meta property="twitter:image" content="https://coswap.in/logo.png">
+
+</head>
+<body class="soft-bg has-mobile-nav">
+    <!-- Premium Background System -->
+    <div class="premium-bg-system parallax-bg" aria-hidden="true">
+        <div class="aurora-layer"></div>
+        <div class="droplet-container parallax-particles">
+            <!-- Tiered droplets handled by CSS system -->
+            <div class="bg-droplet" style="width:10px; height:10px; left:5%; --duration:18s; --sway:40px;"></div>
+            <div class="bg-droplet" style="width:6px; height:6px; left:15%; --duration:24s; --sway:-30px; animation-delay:-5s;"></div>
+            <div class="bg-droplet" style="width:8px; height:8px; left:40%; --duration:20s; --sway:20px; animation-delay:-2s;"></div>
+            <div class="bg-droplet" style="width:12px; height:12px; left:60%; --duration:28s; --sway:-40px; animation-delay:-8s;"></div>
+            <div class="bg-droplet" style="width:5px; height:5px; left:85%; --duration:22s; --sway:35px; animation-delay:-3s;"></div>
+            <div class="bg-droplet" style="width:9px; height:9px; left:25%; --duration:19s; --sway:-25px; animation-delay:-1s;"></div>
+            <div class="bg-droplet" style="width:7px; height:7px; left:70%; --duration:25s; --sway:30px; animation-delay:-6s;"></div>
+            <div class="bg-droplet" style="width:11px; height:11px; left:50%; --duration:21s; --sway:-35px; animation-delay:-4s;"></div>
+            <div class="bg-droplet" style="width:6px; height:6px; left:10%; --duration:23s; --sway:25px; animation-delay:-7s;"></div>
+            <div class="bg-droplet" style="width:10px; height:10px; left:95%; --duration:26s; --sway:-30px; animation-delay:-9s;"></div>
+        </div>
+        <div class="ripple-layer">
+            <div class="liquid-ripple" style="top:30%; left:20%;"></div>
+            <div class="liquid-ripple" style="top:60%; left:85%; animation-delay:-5s;"></div>
+        </div>
+    </div>
+
+    <nav class="navbar"></nav>
+
+    <main class="page-container">
+        <header class="search-hero">
+            <h1>Find your next deal.</h1>
+            <div class="search-wrapper">
+                <div class="search-bar-wrap">
+                    <input type="text" id="searchInput" class="search-bar" placeholder="Search for Netflix, Amazon, Pizza...">
+                    <button class="search-btn" onclick="applySearch()" style="background: none; border: none; padding-right: 20px; color: #4fd0ff; cursor: pointer;">
+                        <i data-lucide="search" style="width: 24px;"></i>
+                    </button>
+                </div>
+                <div class="category-container">
+                    <div class="chip active" onclick="setQuery('', this)">All</div>
+                    <div class="chip" onclick="setQuery('Netflix', this)">Netflix</div>
+                    <div class="chip" onclick="setQuery('Amazon', this)">Amazon</div>
+                    <div class="chip" onclick="setQuery('Zomato', this)">Zomato</div>
+                    <div class="chip" onclick="setQuery('Shopping', this)">Shopping</div>
+                </div>
+            </div>
+        </header>
+
+        <!-- Trending -->
+        <section>
+            <div class="section-header">
+                <h2>Trending Coupons</h2>
+            </div>
+            <div id="trendingGrid" class="results-grid">
+                <!-- Skeleton loader or empty state handled by JS -->
+            </div>
+        </section>
+
+        <!-- Recently Added -->
+        <section style="margin-top: 80px;">
+            <div class="section-header">
+                <h2>Recently Added</h2>
+            </div>
+            <div id="recentlyGrid" class="results-grid">
+            </div>
+        </section>
+
+        <!-- Recommendations -->
+        <section style="margin-top: 80px;">
+            <div class="section-header">
+                <h2>Recommended for You</h2>
+            </div>
+            <div id="recommendationGrid" class="results-grid">
+            </div>
+        </section>
+
+        <section id="searchResultsSection" style="display: none; margin-top: 80px;">
+            <div class="section-header">
+                <h2>Search Results</h2>
+            </div>
+            <div id="searchGrid" class="results-grid">
+            </div>
+        </section>
+    </main>
+
+    <!-- Mobile Bottom Navigation -->
+    <nav class="mobile-nav" aria-label="Mobile navigation">
+        <div class="mobile-nav-inner">
+            <a href="dashboard.html" class="mobile-nav-item"><i data-lucide="layout-dashboard"></i><span>Home</span></a>
+            <a href="browse.html" class="mobile-nav-item active"><i data-lucide="search"></i><span>Browse</span></a>
+            <a href="sell.html" class="mobile-nav-item"><i data-lucide="plus-circle"></i><span>Sell</span></a>
+            <a href="chatlist.html" class="mobile-nav-item"><i data-lucide="message-square"></i><span>Chat</span></a>
+            <a class="mobile-nav-item" href="profile.html">
+                <svg viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+                Profile
+            </a>
+        </div>
+    </nav>
+
+    <script src="api.js" defer></script>
+    <script src="components.js" defer></script>
+    <script>
+        const searchInput = document.getElementById("searchInput");
+        const trendingGrid = document.getElementById("trendingGrid");
+        const recentlyGrid = document.getElementById("recentlyGrid");
+        const recommendationGrid = document.getElementById("recommendationGrid");
+        const searchGrid = document.getElementById("searchGrid");
+        const searchResultsSection = document.getElementById("searchResultsSection");
+
+        let searchTimer = null;
+
+        function escapeHtml(str) {
+            if (!str) return "";
+            return String(str).replace(/[&<>"']/g, m => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":"&#39;"}[m]));
+        }
+
+        function setQuery(query, chipElement) {
+            searchInput.value = query;
+            
+            // Handle visual state of chips
+            const chips = document.querySelectorAll('.chip');
+            chips.forEach(c => c.classList.remove('active'));
+            if (chipElement) {
+                chipElement.classList.add('active');
+            } else {
+                // Try to find the chip matching the query if no chipElement provided
+                chips.forEach(c => {
+                    if (c.textContent.trim() === (query || 'All')) c.classList.add('active');
+                });
+            }
+            
+            applySearch();
+        }
+
+        function applySearch() {
+            const val = searchInput.value.trim();
+            if (!val) {
+                searchResultsSection.style.display = "none";
+                return;
+            }
+            searchResultsSection.style.display = "block";
+            loadCoupons(val, "searchGrid");
+        }
+
+        async function loadCoupons(searchTerm = "", targetGridId) {
+            const target = document.getElementById(targetGridId);
+            target.innerHTML = '<div class="empty-state"><h3>Searching...</h3></div>';
+            
+            try {
+                const query = searchTerm ? `?search=${encodeURIComponent(searchTerm)}` : "";
+                const data = await apiRequest(`/coupons${query}`);
+                let list = data.coupons || [];
+                
+                // For demo/simulated feel, we can slice if needed
+                if (targetGridId === "trendingGrid") list = list.slice(0, 3);
+                if (targetGridId === "recentlyGrid") list = list.slice(-3).reverse();
+
+                renderCoupons(list, targetGridId);
+            } catch (err) {
+                target.innerHTML = `<div class="empty-state"><h3>Error</h3><p>${escapeHtml(err.message)}</p></div>`;
+            }
+        }
+
+        function renderCoupons(items, targetGridId) {
+            const target = document.getElementById(targetGridId);
+            if (!items.length) {
+                target.innerHTML = `
+                    <div class="empty-state">
+                        <h3>No coupons available yet</h3>
+                        <p>Be the first to list one and help others save money.</p>
+                        <a href="sell.html" class="btn-sell">Sell a Coupon</a>
+                    </div>
+                `;
+                return;
+            }
+
+            target.innerHTML = items.map(c => `
+                <article class="coupon-card">
+                    <img src="${escapeHtml(c.image_url || 'bg.png')}" class="card-img" onerror="this.src='bg.png'" loading="lazy" alt="Image">
+                    <div class="card-content">
+                        <div class="card-tag">${escapeHtml(c.category || 'Voucher')}</div>
+                        <div class="card-title">${escapeHtml(c.title)}</div>
+                        <div class="card-meta">
+                            <div class="card-price">₹${escapeHtml(String(c.price))}</div>
+                            <div class="seller-badge">
+                                <i data-lucide="shield-check" style="width:12px"></i>
+                                <span>Trusted</span>
+                            </div>
+                        </div>
+                        <div class="card-footer">
+                            <button class="btn-card btn-primary" onclick="window.location.href='buy.html?id=${c.id}'">Buy Coupon</button>
+                            <button class="btn-card btn-secondary" onclick="window.location.href='coupon-details.html?id=${c.id}'">Details</button>
+                        </div>
+                    </div>
+                </article>
+            `).join("");
+            lucide.createIcons();
+        }
+
+        async function loadRecommendations() {
+            recommendationGrid.innerHTML = '<div class="empty-state"><h3>Finding best deals...</h3></div>';
+            try {
+                const data = await apiRequest("/recommendations?limit=3");
+                renderCoupons(data.recommendations || [], "recommendationGrid");
+            } catch (err) {
+                recommendationGrid.innerHTML = '<div class="empty-state"><h3>No recommendations available yet</h3></div>';
+            }
+        }
+
+        // Initialize
+        document.addEventListener("DOMContentLoaded", () => {
+            lucide.createIcons();
+            loadCoupons("", "trendingGrid");
+            loadCoupons("", "recentlyGrid");
+            loadRecommendations();
+        });
+
+        // Live search with debounce
+        searchInput.addEventListener("input", () => {
+            clearTimeout(searchTimer);
+            searchTimer = setTimeout(applySearch, 500);
+        });
+    </script>
+    <script src="components.js" defer></script>
+</body>
+</html>

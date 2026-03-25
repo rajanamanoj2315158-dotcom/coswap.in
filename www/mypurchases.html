@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <link rel="preconnect" href="https://unpkg.com">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>My Purchases — CoSwap</title>
+    <link rel="canonical" href="https://coswap.in/mypurchases.html">
+    <link rel="preload" href="theme.css" as="style">
+    <link rel="stylesheet" href="theme.css">
+    <script src="api.js" defer></script>
+    <script src="ui.js" defer></script>
+
+    <!-- Open Graph / Facebook -->
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://coswap.in/">
+    <meta property="og:title" content="CoSwap – Buy and Sell Coupons Instantly">
+    <meta property="og:description" content="Discover unused coupons from other users or sell your own in seconds.">
+    <meta property="og:image" content="https://coswap.in/logo.png">
+
+    <!-- Twitter -->
+    <meta property="twitter:card" content="summary_large_image">
+    <meta property="twitter:url" content="https://coswap.in/">
+    <meta property="twitter:title" content="CoSwap – Buy and Sell Coupons Instantly">
+    <meta property="twitter:description" content="Discover unused coupons from other users or sell your own in seconds.">
+    <meta property="twitter:image" content="https://coswap.in/logo.png">
+
+</head>
+<body class="soft-bg">
+    <!-- Premium Background System -->
+    <div class="premium-bg-system parallax-bg" aria-hidden="true">
+        <div class="aurora-layer"></div>
+        <div class="droplet-container parallax-particles">
+            <div class="bg-droplet" style="width:10px; height:10px; left:10%; --duration:18s;"></div>
+            <div class="bg-droplet" style="width:8px; height:8px; left:80%; --duration:22s; animation-delay:-5s;"></div>
+        </div>
+        <div class="ripple-layer">
+            <div class="liquid-ripple" style="top:50%; left:50%;"></div>
+        </div>
+    </div>
+
+    <nav class="navbar"></nav>
+
+    <main class="container" style="padding: 40px 24px 120px;">
+        <header style="margin-bottom: 48px; text-align: center;">
+            <h1 class="hero-title">My Purchases</h1>
+            <p class="hero-subtitle">Track and manage your coupon acquisitions.</p>
+        </header>
+
+        <div id="purchaseList" class="coupon-grid">
+            <div style="text-align: center; padding: 40px; opacity: 0.5;">Loading purchases...</div>
+        </div>
+
+        <div id="emptyState" class="empty-box" style="display:none; text-align: center; padding: 60px 24px;">
+            <h2 style="margin-bottom: 16px;">No Purchases Yet</h2>
+            <p style="margin-bottom: 32px; color: rgba(255,255,255,0.5);">Start exploring unused coupons and vouchers in the marketplace.</p>
+            <button class="button-primary" onclick="window.location.href='browse.html'" style="padding: 14px 28px;">Browse Marketplace</button>
+        </div>
+    </main>
+
+    <nav class="mobile-nav" aria-label="Mobile navigation">
+        <div class="mobile-nav-inner">
+            <a href="dashboard.html" class="mobile-nav-item"><i data-lucide="layout-dashboard"></i><span>Home</span></a>
+            <a href="browse.html" class="mobile-nav-item"><i data-lucide="search"></i><span>Browse</span></a>
+            <a href="sell.html" class="mobile-nav-item"><i data-lucide="plus-circle"></i><span>Sell</span></a>
+            <a href="chatlist.html" class="mobile-nav-item"><i data-lucide="message-square"></i><span>Chat</span></a>
+        </div>
+    </nav>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', async () => {
+            if (!getAuthToken()) {
+                window.location.href = "login.html";
+                return;
+            }
+            loadPurchases();
+        });
+
+        function escapeHtml(str) {
+            if (!str) return "";
+            return String(str).replace(/[&<>"']/g, m => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":"&#39;"}[m]));
+        }
+
+        async function loadPurchases() {
+            let box = document.getElementById("purchaseList");
+            let empty = document.getElementById("emptyState");
+
+            try {
+                const data = await apiRequest("/me/purchases");
+                const purchases = data.purchases || [];
+
+                if (purchases.length === 0) {
+                    box.style.display = "none";
+                    empty.style.display = "block";
+                    return;
+                }
+
+                box.innerHTML = purchases.map(p => `
+                    <article class="coupon-card">
+                        <img src="${escapeHtml(p.image_url || 'bg.png')}" class="card-img" onerror="this.src='bg.png'" alt="Coupon">
+                        <div class="card-content">
+                            <div class="card-tag">${escapeHtml(p.category || 'Voucher')}</div>
+                            <div class="card-title">${escapeHtml(p.title)}</div>
+                            <div class="card-meta">
+                                <span style="color: #4fd0ff; font-weight: 700; font-size: 18px;">₹${p.price}</span>
+                                <span style="font-size: 12px; opacity: 0.6;">${new Date(p.purchased_at).toLocaleDateString()}</span>
+                            </div>
+                            <div style="margin-top: 16px; display: grid; gap: 8px;">
+                                <button class="button-primary" onclick="viewCoupon('${p.coupon_id}')" style="height: 40px; font-size: 14px;">View Details</button>
+                                <button class="button-secondary" onclick="viewChat('${p.coupon_id}')" style="height: 40px; font-size: 14px;">Contact Seller</button>
+                            </div>
+                        </div>
+                    </article>
+                `).join("");
+            } catch (err) {
+                box.innerHTML = `<div style="text-align: center; color: var(--danger); padding: 40px;">${escapeHtml(err.message)}</div>`;
+            }
+        }
+
+        function viewCoupon(id) {
+            window.location.href = `coupon-details.html?id=${id}`;
+        }
+
+        async function viewChat(couponId) {
+            try {
+                const data = await apiRequest("/chats", {
+                    method: "POST",
+                    body: JSON.stringify({ couponId })
+                });
+                window.location.href = `chat.html?id=${data.chat.id}`;
+            } catch (err) {
+                showToast(err.message || "Unable to open chat.");
+            }
+        }
+    </script>
+    <script src="components.js" defer></script>
+</body>
+</html>

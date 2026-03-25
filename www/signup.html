@@ -1,0 +1,188 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <link rel="preconnect" href="https://unpkg.com">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Create Account — CoSwap</title>
+    <meta name="description" content="Join CoSwap to start buying and selling unused discount coupons instantly.">
+    <link rel="preload" href="theme.css" as="style">
+    <link rel="stylesheet" href="theme.css">
+    <script src="ui.js" defer></script>
+    <script src="https://accounts.google.com/gsi/client" async defer></script>
+
+    <!-- Open Graph / Facebook -->
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://coswap.in/">
+    <meta property="og:title" content="CoSwap – Buy and Sell Coupons Instantly">
+    <meta property="og:description" content="Discover unused coupons from other users or sell your own in seconds.">
+    <meta property="og:image" content="https://coswap.in/logo.png">
+
+    <!-- Twitter -->
+    <meta property="twitter:card" content="summary_large_image">
+    <meta property="twitter:url" content="https://coswap.in/">
+    <meta property="twitter:title" content="CoSwap – Buy and Sell Coupons Instantly">
+    <meta property="twitter:description" content="Discover unused coupons from other users or sell your own in seconds.">
+    <meta property="twitter:image" content="https://coswap.in/logo.png">
+
+</head>
+<body class="soft-bg">
+    <!-- Premium Background System -->
+    <div class="premium-bg-system parallax-bg" aria-hidden="true">
+        <div class="aurora-layer"></div>
+        <div class="droplet-container parallax-particles">
+            <div class="bg-droplet" style="width:10px; height:10px; left:5%; --duration:18s;"></div>
+            <div class="bg-droplet" style="width:8px; height:8px; left:90%; --duration:22s; animation-delay:-5s;"></div>
+        </div>
+        <div class="ripple-layer">
+            <div class="liquid-ripple" style="top:30%; left:70%;"></div>
+        </div>
+    </div>
+    <main class="container" style="min-height: 100vh; display: flex; align-items: center; padding: 40px 0;">
+        <div class="signup-layout">
+            <!-- Left Side: Intro -->
+            <section class="hero-copy">
+                <span class="eyebrow">Marketplace Platform</span>
+                <h1 style="font-size: clamp(40px, 5vw, 64px); line-height: 1.1; font-weight: 800; letter-spacing: -0.04em; margin-bottom: 24px;">Join the elite community of coupon traders.</h1>
+                <p style="font-size: 18px; color: rgba(255,255,255,0.6); line-height: 1.6; margin-bottom: 40px;">CoSwap is the most trusted platform to buy and sell unused discount vouchers. Turn your idle coupons into cash instantly.</p>
+                
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 24px;">
+                    <div>
+                        <h3 style="color: #38bdf8; font-size: 16px; font-weight: 700; margin-bottom: 8px;">Instant Liquidity</h3>
+                        <p style="font-size: 14px; opacity: 0.6;">List your coupon and get paid as soon as someone buys it.</p>
+                    </div>
+                    <div>
+                        <h3 style="color: #38bdf8; font-size: 16px; font-weight: 700; margin-bottom: 8px;">Guaranteed Savings</h3>
+                        <p style="font-size: 14px; opacity: 0.6;">Verified coupons from top brands like Amazon, Swiggy, and Zomato.</p>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Right Side: Form -->
+            <section class="panel-card">
+                <div style="margin-bottom: 24px;">
+                    <h2 style="font-size: 28px; font-weight: 800; letter-spacing: -0.02em; margin-bottom: 4px;">Create Account</h2>
+                    <p style="font-size: 14px; opacity: 0.5;">Join CoSwap and start saving today.</p>
+                </div>
+
+                <form class="signup-form" id="signupForm" style="display: flex; flex-direction: column; gap: 16px;">
+                    <div style="display: flex; flex-direction: column; gap: 6px;">
+                        <label style="font-size: 12px; font-weight: 700; color: rgba(255,255,255,0.4); text-transform: uppercase;">Full Name</label>
+                        <input type="text" id="name" placeholder="John Doe" required>
+                    </div>
+
+                    <div style="display: flex; flex-direction: column; gap: 6px;">
+                        <label style="font-size: 12px; font-weight: 700; color: rgba(255,255,255,0.4); text-transform: uppercase;">Email Address</label>
+                        <input type="email" id="email" placeholder="john@example.com" required>
+                    </div>
+
+                    <div style="display: flex; flex-direction: column; gap: 6px;">
+                        <label style="font-size: 12px; font-weight: 700; color: rgba(255,255,255,0.4); text-transform: uppercase;">Password</label>
+                        <input type="password" id="password" placeholder="Min 6 characters" required>
+                    </div>
+
+                    <div style="display: flex; align-items: flex-start; gap: 10px; margin: 4px 0;">
+                        <input type="checkbox" id="acceptTerms" style="width: auto; height: auto; margin-top: 4px;" required>
+                        <label for="acceptTerms" style="font-size: 13px; opacity: 0.7; line-height: 1.4;">
+                            I agree to the <a href="terms.html" target="_blank" style="color: #38bdf8; text-decoration: none;">Terms & Conditions</a>
+                        </label>
+                    </div>
+
+                    <button type="submit" class="primary-btn" id="submitButton" style="width: 100%; margin-top: 8px;">Create Account</button>
+                </form>
+
+                <div style="margin: 20px 0; display: flex; align-items: center; gap: 16px; color: rgba(255,255,255,0.1);">
+                    <div style="flex: 1; height: 1px; background: currentColor;"></div>
+                    <span style="font-size: 12px; font-weight: 700; opacity: 0.3;">OR</span>
+                    <div style="flex: 1; height: 1px; background: currentColor;"></div>
+                </div>
+
+                <button class="google-btn" id="googleSignupBtn">
+                    <img src="https://www.gstatic.com/images/branding/product/1x/gsa_512dp.png" alt="Google" loading="lazy">
+                    Continue with Google
+                </button>
+
+                <div style="margin-top: 24px; text-align: center; font-size: 14px; color: rgba(255,255,255,0.5);">
+                    Already have an account? <a href="login.html" style="color: #38bdf8; text-decoration: none; font-weight: 700;">Sign in</a>
+                </div>
+            </section>
+        </div>
+    </main>
+
+    <div id="toast" class="toast"></div>
+
+    <script src="api.js" defer></script>
+    <script>
+        const GOOGLE_CLIENT_ID = "633777352427-d46e8ks94tgkkug8sei8n90mhub6q786.apps.googleusercontent.com";
+
+        if (typeof getAuthToken === "function" && getAuthToken()) {
+            window.location.replace("dashboard.html");
+        }
+
+        window.onload = function() {
+            google.accounts.id.initialize({
+                client_id: GOOGLE_CLIENT_ID,
+                callback: handleGoogleCredential
+            });
+
+            document.getElementById('googleSignupBtn').onclick = () => {
+                google.accounts.id.prompt();
+            };
+        };
+
+        async function handleGoogleCredential(response) {
+            try {
+                const data = await apiRequest("/auth/google", {
+                    method: "POST",
+                    body: JSON.stringify({ idToken: response.credential })
+                });
+
+                setAuth(data.token, data.user);
+                showToast("Account created successfully.");
+                window.location.href = "dashboard.html";
+            } catch (err) {
+                showToast(err.message || "Google registration failed.");
+            }
+        }
+
+        async function submitSignup(event) {
+            event.preventDefault();
+            
+            const name = document.getElementById("name").value.trim();
+            const email = document.getElementById("email").value.trim();
+            const password = document.getElementById("password").value;
+
+            if (password.length < 6) {
+                showToast("Password must be at least 6 characters.");
+                return;
+            }
+
+            const btn = document.getElementById("submitButton");
+            btn.disabled = true;
+            btn.textContent = "Creating Account...";
+
+            try {
+                await apiRequest("/auth/signup", {
+                    method: "POST",
+                    body: JSON.stringify({ name, email, password })
+                });
+
+                localStorage.setItem("SIGNUP_EMAIL", email);
+                showToast("Verification code sent to email.");
+                
+                setTimeout(() => {
+                    window.location.href = "verify-signup.html";
+                }, 1000);
+            } catch (err) {
+                showToast(err.message || "Signup failed.");
+            } finally {
+                btn.disabled = false;
+                btn.textContent = "Create Account";
+            }
+        }
+
+        document.getElementById("signupForm").addEventListener("submit", submitSignup);
+    </script>
+    <script src="components.js" defer></script>
+</body>
+</html>

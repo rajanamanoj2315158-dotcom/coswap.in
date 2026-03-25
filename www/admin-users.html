@@ -1,0 +1,234 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <link rel="preconnect" href="https://unpkg.com">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Manage Users – CoSwap Admin</title>
+
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: Poppins, sans-serif;
+        }
+
+        body {
+            background: radial-gradient(circle at top, #151a2d, #0b0f1f, #05060a);
+            color: white;
+            padding: 30px;
+        }
+
+        h1 {
+            font-size: 34px;
+            margin-bottom: 20px;
+            font-weight: 700;
+        }
+
+        .table-container {
+            background: rgba(255, 255, 255, 0.07);
+            backdrop-filter: blur(14px);
+            border: 1px solid rgba(255, 255, 255, 0.12);
+            border-radius: 16px;
+            padding: 20px;
+            overflow: hidden;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 10px;
+        }
+
+        th,
+        td {
+            padding: 14px;
+            text-align: left;
+            font-size: 15px;
+        }
+
+        th {
+            background: rgba(255, 255, 255, 0.12);
+            font-weight: 600;
+        }
+
+        tr:nth-child(even) {
+            background: rgba(255, 255, 255, 0.05);
+        }
+
+        .btn {
+            padding: 8px 14px;
+            border-radius: 10px;
+            border: none;
+            font-size: 14px;
+            cursor: pointer;
+            margin-right: 6px;
+        }
+
+        .freeze {
+            background: rgba(255, 0, 0, 0.35);
+            color: white;
+            border: 1px solid red;
+        }
+
+        .unfreeze {
+            background: rgba(0, 255, 0, 0.25);
+            color: white;
+            border: 1px solid #00ff73;
+        }
+
+        .delete {
+            background: rgba(255, 80, 80, 0.25);
+            color: white;
+            border: 1px solid red;
+        }
+
+        .view {
+            background: linear-gradient(90deg, #4fd0ff, #6f6cff);
+            color: white;
+        }
+
+        .trusted-tag {
+            color: #4fd0ff;
+            font-size: 13px;
+            font-weight: 600;
+        }
+
+        .warning {
+            color: #ff6b6b;
+            font-weight: 700;
+        }
+
+        .back-btn {
+            padding: 12px 18px;
+            background: #4e7bff;
+            color: white;
+            border-radius: 10px;
+            text-decoration: none;
+            display: inline-block;
+            margin-bottom: 20px;
+        }
+    </style>
+
+    <link rel="preload" href="theme.css" as="style">
+    <link rel="stylesheet" href="theme.css">
+    <script src="ui.js" defer></script>
+    <!-- Open Graph / Facebook -->
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://coswap.in/">
+    <meta property="og:title" content="CoSwap – Buy and Sell Coupons Instantly">
+    <meta property="og:description" content="Discover unused coupons from other users or sell your own in seconds.">
+    <meta property="og:image" content="https://coswap.in/logo.png">
+
+    <!-- Twitter -->
+    <meta property="twitter:card" content="summary_large_image">
+    <meta property="twitter:url" content="https://coswap.in/">
+    <meta property="twitter:title" content="CoSwap – Buy and Sell Coupons Instantly">
+    <meta property="twitter:description" content="Discover unused coupons from other users or sell your own in seconds.">
+    <meta property="twitter:image" content="https://coswap.in/logo.png">
+
+</head>
+
+<body>
+
+    <a href="admin-dashboard.html" class="back-btn">← Back to Dashboard</a>
+
+    <h1>Manage Users</h1>
+
+    <div class="table-container">
+        <table>
+            <tr>
+                <th>Name</th>
+                <th>Email</th>
+                <th>Rating</th>
+                <th>Fraud %</th>
+                <th>Status</th>
+                <th>Actions</th>
+            </tr>
+            <tbody id="usersBody"></tbody>
+        </table>
+    </div>
+
+    <script src="api.js" defer></script>
+    <script>
+        if (!requireAdmin("admin-users.html")) {
+            // redirected
+        }
+
+        async function loadUsers() {
+            const body = document.getElementById("usersBody");
+            body.innerHTML = "";
+
+            try {
+                const data = await apiRequest("/admin/users");
+                const users = data.users || [];
+
+                if (users.length === 0) {
+                    body.innerHTML = `<tr><td colspan="6">No users found.</td></tr>`;
+                    return;
+                }
+
+                users.forEach(u => {
+                    const fraudClass = u.fraudPercent >= 40 ? "warning" : "";
+                    const statusText = u.status === "frozen" ? "Frozen" : "Active";
+                    const statusClass = u.status === "frozen" ? "warning" : "";
+                    const trusted = u.rating && parseFloat(u.rating) >= 4.8 ? `<span class="trusted-tag">✔ Trusted</span>` : "";
+
+                    let actions = "";
+                    if (u.status === "frozen") {
+                        actions = `
+                            <button class="unfreeze" onclick="unfreezeUser('${u.id}')">Unfreeze</button>
+                            <button class="delete" onclick="deleteUser('${u.id}')">Delete</button>
+                        `;
+                    } else {
+                        actions = `
+                            <button class="freeze" onclick="freezeUser('${u.id}')">Freeze</button>
+                            <button class="view" onclick="viewUser('${u.id}')">View</button>
+                        `;
+                    }
+
+                    body.innerHTML += `
+                        <tr>
+                            <td>${u.name} ${trusted}</td>
+                            <td>${u.email}</td>
+                            <td>${u.rating} ⭐</td>
+                            <td class="${fraudClass}">${u.fraudPercent}%</td>
+                            <td class="${statusClass}">${statusText}</td>
+                            <td>${actions}</td>
+                        </tr>
+                    `;
+                });
+            } catch (err) {
+                body.innerHTML = `<tr><td colspan="6">Failed to load users. ${err.message || ""}</td></tr>`;
+            }
+        }
+
+        function viewUser(id) {
+            window.location.href = "seller.html?id=" + id;
+        }
+
+        async function freezeUser(id) {
+            await apiRequest(`/admin/users/${id}/freeze`, { method: "POST" });
+            loadUsers();
+        }
+
+        async function unfreezeUser(id) {
+            await apiRequest(`/admin/users/${id}/unfreeze`, { method: "POST" });
+            loadUsers();
+        }
+
+        async function deleteUser(id) {
+            if (!confirm("Are you sure you want to delete this user?")) return;
+            await apiRequest(`/admin/users/${id}`, { method: "DELETE" });
+            loadUsers();
+        }
+
+        loadUsers();
+    </script>
+
+    <script src="components.js" defer></script>
+</body>
+
+</html>

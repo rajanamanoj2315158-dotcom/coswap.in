@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <link rel="preconnect" href="https://unpkg.com">
+    <title>Waiting for Seller – CoSwap</title>
+    <style>
+        body {
+            background: #0f1120;
+            color: white;
+            font-family: Poppins;
+            text-align: center;
+            padding-top: 120px;
+        }
+
+        .box {
+            background: rgba(255, 255, 255, 0.08);
+            padding: 40px;
+            width: 400px;
+            margin: auto;
+            border-radius: 18px;
+        }
+    </style>
+    <link rel="preload" href="theme.css" as="style">
+    <link rel="stylesheet" href="theme.css">
+    <script src="ui.js" defer></script>
+    <!-- Open Graph / Facebook -->
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://coswap.in/">
+    <meta property="og:title" content="CoSwap – Buy and Sell Coupons Instantly">
+    <meta property="og:description" content="Discover unused coupons from other users or sell your own in seconds.">
+    <meta property="og:image" content="https://coswap.in/logo.png">
+
+    <!-- Twitter -->
+    <meta property="twitter:card" content="summary_large_image">
+    <meta property="twitter:url" content="https://coswap.in/">
+    <meta property="twitter:title" content="CoSwap – Buy and Sell Coupons Instantly">
+    <meta property="twitter:description" content="Discover unused coupons from other users or sell your own in seconds.">
+    <meta property="twitter:image" content="https://coswap.in/logo.png">
+
+</head>
+
+<body>
+    <div class="box">
+        <h2>Waiting for Seller...</h2>
+        <p id="statusText">The seller has 30 minutes to accept your request.</p>
+    </div>
+
+    <script src="api.js" defer></script>
+    <script>
+        if (!requireAuth("waiting.html" + window.location.search)) {
+            // redirected
+        }
+
+        const params = new URLSearchParams(window.location.search);
+        const requestId = params.get("id");
+        const statusText = document.getElementById("statusText");
+
+        if (!requestId) {
+            statusText.innerText = "No request found.";
+            setTimeout(() => window.location.href = "browse.html", 1500);
+        }
+
+        async function pollRequest() {
+            if (!requestId) return;
+
+            try {
+                const data = await apiRequest(`/requests/${requestId}`);
+                const r = data.request;
+
+                if (r.status === "accepted" && r.chat_id) {
+                    window.location.href = `chat.html?id=${r.chat_id}`;
+                    return;
+                }
+
+                if (r.status === "ignored" || r.status === "expired") {
+                    statusText.innerText = "Request was declined or expired.";
+                    setTimeout(() => window.location.href = "browse.html", 2000);
+                    return;
+                }
+
+                statusText.innerText = "The seller has 30 minutes to accept your request.";
+            } catch (err) {
+                statusText.innerText = "Unable to load request status.";
+            }
+        }
+
+        pollRequest();
+        setInterval(pollRequest, 3000);
+    </script>
+
+    <script src="components.js" defer></script>
+</body>
+
+</html>
