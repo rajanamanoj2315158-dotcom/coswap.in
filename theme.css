@@ -895,7 +895,8 @@ option {
 
 /* ─── Specialized Auth Components ───────────────────────────────────────── */
 .login-card {
-  width: 420px;
+  max-width: 420px;
+  width: 100%;
   padding: 40px;
   border-radius: 20px;
   background: rgba(15, 23, 42, 0.85);
@@ -938,7 +939,16 @@ option {
   align-items: center;
 }
 
+@media (max-width: 968px) {
+    .signup-layout {
+        grid-template-columns: 1fr;
+        gap: 40px;
+    }
+}
+
 .panel-card {
+  max-width: 500px;
+  width: 100%;
   padding: 32px;
   border-radius: var(--radius-card);
   background: rgba(15, 23, 42, 0.85);
@@ -1035,4 +1045,223 @@ option {
 .btn-icon svg {
   width: 20px;
   height: 20px;
+}
+
+/* ─── Elite Navbar Responsive System ────────────────────────────────────── */
+.navbar {
+    height: 72px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 24px !important;
+    background: rgba(10, 13, 24, 0.82);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+    position: sticky;
+    top: 0;
+    z-index: 1000;
+}
+
+.nav-menu {
+    display: flex;
+    align-items: center;
+    gap: 28px;
+}
+
+.nav-menu.active {
+    display: flex !important;
+}
+
+@media (max-width: 1024px) {
+    .nav-menu {
+        gap: 16px;
+    }
+}
+
+@media (max-width: 768px) {
+    .nav-menu {
+        display: none;
+        position: fixed;
+        top: 72px;
+        left: 0;
+        right: 0;
+        background: rgba(10, 13, 24, 0.99) !important; /* Higher opacity for readability */
+        -webkit-backdrop-filter: blur(40px);
+        backdrop-filter: blur(40px);
+        flex-direction: column;
+        padding: 40px 24px;
+        align-items: flex-start;
+        border-bottom: 1px solid rgba(255, 255, 255, 0.15);
+        box-shadow: 0 30px 60px rgba(0,0,0,0.8);
+        animation: slideDown 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+        width: 100vw;
+        z-index: 2000;
+    }
+    
+    .nav-link {
+        font-size: 20px;
+        font-weight: 600;
+        width: 100%;
+        padding: 16px 0;
+        border-bottom: 1px solid rgba(255,255,255,0.05);
+        color: white !important;
+    }
+
+    /* Hide decorative overlapping text on mobile */
+    .bg-text, .decorative-text, [class*="bg-text"], .hero-bg-text {
+        display: none !important;
+    }
+
+    /* Category Scrollable Chips */
+    .category-container {
+        display: flex !important;
+        overflow-x: auto !important;
+        white-space: nowrap !important;
+        gap: 12px !important;
+        padding: 8px 4px !important;
+        scrollbar-width: none;
+        -ms-overflow-style: none;
+        justify-content: flex-start !important;
+        margin: 0 -20px;
+        padding-left: 20px !important;
+        padding-right: 20px !important;
+    }
+    .category-container::-webkit-scrollbar {
+        display: none;
+    }
+    .chip {
+        flex: 0 0 auto !important;
+        padding: 10px 20px !important;
+        font-size: 14px !important;
+    }
+
+    /* Highlight important content on Mobile */
+    .hero-title {
+        font-size: 32px !important;
+        line-height: 1.2 !important;
+        margin-bottom: 16px !important;
+        background: linear-gradient(135deg, #fff 0%, #a5b4fc 100%);
+        -webkit-background-clip: text;
+        background-clip: text;
+        -webkit-text-fill-color: transparent;
+    }
+    
+    .hero-subtitle {
+        font-size: 16px !important;
+        margin-bottom: 32px !important;
+        color: rgba(255,255,255,0.7) !important;
+    }
+
+    .btn-primary-glow {
+        transform: scale(1.05);
+        box-shadow: 0 0 20px rgba(79, 208, 255, 0.4);
+    }
+
+    /* ─── Premium Mobile Bottom Nav ───────────────────────────────────────── */
+    .mobile-nav {
+        background: rgba(10, 13, 24, 0.85) !important;
+        -webkit-backdrop-filter: blur(20px) !important;
+        backdrop-filter: blur(20px) !important;
+        border-top: 1px solid rgba(255, 255, 255, 0.08) !important;
+        height: 76px !important;
+        padding-bottom: env(safe-area-inset-bottom);
+        box-shadow: 0 -10px 40px rgba(0,0,0,0.5);
+    }
+    
+    .mobile-nav-item i, .mobile-nav-item svg {
+        width: 24px !important;
+        height: 24px !important;
+        margin-bottom: 4px !important;
+        transition: transform 0.2s ease;
+    }
+    
+    .mobile-nav-item.active {
+        color: #4fd0ff !important;
+    }
+    
+    .mobile-nav-item.active i {
+        transform: translateY(-2px);
+        filter: drop-shadow(0 0 8px rgba(79, 208, 255, 0.5));
+    }
+
+    /* Important content emphasis */
+    .section-header h2 {
+        font-size: 20px !important;
+        font-weight: 700 !important;
+    }
+    
+    .search-bar-wrap {
+        margin: 0 0 40px 0 !important;
+        border: 1px solid rgba(79, 208, 255, 0.3) !important;
+        box-shadow: 0 0 25px rgba(79, 208, 255, 0.15) !important;
+        transition: transform 0.3s ease, box-shadow 0.3s ease !important;
+    }
+    
+    .search-bar-wrap:focus-within {
+        transform: scale(1.02);
+        box-shadow: 0 0 35px rgba(79, 208, 255, 0.3) !important;
+    }
+
+    .search-bar {
+        height: 56px !important;
+        font-size: 16px !important;
+    }
+}
+
+/* ─── Global Footer ─────────────────────────────────────────────────────── */
+.footer {
+    background: rgba(2, 6, 23, 0.8);
+    border-top: 1px solid rgba(255,255,255,0.05);
+    margin-top: 80px;
+    padding: 64px 0 32px 0;
+}
+
+.footer-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 48px;
+    margin-bottom: 64px;
+}
+
+.footer-bottom {
+    padding-top: 32px;
+    border-top: 1px solid rgba(255,255,255,0.05);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    color: rgba(255,255,255,0.4);
+    font-size: 12px;
+}
+
+@media (max-width: 768px) {
+    .footer-bottom {
+        flex-direction: column;
+        gap: 16px;
+        text-align: center;
+    }
+}
+
+/* ─── Mobile Nav Control ─────────────────────────────────────────────────── */
+@media (min-width: 769px) {
+    .mobile-nav {
+        display: none !important;
+    }
+}
+
+/* Elite Component: Section Divider Glow */
+.divider-glow {
+    position: relative;
+    padding-top: 24px;
+    margin-top: 24px;
+}
+
+.divider-glow::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 1px;
+    background: linear-gradient(90deg, transparent, rgba(79, 208, 255, 0.3), transparent);
 }

@@ -105,10 +105,7 @@ app.get("/__debug_files", (req, res) => {
     res.status(500).json({ error: err.message, staticPath });
   }
 });
-app.get("/robots.txt", (req, res) => {
-  res.type("text/plain");
-  res.send(`User-agent: *\nAllow: /\n\nSitemap: https://coswap.in/sitemap.xml`);
-});
+
 
 app.get("/categories", (req, res) => {
   res.json({
@@ -361,6 +358,10 @@ async function expireRequests() {
 
 app.get("/health", (req, res) => {
   res.json({ ok: true, time: new Date().toISOString(), env: process.env.NODE_ENV || "development" });
+});
+
+app.get("/ping", (req, res) => {
+  res.status(200).send("OK");
 });
 
 // ─── robots.txt ──────────────────────────────────────────────────────────────
@@ -1003,18 +1004,36 @@ app.post("/purchases", authMiddleware, async (req, res) => {
     const { couponId } = req.body || {};
     if (!couponId) return res.status(400).json({ error: "couponId is required." });
 
-    const coupon = await Coupon.findById(couponId).lean();
-    if (!coupon) return res.status(404).json({ error: "Coupon not found." });
-    if (coupon.status !== "active") return res.status(400).json({ error: "Coupon not available." });
-    if (String(coupon.seller_id) === String(req.user.id)) return res.status(400).json({ error: "You cannot purchase your own coupon." });
+    // 1. Initial check (non-atomic but helpful for UX/Security)
+    const initialCheck = await Coupon.findById(couponId).lean();
+    if (!initialCheck) return res.status(404).json({ error: "Coupon not found." });
+    if (String(initialCheck.seller_id) === String(req.user.id)) {
+      return res.status(400).json({ error: "You cannot purchase your own coupon." });
+    }
 
-    const purchase = await Purchase.create({ coupon_id: coupon._id, buyer_id: req.user.id, price: coupon.price, status: "success", purchased_at: new Date().toISOString() });
-    await Coupon.updateOne({ _id: coupon._id }, { status: "sold" });
+    // 2. Atomic update
+    const updatedCoupon = await Coupon.findOneAndUpdate(
+      { _id: couponId, status: "active", seller_id: { $ne: req.user.id } },
+      { status: "sold" },
+      { new: true }
+    );
+
+    if (!updatedCoupon) {
+      return res.status(400).json({ error: "Coupon is no longer available or already sold." });
+    }
+
+    const purchase = await Purchase.create({ 
+      coupon_id: couponId, 
+      buyer_id: req.user.id, 
+      price: updatedCoupon.price, 
+      status: "success", 
+      purchased_at: new Date().toISOString() 
+    });
 
     await notify(req.user.id, "Purchase completed successfully.", "mypurchases.html");
-    await notify(coupon.seller_id, "Your coupon was sold successfully.", "mylistings.html");
+    await notify(updatedCoupon.seller_id, "Your coupon was sold successfully.", "mylistings.html");
 
-    res.json({ purchase: { ...purchase.toObject(), id: String(purchase._id), coupon_id: String(coupon._id), buyer_id: String(req.user.id), title: coupon.title, image_url: coupon.image_url, category: coupon.category }, fee: 0 });
+    res.json({ purchase: { ...purchase.toObject(), id: String(purchase._id), coupon_id: String(couponId), buyer_id: String(req.user.id), title: updatedCoupon.title, image_url: updatedCoupon.image_url, category: updatedCoupon.category }, fee: 0 });
   } catch (err) { res.status(500).json({ error: err.message }); }
 });
 
@@ -1396,6 +1415,14 @@ async function start() {
     await ensureAdminUser();
     app.listen(PORT, () => {
       console.log(`CoSwap backend running on http://localhost:${PORT}`);
+      
+      // Auto-Ping to prevent Render.com Free Tier from sleeping
+      const RENDER_EXTERNAL_URL = process.env.RENDER_EXTERNAL_URL || `https://coswap-backend.onrender.com`;
+      setInterval(() => {
+        fetch(`${RENDER_EXTERNAL_URL}/ping`)
+          .then(() => console.log(`[Auto-Ping] Kept awake gracefully at ${new Date().toISOString()}`))
+          .catch(err => console.error(`[Auto-Ping Error]:`, err.message));
+      }, 14 * 60 * 1000); // Trigger every 14 minutes
     });
   } catch (err) {
     console.error("Failed to start server:", err);

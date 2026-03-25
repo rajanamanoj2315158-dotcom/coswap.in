@@ -6,9 +6,25 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Create Account — CoSwap</title>
     <meta name="description" content="Join CoSwap to start buying and selling unused discount coupons instantly.">
+    <link rel="preload" href="theme.css" as="style">
     <link rel="stylesheet" href="theme.css">
     <script src="ui.js" defer></script>
     <script src="https://accounts.google.com/gsi/client" async defer></script>
+
+    <!-- Open Graph / Facebook -->
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://coswap.in/">
+    <meta property="og:title" content="CoSwap – Buy and Sell Coupons Instantly">
+    <meta property="og:description" content="Discover unused coupons from other users or sell your own in seconds.">
+    <meta property="og:image" content="https://coswap.in/logo.png">
+
+    <!-- Twitter -->
+    <meta property="twitter:card" content="summary_large_image">
+    <meta property="twitter:url" content="https://coswap.in/">
+    <meta property="twitter:title" content="CoSwap – Buy and Sell Coupons Instantly">
+    <meta property="twitter:description" content="Discover unused coupons from other users or sell your own in seconds.">
+    <meta property="twitter:image" content="https://coswap.in/logo.png">
+
 </head>
 <body class="soft-bg">
     <!-- Premium Background System -->
@@ -95,7 +111,7 @@
 
     <div id="toast" class="toast"></div>
 
-    <script src="api.js"></script>
+    <script src="api.js" defer></script>
     <script>
         const GOOGLE_CLIENT_ID = "633777352427-d46e8ks94tgkkug8sei8n90mhub6q786.apps.googleusercontent.com";
 
@@ -167,5 +183,6 @@
 
         document.getElementById("signupForm").addEventListener("submit", submitSignup);
     </script>
+    <script src="components.js" defer></script>
 </body>
 </html>

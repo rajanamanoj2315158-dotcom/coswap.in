@@ -6,51 +6,45 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>My Profile – CoSwap</title>
     <link rel="canonical" href="https://coswap.in/profile.html">
+    <link rel="preload" href="theme.css" as="style">
     <link rel="stylesheet" href="theme.css">
-    <script src="api.js"></script>
+    <script src="api.js" defer></script>
     <script src="ui.js" defer></script>
-    <!-- Load Lucide Icons -->
-    <script src="https://unpkg.com/lucide@latest"></script>
+
+    <!-- Open Graph / Facebook -->
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://coswap.in/">
+    <meta property="og:title" content="CoSwap – Buy and Sell Coupons Instantly">
+    <meta property="og:description" content="Discover unused coupons from other users or sell your own in seconds.">
+    <meta property="og:image" content="https://coswap.in/logo.png">
+
+    <!-- Twitter -->
+    <meta property="twitter:card" content="summary_large_image">
+    <meta property="twitter:url" content="https://coswap.in/">
+    <meta property="twitter:title" content="CoSwap – Buy and Sell Coupons Instantly">
+    <meta property="twitter:description" content="Discover unused coupons from other users or sell your own in seconds.">
+    <meta property="twitter:image" content="https://coswap.in/logo.png">
+
 </head>
 <body class="soft-bg">
     <!-- Premium Background System -->
     <div class="premium-bg-system parallax-bg" aria-hidden="true">
         <div class="aurora-layer"></div>
         <div class="droplet-container parallax-particles">
-            <div class="bg-droplet" style="width:10px; height:10px; left:5%; --duration:18s; --sway:40px;"></div>
-            <div class="bg-droplet" style="width:6px; height:6px; left:15%; --duration:24s; --sway:-30px; animation-delay:-5s;"></div>
-            <div class="bg-droplet" style="width:8px; height:8px; left:40%; --duration:20s; --sway:20px; animation-delay:-2s;"></div>
-            <div class="bg-droplet" style="width:12px; height:12px; left:60%; --duration:28s; --sway:-40px; animation-delay:-8s;"></div>
-            <div class="bg-droplet" style="width:5px; height:5px; left:85%; --duration:22s; --sway:35px; animation-delay:-3s;"></div>
+            <div class="bg-droplet" style="width:10px; height:10px; left:5%;"></div>
+            <div class="bg-droplet" style="width:12px; height:12px; left:85%; animation-delay:-5s;"></div>
         </div>
         <div class="ripple-layer">
             <div class="liquid-ripple" style="top:40%; left:80%;"></div>
         </div>
     </div>
-    <nav class="navbar">
-        <a href="index.html" class="logo" style="display: flex; align-items: center; gap: 12px; text-decoration: none; color: white;">
-            <img src="logo.png" alt="CoSwap" style="width: 32px; height: 32px;" loading="lazy">
-            <span style="font-size: 20px; font-weight: 800; letter-spacing: -0.04em;">CoSwap</span>
-        </a>
-        
-        <div class="nav-menu">
-            <a href="browse.html" class="nav-link">Browse</a>
-            <a href="sell.html" class="nav-link">Sell</a>
-            <a href="dashboard.html" class="nav-link">My Listings</a>
-            <a href="chatlist.html" class="nav-link">Messages</a>
-            <a href="profile.html" class="nav-link active">Profile</a>
-        </div>
 
-        <div class="nav-right">
-            <img src="https://api.dicebear.com/7.x/avataaars/svg?seed=coswap" alt="Avatar" class="user-avatar" onclick="window.location.href='profile.html'" loading="lazy">
-            <i data-lucide="log-out" class="logout-icon" onclick="handleLogout()" style="width: 20px;"></i>
-        </div>
-    </nav>
+    <nav class="navbar"></nav>
 
-    <main class="container" style="padding: 60px 24px;">
+    <main class="container" style="padding: 60px 24px 120px;">
         <div style="text-align: center; margin-bottom: 48px;">
-            <h1 class="heading-elite">Account Settings</h1>
-            <p class="subtext-elite" style="margin: 0 auto;">Manage your profile details and marketplace preferences.</p>
+            <h1 class="hero-title">Account Settings</h1>
+            <p class="hero-subtitle">Manage your profile details and marketplace preferences.</p>
         </div>
 
         <div style="display: flex; flex-direction: column; gap: 24px; max-width: 800px; margin: 0 auto;">
@@ -64,65 +58,79 @@
                     </div>
                 </div>
 
-                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin-bottom: 32px;">
-                    <div class="form-group" style="display: flex; flex-direction: column; gap: 8px;">
-                        <label style="font-size: 12px; font-weight: 700; color: rgba(255,255,255,0.4); text-transform: uppercase;">Full Name</label>
-                        <input type="text" id="userName" readonly>
+                <div class="profile-grid">
+                    <div style="display: flex; flex-direction: column; gap: 8px;">
+                        <label style="font-size: 11px; font-weight: 800; color: rgba(255,255,255,0.4); text-transform: uppercase; letter-spacing: 0.05em;">Full Name</label>
+                        <input type="text" id="userName" readonly style="height: 52px; background: rgba(0,0,0,0.2);">
                     </div>
-                    <div class="form-group" style="display: flex; flex-direction: column; gap: 8px;">
-                        <label style="font-size: 12px; font-weight: 700; color: rgba(255,255,255,0.4); text-transform: uppercase;">Email Address</label>
-                        <input type="email" id="userEmail" readonly>
+                    <div style="display: flex; flex-direction: column; gap: 8px;">
+                        <label style="font-size: 11px; font-weight: 800; color: rgba(255,255,255,0.4); text-transform: uppercase; letter-spacing: 0.05em;">Email Address</label>
+                        <input type="email" id="userEmail" readonly style="height: 52px; background: rgba(0,0,0,0.2);">
                     </div>
                 </div>
-                <button class="button-primary" onclick="alert('Profile updates are coming soon!')" style="height: 44px; font-size: 14px;">Save Changes</button>
+                <button class="button-primary" onclick="showToast('Profile updates coming soon!')" style="height: 44px; font-size: 14px; margin-top: 24px;">Save Changes</button>
             </div>
 
             <!-- Marketplace Activity -->
             <div class="card" style="padding: 32px;">
-                <h3 style="font-size: 18px; font-weight: 700; margin-bottom: 16px;">Marketplace Activity</h3>
-                <p style="color: rgba(255,255,255,0.5); font-size: 14px; margin-bottom: 24px;">Track your buying and selling performance across the platform.</p>
+                <h3 style="font-size: 20px; font-weight: 800; margin-bottom: 12px;">Marketplace Activity</h3>
+                <p style="color: rgba(255,255,255,0.5); font-size: 14px; margin-bottom: 24px;">Track your trading performance and public presence.</p>
                 <div style="display: flex; gap: 12px; flex-wrap: wrap;">
                     <button class="button-secondary" onclick="window.location.href='sellerprofile.html'" style="height: 44px; font-size: 14px;">View Public Profile</button>
                     <button class="button-secondary" onclick="window.location.href='mypurchases.html'" style="height: 44px; font-size: 14px;">Purchase History</button>
+                    <button class="button-secondary" onclick="window.location.href='mylistings.html'" style="height: 44px; font-size: 14px;">Listed Coupons</button>
                 </div>
             </div>
 
-            <!-- Account Status -->
-            <div class="card" style="padding: 32px; border-color: rgba(255, 59, 48, 0.2);">
-                <h3 style="font-size: 18px; font-weight: 700; margin-bottom: 16px; color: #ff4d4d;">Account Status</h3>
-                <p style="color: rgba(255,255,255,0.5); font-size: 14px; margin-bottom: 24px;">Once you sign out, you'll need to verify your identity to access your listings again.</p>
-                <button class="button-secondary" onclick="handleLogout()" style="height: 44px; font-size: 14px; color: #ff4d4d; border-color: rgba(255, 59, 48, 0.2);">Sign Out</button>
+            <!-- Account Security -->
+            <div class="card" style="padding: 32px; border-color: rgba(239, 68, 68, 0.2);">
+                <h3 style="font-size: 20px; font-weight: 800; margin-bottom: 12px; color: #ef4444;">Session Management</h3>
+                <p style="color: rgba(255,255,255,0.5); font-size: 14px; margin-bottom: 24px;">Sign out from this device. Your listings will remain active in the marketplace.</p>
+                <button class="button-secondary" onclick="window.handleLogout()" style="height: 44px; font-size: 14px; color: #ef4444; border-color: rgba(239, 68, 68, 0.2);">Logout of CoSwap</button>
             </div>
         </div>
-    <script>
-        document.addEventListener("DOMContentLoaded", () => {
-            if (typeof requireAuth === 'function' && !requireAuth()) return;
-            
-            if (typeof getCurrentUser === 'function') {
-                const user = getCurrentUser();
-                if (user) {
-                    document.getElementById("userName").value = user.name || "N/A";
-                    document.getElementById("userEmail").value = user.email || "N/A";
-                    document.getElementById("displayUserName").innerText = user.name || "User Name";
-                    document.getElementById("displayUserEmail").innerText = user.email || "user@example.com";
-                }
-            }
-        });
+    </main>
 
-        function handleLogout() {
-            if (confirm("Are you sure you want to sign out?")) {
-                if (typeof clearAuth === 'function') clearAuth();
-                window.location.href = "login.html";
+    <style>
+        .profile-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+        }
+        @media (max-width: 640px) {
+            .profile-grid {
+                grid-template-columns: 1fr;
             }
         }
-    </script>
-    <!-- Bottom Nav for Mobile -->
-    <nav class="mobile-nav">
+    </style>
+
+    <nav class="mobile-nav" aria-label="Mobile navigation">
         <div class="mobile-nav-inner">
             <a href="dashboard.html" class="mobile-nav-item"><i data-lucide="layout-dashboard"></i><span>Home</span></a>
             <a href="browse.html" class="mobile-nav-item"><i data-lucide="search"></i><span>Browse</span></a>
             <a href="sell.html" class="mobile-nav-item"><i data-lucide="plus-circle"></i><span>Sell</span></a>
             <a href="chatlist.html" class="mobile-nav-item"><i data-lucide="message-square"></i><span>Chat</span></a>
+            <a href="profile.html" class="mobile-nav-item active"><i data-lucide="user"></i><span>Profile</span></a>
         </div>
     </nav>
-    <script>lucide.createIcons();</script>
+    
+    <script>
+        document.addEventListener("DOMContentLoaded", () => {
+            if (!getAuthToken()) {
+                window.location.href = "login.html";
+                return;
+            }
+            
+            const user = getCurrentUser();
+            if (user) {
+                document.getElementById("userName").value = user.name || "N/A";
+                document.getElementById("userEmail").value = user.email || "N/A";
+                document.getElementById("displayUserName").textContent = user.name || "User Name";
+                document.getElementById("displayUserEmail").textContent = user.email || "user@example.com";
+            }
+            if (window.lucide) window.lucide.createIcons();
+        });
+    </script>
+    <script src="components.js" defer></script>
+</body>
+</html>

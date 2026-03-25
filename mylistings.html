@@ -5,115 +5,137 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>My Listings — CoSwap</title>
+    <link rel="preload" href="theme.css" as="style">
     <link rel="stylesheet" href="theme.css">
+    <script src="api.js" defer></script>
     <script src="ui.js" defer></script>
-    <link rel="canonical" href="https://coswap.in/mylistings.html">
+
+    <!-- Open Graph / Facebook -->
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://coswap.in/">
+    <meta property="og:title" content="CoSwap – Buy and Sell Coupons Instantly">
+    <meta property="og:description" content="Discover unused coupons from other users or sell your own in seconds.">
+    <meta property="og:image" content="https://coswap.in/logo.png">
+
+    <!-- Twitter -->
+    <meta property="twitter:card" content="summary_large_image">
+    <meta property="twitter:url" content="https://coswap.in/">
+    <meta property="twitter:title" content="CoSwap – Buy and Sell Coupons Instantly">
+    <meta property="twitter:description" content="Discover unused coupons from other users or sell your own in seconds.">
+    <meta property="twitter:image" content="https://coswap.in/logo.png">
+
 </head>
 <body class="soft-bg">
-    <nav class="navbar">
-        <a href="index.html" class="logo" style="display: flex; align-items: center; gap: 12px; text-decoration: none; color: white;">
-            <img src="logo.png" alt="CoSwap" style="width: 32px; height: 32px;" loading="lazy">
-            <span style="font-size: 20px; font-weight: 800; letter-spacing: -0.04em;">CoSwap</span>
-        </a>
-        
-        <div class="nav-menu">
-            <a href="browse.html" class="nav-link">Browse</a>
-            <a href="sell.html" class="nav-link">Sell</a>
-            <a href="dashboard.html" class="nav-link active">My Listings</a>
-            <a href="chatlist.html" class="nav-link">Messages</a>
-            <a href="profile.html" class="nav-link">Profile</a>
+    <!-- Premium Background System -->
+    <div class="premium-bg-system parallax-bg" aria-hidden="true">
+        <div class="aurora-layer"></div>
+        <div class="droplet-container parallax-particles">
+            <div class="bg-droplet" style="width:10px; height:10px; left:20%;"></div>
+            <div class="bg-droplet" style="width:6px; height:6px; left:70%; animation-delay:-3s;"></div>
         </div>
-
-        <div class="nav-right">
-            <img src="https://api.dicebear.com/7.x/avataaars/svg?seed=coswap" alt="Avatar" class="user-avatar" onclick="window.location.href='profile.html'" loading="lazy">
-            <i data-lucide="log-out" class="logout-icon" onclick="handleLogout()" style="width: 20px;"></i>
+        <div class="ripple-layer">
+            <div class="liquid-ripple" style="top:30%; left:70%;"></div>
         </div>
-    </nav>
+    </div>
 
-    <main class="container" style="padding: 40px 24px 80px;">
+    <nav class="navbar"></nav>
+
+    <main class="container" style="padding: 40px 24px 120px;">
         <header style="margin-bottom: 48px; text-align: center;">
-            <h1 class="heading-elite">My Active Listings</h1>
-            <p class="subtext-elite" style="margin: 0 auto;">Manage your posted coupons and track your sales progress.</p>
+            <h1 class="hero-title">My Listings</h1>
+            <p class="hero-subtitle">Manage your posted coupons and track your sales progress.</p>
         </header>
 
-        <div id="listingsGrid" style="display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 24px;">
-            <!-- Loaded via API -->
+        <div id="listingsGrid" class="coupon-grid">
+            <div style="text-align: center; padding: 40px; opacity: 0.5;">Loading listings...</div>
         </div>
 
-        <div id="emptyState" class="card" style="display:none; text-align: center; padding: 60px 40px;">
-            <i data-lucide="ticket" style="width: 48px; height: 48px; margin-bottom: 16px; opacity: 0.1;"></i>
-            <p style="color: rgba(255,255,255,0.5); margin-bottom: 24px;">You haven't listed any coupons yet.</p>
-            <button class="button-primary" onclick="window.location.href='sell.html'" style="padding: 0 32px;">Sell Your First Coupon</button>
+        <div id="emptyState" class="empty-box" style="display:none; text-align: center; padding: 60px 24px;">
+            <h2 style="margin-bottom: 16px;">Zero Listings</h2>
+            <p style="margin-bottom: 32px; color: rgba(255,255,255,0.5);">You haven't listed any coupons yet. Your first sale is just a click away.</p>
+            <button class="button-primary" onclick="window.location.href='sell.html'" style="padding: 14px 28px;">Sell Your First Coupon</button>
         </div>
     </main>
 
     <!-- DELETE POPUP -->
-    <div id="deletePopup" style="position:fixed; inset:0; background:rgba(2, 6, 23, 0.8); backdrop-filter:blur(12px); z-index:2000; display:none; align-items:center; justify-content:center; padding:24px;">
+    <div id="deletePopup" style="position:fixed; inset:0; background:rgba(2, 6, 23, 0.82); backdrop-filter:blur(12px); z-index:5000; display:none; align-items:center; justify-content:center; padding:24px;">
         <div class="card" style="max-width:400px; width: 100%; text-align:center; padding: 32px;">
             <h3 style="font-size:20px; font-weight: 800; margin-bottom:12px;">Delete Listing?</h3>
             <p style="color:rgba(255,255,255,0.5); margin-bottom:24px;">This action cannot be undone. Your coupon will be removed from the marketplace.</p>
             <div style="display:flex; gap:12px;">
                 <button onclick="closePopup()" class="button-secondary" style="flex:1;">Cancel</button>
-                <button id="confirmBtn" class="button-primary" style="flex:1; background: #ef4444;">Delete</button>
+                <button id="confirmBtn" class="button-primary" style="flex:1; background: #ef4444; border-color: #ef4444;">Delete</button>
             </div>
         </div>
     </div>
 
-    <script src="api.js"></script>
+    <nav class="mobile-nav" aria-label="Mobile navigation">
+        <div class="mobile-nav-inner">
+            <a href="dashboard.html" class="mobile-nav-item"><i data-lucide="layout-dashboard"></i><span>Home</span></a>
+            <a href="browse.html" class="mobile-nav-item"><i data-lucide="search"></i><span>Browse</span></a>
+            <a href="sell.html" class="mobile-nav-item"><i data-lucide="plus-circle"></i><span>Sell</span></a>
+            <a href="chatlist.html" class="mobile-nav-item"><i data-lucide="message-square"></i><span>Chat</span></a>
+        </div>
+    </nav>
+
     <script>
+        let delId = null;
+
         document.addEventListener("DOMContentLoaded", () => {
-            if (typeof requireAuth === 'function' && !requireAuth()) return;
+            if (!getAuthToken()) {
+                window.location.href = "login.html";
+                return;
+            }
             load();
-            lucide.createIcons();
         });
 
-        function go(p) { window.location.href = p; }
-        
-        let listings = [];
-        let delId = null;
+        function escapeHtml(str) {
+            if (!str) return "";
+            return String(str).replace(/[&<>"']/g, m => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":"&#39;"}[m]));
+        }
 
         async function load() {
             const grid = document.getElementById('listingsGrid');
             const empty = document.getElementById('emptyState');
-            grid.innerHTML = '';
             
             try {
                 const data = await apiRequest('/me/listings');
-                listings = data.coupons || [];
+                const listings = data.coupons || [];
                 
                 if (listings.length === 0) {
+                    grid.style.display = 'none';
                     empty.style.display = 'block';
                     return;
                 }
                 
                 empty.style.display = 'none';
+                grid.style.display = 'grid';
                 grid.innerHTML = listings.map(c => `
-                    <div class="card" style="display: flex; flex-direction: column; gap: 16px;">
-                        <div style="display: flex; justify-content: space-between; align-items: center;">
-                            <div style="font-size: 11px; font-weight: 800; color: ${c.status === 'sold' ? '#ff4d4d' : '#22c55e'}; text-transform: uppercase; letter-spacing: 0.05em; background: ${c.status === 'sold' ? 'rgba(255, 77, 77, 0.1)' : 'rgba(34, 197, 94, 0.1)'}; padding: 4px 8px; border-radius: 4px;">
-                                ${c.status === 'sold' ? 'Sold' : 'Active'}
+                    <article class="coupon-card">
+                        <img src="${escapeHtml(c.image_url || 'bg.png')}" class="card-img" onerror="this.src='bg.png'" alt="Coupon">
+                        <div class="card-content">
+                            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px;">
+                                <div class="card-tag" style="background: ${c.status === 'sold' ? 'rgba(239, 68, 68, 0.1)' : 'rgba(34, 197, 94, 0.1)'}; color: ${c.status === 'sold' ? '#ef4444' : '#22c55e'};">
+                                    ${c.status === 'sold' ? 'Sold' : 'Active'}
+                                </div>
+                                <span style="font-size: 10px; opacity: 0.4;">ID: ${c.id.slice(-6)}</span>
                             </div>
-                            <div style="font-size: 12px; color: rgba(255,255,255,0.3); font-family: monospace;">#${c.id.slice(-6)}</div>
-                        </div>
-                        
-                        <div style="flex: 1;">
-                            <h3 style="font-size: 18px; font-weight: 700; margin-bottom: 8px; line-height: 1.4;">${escapeHtml(c.title)}</h3>
-                            <div style="font-size: 24px; font-weight: 800; color: #38bdf8; margin-bottom: 12px;">₹${escapeHtml(String(c.price))}</div>
-                            <div style="font-size: 12px; color: rgba(255,255,255,0.5); display: flex; align-items: center; gap: 6px;">
-                                <i data-lucide="calendar" style="width: 12px;"></i> Expires: ${escapeHtml(c.expiry || 'N/A')}
+                            <div class="card-title">${escapeHtml(c.title)}</div>
+                            <div class="card-meta">
+                                <span style="color: #4fd0ff; font-weight: 700; font-size: 20px;">₹${c.price}</span>
+                                <span style="font-size: 12px; opacity: 0.6;">Exp: ${escapeHtml(c.expiry || 'N/A')}</span>
+                            </div>
+                            <div style="margin-top: 16px; display: grid; grid-template-columns: 1fr 1fr; gap: 8px;">
+                                <button class="button-secondary" onclick="window.location.href='editcoupon.html?id=${c.id}'" style="height: 40px; font-size: 14px;">Edit</button>
+                                <button class="button-secondary" onclick="openPopup('${c.id}')" style="height: 40px; font-size: 14px; color: #ef4444; border-color: rgba(239, 68, 68, 0.2);">Delete</button>
                             </div>
                         </div>
-
-                        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px; pt-4">
-                            <button class="button-secondary" onclick="go('editcoupon.html?id=${c.id}')" style="height: 40px; font-size: 13px;">Edit</button>
-                            <button class="button-secondary" onclick="openPopup('${c.id}')" style="height: 40px; font-size: 13px; color: #ff4d4d; border-color: rgba(255, 77, 77, 0.2);">Delete</button>
-                        </div>
-                    </div>
+                    </article>
                 `).join('');
                 
-                lucide.createIcons();
+                if (window.lucide) window.lucide.createIcons();
             } catch (err) {
-                grid.innerHTML = `<div class="card" style="color: #ff4d4d; text-align: center;">Error loading listings. Please refresh.</div>`;
+                grid.innerHTML = `<div style="text-align: center; color: var(--danger); padding: 40px;">${escapeHtml(err.message)}</div>`;
             }
         }
 
@@ -125,19 +147,11 @@
                 await apiRequest(`/coupons/${delId}`, { method: 'DELETE' });
                 closePopup();
                 load();
-            } catch (err) { alert('Failed to delete listing.'); }
-        };
-
-        function handleLogout() {
-            if (confirm("Sign out from CoSwap?")) {
-                if (typeof clearAuth === 'function') clearAuth();
-                window.location.href = "login.html";
+            } catch (err) { 
+                showToast(err.message || 'Failed to delete listing.', 'error'); 
             }
-        }
-
-        function escapeHtml(s) {
-            return s ? String(s).replace(/[&<>"']/g, m => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m])) : '';
-        }
+        };
     </script>
+    <script src="components.js" defer></script>
 </body>
 </html>

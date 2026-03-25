@@ -16,6 +16,7 @@
     <meta property="og:type" content="website">
     <meta property="og:url" content="https://coswap.in">
     
+    <link rel="preload" href="theme.css" as="style">
     <link rel="stylesheet" href="theme.css">
     <script src="https://unpkg.com/lucide@latest"></script>
     <style>
@@ -40,21 +41,18 @@
         }
 
         /* Header Navigation */
-        header.nav-bar {
-            position: sticky;
-            top: 0;
-            z-index: 1000;
-            background: rgba(10, 13, 24, 0.82);
-            backdrop-filter: blur(20px);
-            border-bottom: 1px solid rgba(255, 255, 255, 0.08);
-            transition: all 0.3s ease;
-        }
-
-        .nav-inner {
-            height: 80px;
+        .navbar {
             display: flex;
             align-items: center;
             justify-content: space-between;
+            height: 72px;
+            padding: 0 24px;
+            background: rgba(10, 13, 24, 0.82);
+            backdrop-filter: blur(20px);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+            position: sticky;
+            top: 0;
+            z-index: 1000;
         }
 
         .logo {
@@ -63,7 +61,7 @@
             gap: 12px;
             text-decoration: none;
             color: white;
-            font-size: 22px;
+            font-size: 20px;
             font-weight: 800;
             letter-spacing: -0.04em;
         }
@@ -655,33 +653,15 @@
             <div class="liquid-ripple" style="top:60%; left:80%; animation-delay:-6s;"></div>
         </div>
     </div>
-    <nav class="navbar">
-        <a href="index.html" class="logo" style="display: flex; align-items: center; gap: 12px; text-decoration: none; color: white;">
-            <img src="logo.png" alt="CoSwap" style="width: 32px; height: 32px;" loading="lazy">
-            <span style="font-size: 20px; font-weight: 800; letter-spacing: -0.04em;">CoSwap</span>
-        </a>
-        
-        <div class="nav-menu">
-            <a href="browse.html" class="nav-link">Browse</a>
-            <a href="sell.html" class="nav-link">Sell</a>
-            <a href="dashboard.html" class="nav-link">My Listings</a>
-            <a href="chatlist.html" class="nav-link">Messages</a>
-            <a href="profile.html" class="nav-link">Profile</a>
-        </div>
-
-        <div class="nav-right">
-            <img src="https://api.dicebear.com/7.x/avataaars/svg?seed=coswap" alt="Avatar" class="user-avatar" onclick="window.location.href='profile.html'" loading="lazy">
-            <i data-lucide="log-out" class="logout-icon" onclick="handleLogout()" style="width: 20px;"></i>
-        </div>
-    </nav>
+    <nav class="navbar"></nav>
 
     <main class="container">
         <!-- Hero Section -->
         <section class="hero">
-            <h1>Buy and Sell Discount <br>Coupons Easily</h1>
-            <p>India's most trusted marketplace to save money on your favorite brands effortlessly.</p>
+            <h1 class="hero-title">Buy and Sell Discount <br>Coupons Easily</h1>
+            <p class="hero-subtitle">India's most trusted marketplace to save money on your favorite brands effortlessly.</p>
             <div class="hero-buttons">
-                <button class="button-primary" onclick="window.location.href='browse.html'">Browse Coupons</button>
+                <button class="button-primary btn-primary-glow" onclick="window.location.href='browse.html'">Browse Coupons</button>
                 <button class="button-secondary" onclick="window.location.href='sell.html'">Sell a Coupon</button>
             </div>
         </section>
@@ -696,7 +676,7 @@
         <!-- Marketplace Sections -->
         <div class="marketplace-sections">
             <!-- Trending -->
-            <section>
+            <section class="divider-glow">
                 <div class="section-header">
                     <h2>Trending Coupons</h2>
                     <a href="browse.html" class="view-all-link">View All</a>
@@ -808,8 +788,8 @@
         </div>
     </footer>
 
-    <script src="api.js"></script>
-    <script src="ui.js"></script>
+    <script src="api.js" defer></script>
+    <script src="ui.js" defer></script>
     <script>
         // Init Lucide
         lucide.createIcons();
@@ -829,11 +809,20 @@
             partWrap.appendChild(p);
         }
 
+        // Mobile Menu Toggle
+        const menuToggle = document.getElementById('menuToggle');
+        const navMenu = document.getElementById('navMenu');
+        if (menuToggle && navMenu) {
+            menuToggle.addEventListener('click', () => {
+                navMenu.classList.toggle('active');
+            });
+        }
+
         // Search logic
         const sInput = document.getElementById('searchInput');
         sInput.addEventListener('keypress', (e) => {
-            if(e.key === 'Enter') {
-                window.location.href = `browse.html?search=${encodeURIComponent(sInput.value)}`;
+            if(e.key === 'Enter' && sInput.value.trim()) {
+                window.location.href = `browse.html?search=${encodeURIComponent(sInput.value.trim())}`;
             }
         });
 
@@ -883,10 +872,11 @@
         function createCard(c, showOldDate = false) {
             const div = document.createElement('div');
             div.className = 'coupon-card';
-            div.onclick = () => window.location.href = `buy.html?id=${c._id}`;
+            div.onclick = () => window.location.href = `buy.html?id=${c.id || c._id}`;
             
             // Format date nicely
-            const expiry = c.expiry_date ? new Date(c.expiry_date).toLocaleDateString('en-IN', { day: 'numeric', month: 'short', year: 'numeric' }) : '30 Apr 2026';
+            const expiryStr = c.expiry || c.expiry_date;
+            const expiry = expiryStr ? new Date(expiryStr).toLocaleDateString('en-IN', { day: 'numeric', month: 'short', year: 'numeric' }) : '30 Apr 2026';
 
             div.innerHTML = `
                 <h3>${escapeHtml(c.title)}</h3>
@@ -921,5 +911,6 @@
             }
         });
     </script>
+    <script src="components.js" defer></script>
 </body>
 </html>

@@ -6,6 +6,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Sell Coupons — CoSwap</title>
     <meta name="description" content="List your unused coupons or vouchers for sale on CoSwap India's marketplace.">
+    <link rel="preload" href="theme.css" as="style">
     <link rel="stylesheet" href="theme.css">
     <script src="https://unpkg.com/lucide@latest"></script>
     <style>
@@ -202,6 +203,21 @@
             }
         }
     </style>
+
+    <!-- Open Graph / Facebook -->
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://coswap.in/">
+    <meta property="og:title" content="CoSwap – Buy and Sell Coupons Instantly">
+    <meta property="og:description" content="Discover unused coupons from other users or sell your own in seconds.">
+    <meta property="og:image" content="https://coswap.in/logo.png">
+
+    <!-- Twitter -->
+    <meta property="twitter:card" content="summary_large_image">
+    <meta property="twitter:url" content="https://coswap.in/">
+    <meta property="twitter:title" content="CoSwap – Buy and Sell Coupons Instantly">
+    <meta property="twitter:description" content="Discover unused coupons from other users or sell your own in seconds.">
+    <meta property="twitter:image" content="https://coswap.in/logo.png">
+
 </head>
 
 <body class="soft-bg">
@@ -229,26 +245,7 @@
 
     <div class="spotlight-backdrop"></div>
 
-    <nav class="navbar">
-        <div class="container" style="display: flex; justify-content: space-between; align-items: center; height: 100%;">
-            <a href="index.html" class="logo" style="display: flex; align-items: center; gap: 12px; text-decoration: none; color: white;">
-                <img src="logo.png" alt="CoSwap" style="width: 32px; height: 32px;" loading="lazy">
-                <span style="font-size: 20px; font-weight: 800; letter-spacing: -0.04em;">CoSwap</span>
-            </a>
-            
-            <div class="nav-menu">
-                <a href="browse.html" class="nav-link">Browse</a>
-                <a href="sell.html" class="nav-link active">Sell</a>
-                <a href="dashboard.html" class="nav-link">My Listings</a>
-                <a href="chatlist.html" class="nav-link">Messages</a>
-                <a href="profile.html" class="nav-link">Profile</a>
-            </div>
-
-            <div class="nav-right">
-                <img src="https://api.dicebear.com/7.x/avataaars/svg?seed=coswap" alt="Avatar" class="user-avatar" onclick="window.location.href='profile.html'" loading="lazy">
-            </div>
-        </div>
-    </nav>
+    <nav class="navbar"></nav>
 
     <header class="header-gradient">
         <div class="container">
@@ -322,8 +319,8 @@
 
     <div id="toast" class="toast"></div>
 
-    <script src="api.js"></script>
-    <script src="ui.js"></script>
+    <script src="api.js" defer></script>
+    <script src="ui.js" defer></script>
     <script>
         lucide.createIcons();
 
@@ -483,5 +480,6 @@
 
         initPage();
     </script>
+    <script src="components.js" defer></script>
 </body>
 </html>
